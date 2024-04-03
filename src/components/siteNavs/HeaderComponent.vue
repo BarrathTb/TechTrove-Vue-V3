@@ -317,21 +317,21 @@
         if (this.windowWidth < 996) {
           this.toggleOffcanvasVisibility();
         }
-        this.scrollToProductCarousel()
+        // this.scrollToProductCarousel()
       },
       handleBrandClick(brand) {
         this.loadProductCards(brand)
         if (this.windowWidth < 996) {
           this.toggleOffcanvasVisibility();
         }
-        this.scrollToProductCarousel()
+        // this.scrollToProductCarousel()
       },
-      scrollToProductCarousel() {
-        const carouselElement = document.getElementById('productCarousel')
-        if (carouselElement) {
-          carouselElement.scrollIntoView({ behavior: 'smooth' })
-        }
-      }
+      // scrollToProductCarousel() {
+      //   const carouselElement = document.getElementById('productCarousel')
+      //   if (carouselElement) {
+      //     carouselElement.scrollIntoView({ behavior: 'smooth' })
+      //   }
+      // }
     },
     mounted() {
       window.addEventListener('resize', this.handleResize);
@@ -350,8 +350,10 @@
       },
       uniqueBrands() {
 
-        const brands = this.products.map((products) => products.brand)
-        return Array.from(new Set(brands)).sort()
+        return Array.from(this.products.reduce((acc, product) => {
+          acc.add(product.brand)
+          return acc;
+        }, new Set()));
       }
     }
   }
@@ -382,4 +384,4 @@
   .menu-item {
     border-bottom: 1px solid white;
   }
-</style>ws
+</style>

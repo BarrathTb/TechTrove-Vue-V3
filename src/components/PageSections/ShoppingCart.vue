@@ -61,6 +61,32 @@
                 </div>
               </div>
             </div>
+            <section class="wishlist py-3" >
+        <h2 class="tube-text p-2">Your Wishlist</h2>
+        <div class="table-responsive">
+          <table class="table bg-secondary col-md-4">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">Product</th>
+                <th scope="col">Price</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in wishlistItems" :key="`wishlist-${item.id}`">
+                <td><img :src="item.image" :alt="item.name" class="cartImage mx-2 my-2" /></td>
+                <td>{{ item.name }}</td>
+                <td>${{ item.price.toFixed(2) }}</td>
+                <td style="vertical-align: middle">
+                  <button @click="moveToCart(item)" class="btn btn-success">Add to Cart</button>
+                  <button @click="removeFromWishlist(index)" class="btn btn-danger ml-2"><i class="bi bi-trash"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
             <div class="col-md-6">
               <div class="card bg-success rounder-3">
                 <h2 class="text-primary-bold p-4">Shipping Information</h2>
@@ -208,6 +234,7 @@
           </div>
         </div>
       </section>
+      
     </div>
   </transition>
 </template>
@@ -221,7 +248,8 @@
     data() {
       return {
         // cartVisible: false,
-        products: Array
+        products: Array,
+        wishlistItems: [],
       }
     },
 
@@ -271,7 +299,19 @@
       clearCart() {
 
         this.$emit('update-cart', this.cartItems)
-      }
+      },
+      addToWishlist(product) {
+        if (!this.wishlistItems.find((item) => item.id === product.id)) {
+          this.wishlistItems.push(product);
+        }
+      },
+      removeFromWishlist(index) {
+        this.wishlistItems.splice(index, 1);
+      },
+      moveToCart(wishlistItem) {
+        this.addToCart({ product: wishlistItem, quantity: 1 });
+        this.removeFromWishlist(this.wishlistItems.indexOf(wishlistItem));
+      },
     }
   }
 </script>

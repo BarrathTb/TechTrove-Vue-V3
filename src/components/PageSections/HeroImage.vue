@@ -196,7 +196,7 @@
     }
   }
 
-  /* @keyframes slideGradient {
+  @keyframes slideGradient {
     0% {
       background-position: 100% center;
     }
@@ -215,9 +215,9 @@
     animation: slideGradient 15s linear infinite;
     -webkit-text-fill-color: transparent;
     display: inline-block;
-  } */
+  }
 
-  .rainbow-text-animate {
+  /* .rainbow-text-animate {
 
     background: radial-gradient(circle closest-side at center, red, orange, yellow, green, blue, indigo, violet);
     background-size: 400% 400%;
@@ -238,7 +238,7 @@
     100% {
       background-size: 200% 200%;
     }
-  }
+  } */
 
 
   .hero-minimize {

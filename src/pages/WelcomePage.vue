@@ -39,12 +39,12 @@
 
 <script>
   import AppFooter from '@/components/PageSections/AppFooter.vue'
-  import HowItWorksAccordion from '@/components/PageSections/HowItWorksAccordion.vue'
-  import InfoCard from '@/components/PageSections/InfoCard.vue'
-  import PromotionalCard from '@/components/PageSections/PromotionalCard.vue'
-  import WelcomeSection from '@/components/PageSections/WelcomeSection.vue'
-  import LoginModal from '@/components/modals/LoginModal.vue'
-  import WelcomeHeader from '@/components/siteNavs/WelcomeHeader.vue'
+import HowItWorksAccordion from '@/components/PageSections/HowItWorksAccordion.vue'
+import InfoCard from '@/components/PageSections/InfoCard.vue'
+import PromotionalCard from '@/components/PageSections/PromotionalCard.vue'
+import WelcomeSection from '@/components/PageSections/WelcomeSection.vue'
+import LoginModal from '@/components/modals/LoginModal.vue'
+import WelcomeHeader from '@/components/siteNavs/WelcomeHeader.vue'
 
 
   export default {
@@ -92,7 +92,7 @@
               behavior: 'smooth'
             });
           }
-        }, 1100); // Slightly longer than the transition duration
+        }, 1100);
 
       },
 

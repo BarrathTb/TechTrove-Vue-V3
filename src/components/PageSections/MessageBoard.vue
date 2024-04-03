@@ -20,7 +20,7 @@
 
 <script>
   import MessageCard from './MessageCard.vue';
-  import MessageForm from './MessageForm.vue';
+import MessageForm from './MessageForm.vue';
 
   export default {
     components: {
@@ -55,7 +55,7 @@
       toggleMessageBoard() {
         this.boardVisible = !this.boardVisible;
       },
-      closeMessageBoard() { // Please note the typo correction from "Boaard" to "Board"
+      closeMessageBoard() { 
         this.boardVisible = false;
       },
     }

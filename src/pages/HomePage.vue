@@ -23,17 +23,17 @@
 
 <script>
   import AppFooter from '@/components/PageSections/AppFooter.vue'
-  import BlogSection from '@/components/PageSections/BlogSection.vue'
-  import BuilderZone from '@/components/PageSections/BuilderZone.vue'
-  import HeroImage from '@/components/PageSections/HeroImage.vue'
-  import MessageBoard from '@/components/PageSections/MessageBoard.vue'
-  import PcBuilder from '@/components/PageSections/PcBuilder.vue'
-  import ProductCarousel from '@/components/PageSections/ProductCarousel.vue'
-  import ShoppingCart from '@/components/PageSections/ShoppingCart.vue'
-  import SupportSection from '@/components/PageSections/SupportSection.vue'
-  import ProductDetailModal from '@/components/modals/ProductDetailModal.vue'
-  import HeaderComponent from '@/components/siteNavs/HeaderComponent.vue'
-  import { products } from '@/data.js'
+import BlogSection from '@/components/PageSections/BlogSection.vue'
+import BuilderZone from '@/components/PageSections/BuilderZone.vue'
+import HeroImage from '@/components/PageSections/HeroImage.vue'
+import MessageBoard from '@/components/PageSections/MessageBoard.vue'
+import PcBuilder from '@/components/PageSections/PcBuilder.vue'
+import ProductCarousel from '@/components/PageSections/ProductCarousel.vue'
+import ShoppingCart from '@/components/PageSections/ShoppingCart.vue'
+import SupportSection from '@/components/PageSections/SupportSection.vue'
+import ProductDetailModal from '@/components/modals/ProductDetailModal.vue'
+import HeaderComponent from '@/components/siteNavs/HeaderComponent.vue'
+import { products } from '@/data.js'
 
   export default {
     components: {
@@ -51,6 +51,8 @@
     },
     data() {
       return {
+        activeCategory: null,
+        activeBrand: null,
         boardVisible: false,
         builderZoneVisible: false,
         selectedProductQuantity: 0,
@@ -155,15 +157,29 @@
         return [...new Set(products.map((p) => p.brand))]
       },
       filterProducts(selectedItem) {
-        if (this.uniqueCategories.includes(selectedItem)) {
-          this.filteredProducts = this.allProducts.filter(
-            (product) => product.category === selectedItem
-          )
-          return selectedItem
-        } else if (this.uniqueBrands.includes(selectedItem)) {
-          this.filteredProducts = this.allProducts.filter((product) => product.brand === selectedItem)
+        // Determine if selectedItem is a category or a brand.
+        this.resetFilters();
+        const isCategory = this.uniqueCategories.includes(selectedItem);
+        const isBrand = this.uniqueBrands.includes(selectedItem);
+
+        // Update the active filters based on the selection.
+        if (isCategory) {
+          this.activeCategory = selectedItem;
+        } else if (isBrand) {
+          this.activeBrand = selectedItem;
         }
-        return selectedItem
+
+        // Perform filtering based on the active category and/or brand.
+        this.filteredProducts = this.allProducts.filter(product => {
+          return (!this.activeCategory || product.category === this.activeCategory) &&
+                (!this.activeBrand || product.brand === this.activeBrand);
+        });
+      },
+      resetFilters() {
+        // Reset both active filters and show all products again.
+        this.activeCategory = null;
+        this.activeBrand = null;
+        this.filteredProducts = this.allProducts;
       },
       performSearch(query) {
         if (typeof query !== 'string' || !query.trim()) {
@@ -183,7 +199,7 @@
           });
 
           if (this.filteredProducts.length === 0) {
-            // Alert the user that no results were found.
+            
             alert('No results found. Showing all products.');
             // Return all products since no results matched the search query.
             return { products: this.allProducts, searchQuery: this.searchQuery };
@@ -237,7 +253,8 @@
             console.error('Failed to get the shopping cart element or scrollIntoView is not available');
           }
         });
-      }
+      },
+      
 
     }
   }

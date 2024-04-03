@@ -25,7 +25,7 @@
     name: 'BuilderZone',
     data() {
       return {
-        // Example of what builds data could look like
+      
         builds: [
           {
             videoSrc: "https://www.youtube.com/embed/eMlyRrzvUaI?si=T845E6JhBIcE1nyt",
