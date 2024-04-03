@@ -5,7 +5,7 @@ export const products = [
     brand: 'ASUS',
     category: 'Motherboards',
     price: 859.99,
-    image: '/TechTrove-Web-Vue-V1/images/asus-rog-crosshairs.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/asus-rog-crosshairs.jpg',
     description: 'High-performance gaming motherboard with RGB lighting and advanced cooling.',
     stock: 25,
     ratings: {
@@ -32,7 +32,7 @@ export const products = [
     brand: 'ASUS',
     category: 'Motherboards',
     price: 999.99,
-    image: '/TechTrove-Web-Vue-V1/images/asus-rog-matrix-cooling.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/asus-rog-matrix-cooling.jpg',
     description: 'The ultimate overclocking motherboard with water-cooling readiness.',
     stock: 15,
     ratings: {
@@ -59,7 +59,7 @@ export const products = [
     brand: 'ASUS',
     category: 'Motherboards',
     price: 1249.99,
-    image: '/TechTrove-Web-Vue-V1/images/asus-rog-rampage-mother.webp',
+    image: '/TechTrove-Web-Vue-V3/images/asus-rog-rampage-mother.webp',
     description: 'A flagship motherboard built for extreme performance and gaming.',
     stock: 10,
     ratings: {
@@ -87,7 +87,7 @@ export const products = [
     category: 'Motherboards',
     price: 729.99,
     image:
-      '/TechTrove-Web-Vue-V1/images/EK_ROG_Maximus_XIV_Extreme_Glacial_Landing-page_Product@2x-999x1030.png',
+      '/TechTrove-Web-Vue-V3/images/EK_ROG_Maximus_XIV_Extreme_Glacial_Landing-page_Product@2x-999x1030.png',
     description: 'Custom-designed motherboard with premium liquid cooling capabilities.',
     stock: 20,
     ratings: {
@@ -114,7 +114,7 @@ export const products = [
     brand: 'ASUS',
     category: 'Motherboards',
     price: 379.99,
-    image: '/TechTrove-Web-Vue-V1/images/Asus Rog Strix Z590-E.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Asus Rog Strix Z590-E.webp',
     description: 'Gaming motherboard with advanced power delivery and optimized cooling.',
     stock: 30,
     ratings: {
@@ -141,7 +141,7 @@ export const products = [
     brand: 'MSI',
     category: 'Motherboards',
     price: 699.99,
-    image: '/TechTrove-Web-Vue-V1/images/MSI MEG X590 Godlike.webp',
+    image: '/TechTrove-Web-Vue-V3/images/MSI MEG X590 Godlike.webp',
     description: 'A masterclass in motherboard engineering with unrivaled performance.',
     stock: 5,
     ratings: {
@@ -168,7 +168,7 @@ export const products = [
     brand: 'Gigabyte',
     category: 'Motherboards',
     price: 459.99,
-    image: '/TechTrove-Web-Vue-V1/images/Gigabyte Z690 Aorus Master.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Gigabyte Z690 Aorus Master.webp',
     description: 'Top-tier Z690 motherboard with advanced thermal design for enthusiasts.',
     stock: 12,
     ratings: {
@@ -195,7 +195,7 @@ export const products = [
     brand: 'MSI',
     category: 'Motherboards',
     price: 209.99,
-    image: '/TechTrove-Web-Vue-V1/images/MSI MPG B550 Gaming Edge WiFi.webp',
+    image: '/TechTrove-Web-Vue-V3/images/MSI MPG B550 Gaming Edge WiFi.webp',
     description: 'Performance gaming motherboard with WiFi 6 and ample connectivity options.',
     stock: 18,
     ratings: {
@@ -222,7 +222,7 @@ export const products = [
     brand: 'ASUS',
     category: 'Motherboards',
     price: 189.99,
-    image: '/TechTrove-Web-Vue-V1/images/Asus TUF Gaming X570-Plus (Wi-Fi).webp',
+    image: '/TechTrove-Web-Vue-V3/images/Asus TUF Gaming X570-Plus (Wi-Fi).webp',
     description: 'Durable motherboard with military-grade components and integrated Wi-Fi.',
     stock: 25,
     ratings: {
@@ -249,7 +249,7 @@ export const products = [
     brand: 'EVGA',
     category: 'Motherboards',
     price: 499.99,
-    image: '/TechTrove-Web-Vue-V1/images/EVGA Z390 Dark.webp',
+    image: '/TechTrove-Web-Vue-V3/images/EVGA Z390 Dark.webp',
     description: 'An elite motherboard designed for record-breaking performance.',
     stock: 8,
     ratings: {
@@ -276,7 +276,7 @@ export const products = [
     brand: 'Biostar',
     category: 'Motherboards',
     price: 159.99,
-    image: '/TechTrove-Web-Vue-V1/images/Biostar Racing Z490GTN.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Biostar Racing Z490GTN.webp',
     description: 'Mini-ITX motherboard perfect for building a compact yet powerful system.',
     stock: 20,
     ratings: {
@@ -304,7 +304,7 @@ export const products = [
     brand: 'NVIDIA',
     category: 'Graphics Cards',
     price: 699.99,
-    image: '/TechTrove-Web-Vue-V1/images/RTX 3080.webp',
+    image: '/TechTrove-Web-Vue-V3/images/RTX 3080.webp',
     description:
       "The GeForce RTX™ 3080 delivers the ultra performance that gamers crave, powered by Ampere—NVIDIA's 2nd gen RTX architecture.",
     stock: 10,
@@ -332,7 +332,7 @@ export const products = [
     brand: 'AMD',
     category: 'Graphics Cards',
     price: 649.99,
-    image: '/TechTrove-Web-Vue-V1/images/RX 6800 XT.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/RX 6800 XT.jpg',
     description:
       'The AMD Radeon RX 6800 XT graphics card, powered by AMD RDNA 2 architecture, featuring 72 powerful enhanced Compute Units, and 16GB of GDDR6 memory.',
     stock: 8,
@@ -360,7 +360,7 @@ export const products = [
     brand: 'ASUS',
     category: 'Graphics Cards',
     price: 599.99,
-    image: '/TechTrove-Web-Vue-V1/images/RTX 3070 ROG.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/RTX 3070 ROG.jpg',
     description:
       "Built with the breakthrough graphics performance of the award-winning NVIDIA Turing architecture, this is your blazing-fast supercharger for today's most popular games.",
     stock: 15,
@@ -383,7 +383,7 @@ export const products = [
     brand: 'MSI',
     category: 'Graphics Cards',
     price: 249.99,
-    image: '/TechTrove-Web-Vue-V1/images/GTX 1660 Super MSI.webp',
+    image: '/TechTrove-Web-Vue-V3/images/GTX 1660 Super MSI.webp',
     description:
       'A strong backplate reinforces the graphics card while providing passive cooling by applying thermal pads.',
     stock: 20,
@@ -411,7 +411,7 @@ export const products = [
     brand: 'Gigabyte',
     category: 'Graphics Cards',
     price: 399.99,
-    image: '/TechTrove-Web-Vue-V1/images/RTX 2060 Super Aorus.webp',
+    image: '/TechTrove-Web-Vue-V3/images/RTX 2060 Super Aorus.webp',
     description:
       'The AORUS GeForce RTX 2060 Super comes with an all-around cooling solution that keeps the GPU cool from every angle.',
     stock: 13,
@@ -439,7 +439,7 @@ export const products = [
     brand: 'EVGA',
     category: 'Graphics Cards',
     price: 1499.99,
-    image: '/TechTrove-Web-Vue-V1/images/evga-3090-ftw.webp',
+    image: '/TechTrove-Web-Vue-V3/images/evga-3090-ftw.webp',
     description:
       'The EVGA GeForce RTX 3090 is colossally powerful in every way imaginable, giving you a whole new tier of performance at 8K resolution.',
     stock: 5,
@@ -462,7 +462,7 @@ export const products = [
     brand: 'EVGA',
     category: 'Graphics Cards',
     price: 729.99,
-    image: '/TechTrove-Web-Vue-V1/images/evga-3080-ftw.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/evga-3080-ftw.jpg',
     description:
       "Experience the best gaming experience with the new EVGA GeForce RTX 3080's enhanced Ray Tracing Cores and Tensor Cores, new streaming multiprocessors, and high-speed GDDR6X memory.",
     stock: 7,
@@ -485,7 +485,7 @@ export const products = [
     brand: 'EVGA',
     category: 'Graphics Cards',
     price: 549.99,
-    image: '/TechTrove-Web-Vue-V1/images/evga-3080-ftw.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/evga-3080-ftw.jpg',
     description:
       'With the EVGA GeForce RTX 3070, you can count on incredible performance for ray tracing and AI-powered DLSS to deliver the ultimate PC gaming experience.',
     stock: 12,
@@ -508,7 +508,7 @@ export const products = [
     brand: 'ASUS',
     category: 'Graphics Cards',
     price: 1999.99,
-    image: '/TechTrove-Web-Vue-V1/images/asus-rog-strix-4090-btf.png',
+    image: '/TechTrove-Web-Vue-V3/images/asus-rog-strix-4090-btf.png',
     description:
       'The ASUS ROG Strix GeForce RTX 4090 OC edition is built with enhanced RT Cores and Tensor Cores, new streaming multiprocessors, and superfast GDDR6X memory for an amazing gaming experience.',
     stock: 3,
@@ -531,7 +531,7 @@ export const products = [
     brand: 'ASUS',
     category: 'Graphics Cards',
     price: 1199.99,
-    image: '/TechTrove-Web-Vue-V1/images/asus-rog-strix-4080-super.png',
+    image: '/TechTrove-Web-Vue-V3/images/asus-rog-strix-4080-super.png',
     description:
       'The ASUS ROG Strix GeForce RTX 4080 has been redesigned to harness the incredible power of the new Ada Lovelace architecture and provides gamers with an unrivaled experience.',
     stock: 4,
@@ -554,7 +554,7 @@ export const products = [
     brand: 'Gigabyte',
     category: 'Graphics Cards',
     price: 1399.99,
-    image: '/TechTrove-Web-Vue-V1/images/Gigabyte RTX 3080 Ti Aorus Master.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Gigabyte RTX 3080 Ti Aorus Master.webp',
     description:
       'The Gigabyte GeForce RTX 4080 Ti boasts cutting-edge performance with its next-gen RT Cores, Tensor Cores, and fast GDDR6X memory, making it ideal for the most demanding gamers and creators.',
     stock: 6,
@@ -582,7 +582,7 @@ export const products = [
     brand: 'Gigabyte',
     category: 'Graphics Cards',
     price: 1599.99,
-    image: '/TechTrove-Web-Vue-V1/images/Gigabyte Aorus RTX 3090 Xtreme.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/Gigabyte Aorus RTX 3090 Xtreme.jpg',
     description:
       'The Gigabyte AORUS GeForce RTX 3090 Xtreme is engineered with the highest-grade chokes and capacitors, this graphic card delivers outstanding performance and durable system lifespan.',
     stock: 4,
@@ -610,7 +610,7 @@ export const products = [
     brand: 'Gigabyte',
     category: 'Graphics Cards',
     price: 1199.99,
-    image: '/TechTrove-Web-Vue-V1/images/Gigabyte RTX 3080 Ti Aorus Master.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Gigabyte RTX 3080 Ti Aorus Master.webp',
     description:
       "Powered by NVIDIA's new Ampere architecture, the Gigabyte GeForce RTX 3080 Ti AORUS MASTER delivers an incredible leap in performance and fidelity with acclaimed features such as ray tracing, tensor cores for AI acceleration, and much more.",
     stock: 3,
@@ -638,7 +638,7 @@ export const products = [
     brand: 'Gigabyte',
     category: 'Graphics Cards',
     price: 1299.99,
-    image: '/TechTrove-Web-Vue-V1/images/Gigabyte Aorus RTX 4080 Master.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/Gigabyte Aorus RTX 4080 Master.jpg',
     description:
       "Experience gaming excellence with Gigabyte's AORUS GeForce RTX 4080 MASTER. This formidable card is packed with all-new Ampere SM units delivering 2x the FP32 throughput and improved power efficiency.",
     stock: 2,
@@ -667,7 +667,7 @@ export const products = [
     brand: 'Intel',
     category: 'Processors',
     price: 589.99,
-    image: '/TechTrove-Web-Vue-V1/images/Intel Core i9-12900K.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Intel Core i9-12900K.webp',
     description:
       '12th Gen Intel Core i9 processor offers peak performance with up to 5.2 GHz and advanced overclocking capabilities for gaming and heavy workloads.',
     stock: 10,
@@ -688,7 +688,7 @@ export const products = [
     brand: 'AMD',
     category: 'Processors',
     price: 799.99,
-    image: '/TechTrove-Web-Vue-V1/images/AMD Ryzen 9 5950X.webp',
+    image: '/TechTrove-Web-Vue-V3/images/AMD Ryzen 9 5950X.webp',
     description:
       'The AMD Ryzen 9 5950X boasts high core and thread counts for demanding applications and can push performance with aggressive boost clocks.',
     stock: 8,
@@ -709,7 +709,7 @@ export const products = [
     brand: 'Intel',
     category: 'Processors',
     price: 409.99,
-    image: '/TechTrove-Web-Vue-V1/images/Intel Core i7-12700K.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Intel Core i7-12700K.webp',
     description:
       'The Intel Core i7-12700K features hybrid architecture that combines performance cores with efficient cores to deliver a new level of gaming and multitasking performance.',
     stock: 15,
@@ -730,7 +730,7 @@ export const products = [
     brand: 'AMD',
     category: 'Processors',
     price: 449.0,
-    image: '/TechTrove-Web-Vue-V1/images/AMD Ryzen 7 5800X.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/AMD Ryzen 7 5800X.jpg',
     description:
       'With the AMD Ryzen 7 5800X, experience elite gaming with 8 cores optimized for high-FPS gaming rigs, and handle demanding tasks like content creation with ease.',
     stock: 12,
@@ -751,7 +751,7 @@ export const products = [
     brand: 'Intel',
     category: 'Processors',
     price: 299.99,
-    image: '/TechTrove-Web-Vue-V1/images/Intel Core i5-12600K.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/Intel Core i5-12600K.jpg',
     description:
       'The Intel Core i5-12600K offers excellent mid-range performance with its new hybrid architecture optimized for gaming and productivity.',
     stock: 20,
@@ -772,7 +772,7 @@ export const products = [
     brand: 'AMD',
     category: 'Processors',
     price: 309.99,
-    image: '/TechTrove-Web-Vue-V1/images/AMD Ryzen 5 5600X.webp',
+    image: '/TechTrove-Web-Vue-V3/images/AMD Ryzen 5 5600X.webp',
     description:
       'The AMD Ryzen 5 5600X is a powerful six-core processor that excels in gaming and productivity tasks with its high boost clocks.',
     stock: 25,
@@ -794,7 +794,7 @@ export const products = [
     brand: 'Intel',
     category: 'Processors',
     price: 374.99,
-    image: '/TechTrove-Web-Vue-V1/images/Intel Core i7-11700K.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Intel Core i7-11700K.webp',
     description:
       'Unlocked 11th Gen Intel Core i7-11700K desktop processor, designed for gamers and creative professionals who want to push their experience to higher levels.',
     stock: 20,
@@ -816,7 +816,7 @@ export const products = [
     brand: 'AMD',
     category: 'Processors',
     price: 1399.99,
-    image: '/TechTrove-Web-Vue-V1/images/AMD Ryzen Threadripper 3960X.webp',
+    image: '/TechTrove-Web-Vue-V3/images/AMD Ryzen Threadripper 3960X.webp',
     description:
       'The AMD Ryzen Threadripper 3960X is a powerhouse for creators and enthusiasts, featuring 24 cores and 48 threads to handle complex workloads with ease.',
     stock: 5,
@@ -837,7 +837,7 @@ export const products = [
     brand: 'Intel',
     category: 'Processors',
     price: 122.99,
-    image: '/TechTrove-Web-Vue-V1/images/Intel Core i3-10100.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/Intel Core i3-10100.jpg',
     description:
       'Intel Core i3-10100 provides solid performance for everyday computing, with a quad-core design and Intel Hyper-Threading Technology.',
     stock: 30,
@@ -859,7 +859,7 @@ export const products = [
     brand: 'AMD',
     category: 'Processors',
     price: 129.99,
-    image: '/TechTrove-Web-Vue-V1/images/AMD Ryzen 3 3300X.webp',
+    image: '/TechTrove-Web-Vue-V3/images/AMD Ryzen 3 3300X.webp',
     description:
       'AMD Ryzen 3 3300X offers great entry-level gaming and multitasking with impressive single-threaded performance and unlocked overclocking potential.',
     stock: 18,
@@ -881,7 +881,7 @@ export const products = [
     brand: 'Intel',
     category: 'Processors',
     price: 157.99,
-    image: '/TechTrove-Web-Vue-V1/images/Intel Core i5-10400F.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Intel Core i5-10400F.webp',
     description:
       'A fantastic choice for budget gaming rigs, the Intel Core i5-10400F offers six cores of processing power without integrated graphics.',
     stock: 22,
@@ -903,7 +903,7 @@ export const products = [
     brand: 'AMD',
     category: 'Processors',
     price: 359.99,
-    image: '/TechTrove-Web-Vue-V1/images/AMD Ryzen 7 Pro 4750G.webp',
+    image: '/TechTrove-Web-Vue-V3/images/AMD Ryzen 7 Pro 4750G.webp',
     description:
       'Designed for professional use in mind, the AMD Ryzen 7 PRO 4750G includes Radeon graphics and robust security features catering to business environments.',
     stock: 14,
@@ -926,7 +926,7 @@ export const products = [
     brand: 'Corsair',
     category: 'Memory',
     price: 229.99,
-    image: '/TechTrove-Web-Vue-V1/images/Corsair Dominator Platinum.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Corsair Dominator Platinum.webp',
     description:
       'The Corsair Dominator Platinum RGB is the perfect blend of performance and aesthetics, featuring iconic design, patented DHX cooling technology, and a wide range of customization options with iCUE software.',
     stock: 35,
@@ -948,7 +948,7 @@ export const products = [
     brand: 'G.SKILL',
     category: 'Memory',
     price: 199.99,
-    image: '/TechTrove-Web-Vue-V1/images/G.SKILL Trident Z Royal.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/G.SKILL Trident Z Royal.jpg',
     description:
       'Trident Z Royal series represents one of the highest echelons in performance memory, designed with a crown jewel-like design, crystalline light bars, and luxury aluminum heatsinks.',
     stock: 18,
@@ -969,7 +969,7 @@ export const products = [
     brand: 'Teamgroup',
     category: 'Memory',
     price: 159.99,
-    image: '/TechTrove-Web-Vue-V1/images/TEAMGROUP T-FORCE Xtreem ARGB.webp',
+    image: '/TechTrove-Web-Vue-V3/images/TEAMGROUP T-FORCE Xtreem ARGB.webp',
     description:
       'The T-Force Xtreem ARGB features mesmerizing RGB lighting with mirror reflection design, offering both striking visuals and outstanding performance.',
     stock: 25,
@@ -992,7 +992,7 @@ export const products = [
     brand: 'Crucial',
     category: 'Memory',
     price: 349.99,
-    image: '/TechTrove-Web-Vue-V1/images/Crucial Ballistix Max.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/Crucial Ballistix Max.jpg',
     description:
       'Crucial Ballistix MAX offers maximum speeds and responsiveness for gaming enthusiasts and extreme overclockers with its meticulously engineered design and XMP profiles.',
     stock: 10,
@@ -1014,7 +1014,7 @@ export const products = [
     brand: 'G.SKILL',
     category: 'Memory',
     price: 219.99,
-    image: '/TechTrove-Web-Vue-V1/images/G.SKILL Trident Z Royal Series.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/G.SKILL Trident Z Royal Series.jpg',
     description:
       'Experience luxury and performance with the Trident Z Royal Series, featuring a polished aluminum heat spreader in magnificent gold or silver and crystalline light bar.',
     stock: 15,
@@ -1037,7 +1037,7 @@ export const products = [
     brand: 'Corsair',
     category: 'Memory',
     price: 549.99,
-    image: '/TechTrove-Web-Vue-V1/images/Corsair Dominator Platinum RGB.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/Corsair Dominator Platinum RGB.jpg',
     description:
       'The Corsair Dominator Platinum RGB is the pinnacle of premium craftsmanship, intelligent design, and stunning RGB lighting powered by Corsair iCUE software.',
     stock: 8,
@@ -1059,7 +1059,7 @@ export const products = [
     brand: 'G.SKILL',
     category: 'Memory',
     price: 299.99,
-    image: '/TechTrove-Web-Vue-V1/images/G.SKILL Trident Z Neo.webp',
+    image: '/TechTrove-Web-Vue-V3/images/G.SKILL Trident Z Neo.webp',
     description:
       "Designed for gaming and PC enthusiasts, the Trident Z Neo DDR4 memory series brings performance and style with sleek exterior design and dazzling RGB lighting effects using G.SKILL's Trident Z Lighting Control software.",
     stock: 15,
@@ -1081,7 +1081,7 @@ export const products = [
     brand: 'Crucial',
     category: 'Memory',
     price: 349.99,
-    image: '/TechTrove-Web-Vue-V1/images/Crucial Ballistix Max 4400.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/Crucial Ballistix Max 4400.jpg',
     description:
       'The Crucial Ballistix MAX DDR4 memory is engineered for the latest AMD and Intel platforms with XMP 2.0 support for automatic overclocking. Tuned for high performance and designed for gamers and modders seeking a cutting-edge advantage.',
     stock: 10,
@@ -1104,7 +1104,7 @@ export const products = [
     brand: 'Teamgroup',
     category: 'Memory',
     price: 79.99,
-    image: '/TechTrove-Web-Vue-V1/images/TEAMGROUP Vulcan Z.webp',
+    image: '/TechTrove-Web-Vue-V3/images/TEAMGROUP Vulcan Z.webp',
     description:
       'The Teamgroup T-Force Vulcan Z is designed for complete protection and enhanced heat dissipation. The heat spreader is made of a punch press process with a 0.8mm thick, one-piece alloy aluminum to reinforce the body structure.',
     stock: 25,
@@ -1127,7 +1127,7 @@ export const products = [
     brand: 'Samsung',
     category: 'SSD',
     price: 229.99,
-    image: '/TechTrove-Web-Vue-V1/images/Samsung 980 PRO.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Samsung 980 PRO.webp',
     description:
       'The Samsung 980 PRO offers exceptional speed and reliability with PCIe 4.0 connectivity and up to 7000 MB/s read speeds.',
     stock: 50,
@@ -1147,7 +1147,7 @@ export const products = [
     brand: 'Western Digital',
     category: 'SSD',
     price: 199.99,
-    image: '/TechTrove-Web-Vue-V1/images/WD Black SN850.webp',
+    image: '/TechTrove-Web-Vue-V3/images/WD Black SN850.webp',
     description:
       'High-performance gaming SSD with PCIe 4.0 technology for blazing fast read and write speeds.',
     stock: 40,
@@ -1167,7 +1167,7 @@ export const products = [
     brand: 'Crucial',
     category: 'SSD',
     price: 109.99,
-    image: '/TechTrove-Web-Vue-V1/images/Crucial P5.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Crucial P5.webp',
     description:
       "The Crucial P5 redefines what's possible with innovations that transform the speed of storage.",
     stock: 35,
@@ -1188,7 +1188,7 @@ export const products = [
     brand: 'SK hynix',
     category: 'SSD',
     price: 134.99,
-    image: '/TechTrove-Web-Vue-V1/images/SK Hynix Gold P31.webp',
+    image: '/TechTrove-Web-Vue-V3/images/SK Hynix Gold P31.webp',
     description:
       "One of the world's first 128-layer NAND flash-based consumer SSDs, delivering unparalleled speed and efficiency.",
     stock: 30,
@@ -1209,7 +1209,7 @@ export const products = [
     brand: 'ADATA',
     category: 'SSD',
     price: 129.99,
-    image: '/TechTrove-Web-Vue-V1/images/ADATA XPG SX8200 Pro.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/ADATA XPG SX8200 Pro.jpg',
     description:
       'Utilizing PCIe Gen3x4 interface and featuring NVMe 1.3 support, the XPG SX8200 Pro delivers fast read/write speeds for accelerated performance.',
     stock: 25,
@@ -1230,7 +1230,7 @@ export const products = [
     brand: 'Corsair',
     category: 'SSD',
     price: 369.99,
-    image: '/TechTrove-Web-Vue-V1/images/Corsair Force MP600.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Corsair Force MP600.webp',
     description:
       'The Corsair Force Series MP600 uses Gen4 PCIe technology with blazing fast sequential read speeds of up to 4950MB/s for top-tier performance.',
     stock: 20,
@@ -1252,7 +1252,7 @@ export const products = [
     brand: 'Seagate',
     category: 'SSD',
     price: 219.99,
-    image: '/TechTrove-Web-Vue-V1/images/Seagate FireCuda 520.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Seagate FireCuda 520.webp',
     description:
       'The Seagate FireCuda 520 SSD offers enthusiasts and pro-level gamers the fastest data transfer rates available in a solid state drive.',
     stock: 15,
@@ -1273,7 +1273,7 @@ export const products = [
     brand: 'Samsung',
     category: 'SSD',
     price: 199.99,
-    image: '/TechTrove-Web-Vue-V1/images/samsung-970-evo-plus.webp',
+    image: '/TechTrove-Web-Vue-V3/images/samsung-970-evo-plus.webp',
     description:
       'The Samsung 970 EVO Plus delivers breakthrough speeds and best-in-class reliability.',
     stock: 30,
@@ -1294,7 +1294,7 @@ export const products = [
     brand: 'Crucial',
     category: 'SSD',
     price: 114.99,
-    image: '/TechTrove-Web-Vue-V1/images/crucial-mx500.webp',
+    image: '/TechTrove-Web-Vue-V3/images/crucial-mx500.webp',
     description:
       'The Crucial MX500 offers solid performance and reliability with dynamic write acceleration technology.',
     stock: 40,
@@ -1315,7 +1315,7 @@ export const products = [
     brand: 'Western Digital',
     category: 'SSD',
     price: 109.99,
-    image: '/TechTrove-Web-Vue-V1/images/wd-blue-sn550.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/wd-blue-sn550.jpg',
     description:
       'The WD Blue SN550 NVMe SSD can deliver over 4 times the speed of our best SATA SSDs.',
     stock: 35,
@@ -1336,7 +1336,7 @@ export const products = [
     brand: 'ADATA',
     category: 'SSD',
     price: 129.99,
-    image: '/TechTrove-Web-Vue-V1/images/ADATA XPG SX8200 Pro.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/ADATA XPG SX8200 Pro.jpg',
     description:
       'The ADATA XPG SX8200 Pro is designed for hardcore gamers, PC enthusiasts, overclockers, and video content producers.',
     stock: 25,
@@ -1357,7 +1357,7 @@ export const products = [
     brand: 'Corsair',
     category: 'SSD',
     price: 399.99,
-    image: '/TechTrove-Web-Vue-V1/images/Corsair Force MP600.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Corsair Force MP600.webp',
     description:
       'The Corsair Force Series MP600 Gen4 PCIe x4 NVMe M.2 SSD provides extreme storage performance with up to 4,950MB/sec sequential read, and up to 4,250MB/sec sequential write speeds.',
     stock: 15,
@@ -1379,7 +1379,7 @@ export const products = [
     brand: 'Corsair',
     category: 'Power Supply',
     price: 129.99,
-    image: '/TechTrove-Web-Vue-V1/images/Corsair RM750x.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Corsair RM750x.webp',
     description:
       'The Corsair RM750x is a high-performance power supply boasting full modular cables and 80+ Gold efficiency for quiet operation and less heat generation.',
     stock: 25,
@@ -1401,7 +1401,7 @@ export const products = [
     brand: 'EVGA',
     category: 'Power Supply',
     price: 159.99,
-    image: '/TechTrove-Web-Vue-V1/images/EVGA SuperNOVA 850 G3.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/EVGA SuperNOVA 850 G3.jpg',
     description:
       'The EVGA SuperNOVA 850 G3 provides reliable power with 80+ Gold efficiency, fully modular design, and Eco Mode for ultra-quiet performance.',
     stock: 20,
@@ -1423,7 +1423,7 @@ export const products = [
     brand: 'Seasonic',
     category: 'Power Supply',
     price: 99.9,
-    image: '/TechTrove-Web-Vue-V1/images/Seasonic FOCUS Plus 650 Gold.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Seasonic FOCUS Plus 650 Gold.webp',
     description:
       'The Seasonic FOCUS Plus 650 Gold is a compact, highly reliable power supply with 80+ Gold certification and fully modular cables for easy installation.',
     stock: 25,
@@ -1445,7 +1445,7 @@ export const products = [
     brand: 'ASUS',
     category: 'Power Supply',
     price: 219.99,
-    image: '/TechTrove-Web-Vue-V1/images/ASUS ROG Thor 850.webp',
+    image: '/TechTrove-Web-Vue-V3/images/ASUS ROG Thor 850.webp',
     description:
       'The ASUS ROG Thor 850 is the choice for gamers, featuring 80+ Platinum efficiency, customizable Aura Sync RGB lighting, and an OLED power display.',
     stock: 5,
@@ -1467,7 +1467,7 @@ export const products = [
     brand: 'Cooler Master',
     category: 'Power Supply',
     price: 119.99,
-    image: '/TechTrove-Web-Vue-V1/images/Cooler Master V750.webp',
+    image: '/TechTrove-Web-Vue-V3/images/Cooler Master V750.webp',
     description:
       'Cooler Master V750 offers high efficiency and stability with its 80+ Gold certification and fully modular design, ideal for a variety of PC builds.',
     stock: 15,
@@ -1489,7 +1489,7 @@ export const products = [
     brand: 'Thermaltake',
     category: 'Power Supply',
     price: 209.99,
-    image: '/TechTrove-Web-Vue-V1/images/thermaltake-toughpower-grand-rgb-1050w.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/thermaltake-toughpower-grand-rgb-1050w.jpg',
     description:
       'With 1050W of power, 80+ Platinum certification, and a patented 256-color RGB fan, the Toughpower Grand RGB is a premium PSU for performance PCs.',
     stock: 4,
@@ -1511,7 +1511,7 @@ export const products = [
     brand: 'NZXT',
     category: 'Power Supply',
     price: 109.99,
-    image: '/TechTrove-Web-Vue-V1/images/NZXT C650.webp',
+    image: '/TechTrove-Web-Vue-V3/images/NZXT C650.webp',
     description:
       'The NZXT C650 PSU delivers clean, stable power with 80+ Gold efficiency and a silent operation, perfect for your gaming rig.',
     stock: 35,
@@ -1533,7 +1533,7 @@ export const products = [
     brand: 'Be Quiet!',
     category: 'Power Supply',
     price: 129.9,
-    image: '/TechTrove-Web-Vue-V1/images/Be Quiet! Straight Power 11 650W.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/Be Quiet! Straight Power 11 650W.jpg',
     description:
       'Designed for computer enthusiasts seeking quiet operation, the Be Quiet! Straight Power 11 650W offers exceptional reliability and performance.',
     stock: 21,
@@ -1555,7 +1555,7 @@ export const products = [
     brand: 'Fractal Design',
     category: 'Power Supply',
     price: 139.99,
-    image: '/TechTrove-Web-Vue-V1/images/Fractal Design Ion+ 760P.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/Fractal Design Ion+ 760P.jpg',
     description:
       "Fractal Design's Ion+ 760P is a premium power supply unit with stellar performance, ultra-flexible cables, and 80+ Platinum efficiency.",
     stock: 18,
@@ -1577,7 +1577,7 @@ export const products = [
     brand: 'XPG',
     category: 'Power Supply',
     price: 109.99,
-    image: '/TechTrove-Web-Vue-V1/images/xpg-core-reactor.webp',
+    image: '/TechTrove-Web-Vue-V3/images/xpg-core-reactor.webp',
     description:
       'The XPG Core Reactor 650W is a compact, powerful PSU with 80+ Gold efficiency, suited for gamers and enthusiasts looking for top performance.',
     stock: 24,
@@ -1600,7 +1600,7 @@ export const products = [
     brand: 'Apple',
     category: 'Laptop',
     price: 2399.99,
-    image: '/TechTrove-Web-Vue-V1/images/mac-book.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/mac-book.jpg',
     description:
       'Designed for professionals, the MacBook Pro features a stunning 16-inch Retina display, powerful processors and graphics, and up to 20 hours of battery life.',
     stock: 15,
@@ -1622,7 +1622,7 @@ export const products = [
     brand: 'Dell',
     category: 'Laptop',
     price: 1850.0,
-    image: '/TechTrove-Web-Vue-V1/images/dell-xps-15.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/dell-xps-15.jpg',
     description:
       "With its stunning 4K UHD display, powerful performance from Intel's latest CPUs, and premium construction, the Dell XPS 15 is an ideal choice for power users.",
     stock: 20,
@@ -1644,7 +1644,7 @@ export const products = [
     brand: 'Lenovo',
     category: 'Laptop',
     price: 1429.99,
-    image: '/TechTrove-Web-Vue-V1/images/asus-tuf-gaming-laptop.webp',
+    image: '/TechTrove-Web-Vue-V3/images/asus-tuf-gaming-laptop.webp',
     description:
       'The Lenovo ThinkPad X1 Carbon offers robust security, durability, and performance in an ultralight and thin package, perfect for business professionals.',
     stock: 25,
@@ -1666,7 +1666,7 @@ export const products = [
     brand: 'ASUS',
     category: 'Laptop',
     price: 1799.99,
-    image: '/TechTrove-Web-Vue-V1/images/rog-strix-17-gaming.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/rog-strix-17-gaming.jpg',
     description:
       'The ASUS ROG Zephyrus G15 balances exceptional portability with potent performance, including a high-refresh-rate display and strong gaming capabilities.',
     stock: 18,
@@ -1688,7 +1688,7 @@ export const products = [
     brand: 'ASUS',
     category: 'Laptop',
     price: 2899.99,
-    image: '/TechTrove-Web-Vue-V1/images/asus-rog-zephyrus-duo-15.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/asus-rog-zephyrus-duo-15.jpg',
     description:
       'The ASUS ROG Zephyrus Duo 15 features an innovative dual-screen design, high-end performance hardware, and exceptional cooling for a top-tier gaming experience.',
     stock: 10,
@@ -1710,7 +1710,7 @@ export const products = [
     brand: 'Dell Alienware',
     category: 'Laptop',
     price: 2229.99,
-    image: '/TechTrove-Web-Vue-V1/images/alienware-area-51m.webp',
+    image: '/TechTrove-Web-Vue-V3/images/alienware-area-51m.webp',
     description:
       'The Alienware Area-51m R2 is designed for gamers seeking desktop-level power in a laptop form-factor, featuring upgradable components and a bold design.',
     stock: 12,
@@ -1732,7 +1732,7 @@ export const products = [
     brand: 'MSI',
     category: 'Laptop',
     price: 1999.99,
-    image: '/TechTrove-Web-Vue-V1/images/msi-ge66-raider.webp',
+    image: '/TechTrove-Web-Vue-V3/images/msi-ge66-raider.webp',
     description:
       'The MSI GE66 Raider delivers a powerful punch with its high performance components and custom RGB lighting, making it a hit among gamers.',
     stock: 14,
@@ -1754,7 +1754,7 @@ export const products = [
     brand: 'Razer',
     category: 'Laptop',
     price: 2599.99,
-    image: '/TechTrove-Web-Vue-V1/images/razer-blade-pro-17.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/razer-blade-pro-17.jpg',
     description:
       'The Razer Blade Pro 17 is a premium gaming laptop that offers a blend of portability, sleek design, and high-end performance for demanding users.',
     stock: 8,
@@ -1776,7 +1776,7 @@ export const products = [
     brand: 'HP',
     category: 'Laptop',
     price: 1599.99,
-    image: '/TechTrove-Web-Vue-V1/images/hp-omen-15.webp',
+    image: '/TechTrove-Web-Vue-V3/images/hp-omen-15.webp',
     description:
       'The HP Omen 15 is a well-rounded gaming laptop offering powerful specs, a sleek design, and a high refresh rate display for a smoother gaming experience.',
     stock: 16,
@@ -1798,7 +1798,7 @@ export const products = [
     brand: 'Acer',
     category: 'Laptop',
     price: 1299.99,
-    image: '/TechTrove-Web-Vue-V1/images/acer-predator-helios-300.jpg',
+    image: '/TechTrove-Web-Vue-V3/images/acer-predator-helios-300.jpg',
     description:
       'The Acer Predator Helios 300 is a popular choice among gamers for its performance at a competitive price point, featuring customizable RGB lighting.',
     stock: 20,
@@ -1820,7 +1820,7 @@ export const products = [
     brand: 'Lenovo',
     category: 'Laptop',
     price: 1799.99,
-    image: '/TechTrove-Web-Vue-V1/images/lenovo-legion-5-pro.webp',
+    image: '/TechTrove-Web-Vue-V3/images/lenovo-legion-5-pro.webp',
     description:
       'The Lenovo Legion 5 Pro offers a superb balance between work and play, equipped with top-tier hardware and an impressive display with high resolution and refresh rate.',
     stock: 10,
@@ -1842,7 +1842,7 @@ export const products = [
     brand: 'Gigabyte',
     category: 'Laptop',
     price: 2199.99,
-    image: '/TechTrove-Web-Vue-V1/images/gigabyte-aorus-17g.webp',
+    image: '/TechTrove-Web-Vue-V3/images/gigabyte-aorus-17g.webp',
     description:
       'The Gigabyte AORUS 17G stands out with its mechanical keyboard in a portable form factor, along with impressive specs designed for intense gaming sessions.',
     stock: 6,
@@ -1864,7 +1864,7 @@ export const products = [
     brand: 'Gigabyte',
     category: 'Kitten',
     price: 2199.99,
-    image: '/TechTrove-Web-Vue-V1/images/gigabyte-aorus-17g.webp',
+    image: '/TechTrove-Web-Vue-V3/images/gigabyte-aorus-17g.webp',
     description:
       'The Gigabyte AORUS 17G stands out with its mechanical keyboard in a portable form factor, along with impressive specs designed for intense gaming sessions.',
     stock: 6,

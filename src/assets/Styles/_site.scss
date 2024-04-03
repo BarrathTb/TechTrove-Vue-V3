@@ -381,7 +381,7 @@ select.select-input {
     border-color 0.3s ease;
 
   &:hover {
-    background-color: darken(white, 10%) 0.5s ease;
+    background-color: darken(white, 10%);
     border-color: darken(white, 10%) 0.5s ease;
     transform: translateY(-5px) 0.5s ease;
     color: $custom-primary;
