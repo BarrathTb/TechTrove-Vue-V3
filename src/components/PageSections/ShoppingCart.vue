@@ -23,24 +23,27 @@
                       </tr>
                     </thead>
                     <tbody class="mx-auto">
-                      <tr
-                        v-for="(item, index) in cartItems"
-                        :key="item.id"
-                        class="align-items-center mx-auto"
-                      >
+                      <tr v-for="item in cart.cartItems" :key="item.product.id">
                         <td>
-                          <img :src="item.image" :alt="item.name" class="cartImage mx-2 my-2" />
+                          <img
+                            :src="item.product.image"
+                            :alt="item.product.name"
+                            class="cartImage mx-2 my-2"
+                          />
                         </td>
-                        <td>{{ item.name }}</td>
-                        <td>${{ item.price.toFixed(2) }}</td>
+                        <td>{{ item.product.name }}</td>
+                        <td>${{ item.product.price.toFixed(2) }}</td>
                         <td>{{ item.quantity }}</td>
-                        <td>${{ (item.price * item.quantity).toFixed(2) }}</td>
+                        <td>${{ (item.product.price * item.quantity).toFixed(2) }}</td>
                         <td style="vertical-align: middle">
                           <div class="d-flex align-items-center justify-content-center mx-2 gap-2">
-                            <button class="border-0 bg-transparent" @click="editItem(index)">
+                            <button class="border-0 bg-transparent" @click="editItem(item.product)">
                               <i class="bi bi-pencil icon-light fs-4"></i>
                             </button>
-                            <button class="border-0 bg-transparent" @click="removeCartItem(index)">
+                            <button
+                              class="border-0 bg-transparent"
+                              @click="removeCartItem(item.product)"
+                            >
                               <i class="bi bi-trash fs-4 icon-danger"></i>
                             </button>
                           </div>
@@ -77,35 +80,41 @@
           </div>
         </div>
       </section>
+      <shipping-section @toggle-shipping="toggleShippingVisibility" />
     </div>
   </transition>
 </template>
 
 <script>
+import CartCollection from '@/models/Cart.js'
+import ShippingSection from './ShippingSection.vue'
 export default {
   name: 'ShoppingCart',
-  components: {},
+  components: {
+    ShippingSection
+  },
 
   props: {
-    cartItems: Array
+    cart: {
+      type: CartCollection,
+      required: true
+    }
   },
   data() {
     return {
-      products: Array,
-      wishlistItems: []
+      // cartVisible: false,
+      shippingVisible: false
     }
   },
 
   computed: {
     cartTotal() {
-      const total = this.cartItems.reduce((total, item) => {
-        return total + item.price * item.quantity
-      }, 0)
-      return total.toFixed(2)
+      // Use the 'total' getter from CartCollection
+      return this.cart.total.toFixed(2)
     },
 
     cartItemCount() {
-      return this.cartItems.reduce((count, item) => count + item.quantity, 0)
+      return this.cart.cartItems.reduce((count, item) => count + item.quantity, 0)
     }
   },
 
@@ -115,33 +124,27 @@ export default {
       this.cartVisible = !this.cartVisible
     },
     toggleShippingVisibility() {
-      this.$emit('toggle-shipping')
+      this.shippingVisible = !this.shippingVisible
     },
     updateCart() {
       this.$emit('update-cart-count', this.cartItemCount)
     },
 
-    removeCartItem(index) {
-      this.$emit('remove-cart-item', index)
+    removeCartItem(item) {
+      this.$emit('remove-cart-item', item)
     },
-    editItem(index) {
-      this.$emit('edit-item', index)
+    editItem(item) {
+      this.$emit('edit-item', item)
     },
 
-    addToCart(item) {
-      const productToAdd = item.product || item
-      const quantityToAdd = item.quantity || 1
+    addToCart(item, quantity = 1) {
+      this.cart.addItem(item, quantity) // Call the addItem of CartCollection
+      this.updateCart() // Update the cart count after adding the item
 
-      const foundIndex = this.cartItems(
-        (cartItem) => cartItem.id === productToAdd.id && cartItem.quantity === quantityToAdd
-      )
-
-      if (foundIndex !== -1) {
-        this.$emit('update-cart', this.cartItems)
-      }
+      this.$emit('update-cart')
     },
     clearCart() {
-      this.$emit('update-cart', this.cartItems)
+      this.cart.clearCart() // Use clearCart method from CartCollection
     },
     addToWishlist(product) {
       if (!this.wishlistItems.find((item) => item.id === product.id)) {
@@ -152,8 +155,11 @@ export default {
       this.wishlistItems.splice(index, 1)
     },
     moveToCart(wishlistItem) {
-      this.addToCart({ product: wishlistItem, quantity: 1 })
-      this.removeFromWishlist(this.wishlistItems.indexOf(wishlistItem))
+      this.addToCart(wishlistItem)
+      const wishlistIndex = this.wishlistItems.findIndex((item) => item.id === wishlistItem.id)
+      if (wishlistIndex !== -1) {
+        this.removeFromWishlist(wishlistIndex)
+      }
     }
   }
 }

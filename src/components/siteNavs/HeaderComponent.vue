@@ -48,18 +48,6 @@
 
           <!-- Cart and Login Icons -->
           <div class="d-none d-md-flex justify-content-end align-items-center flex-grow-1 pe-4">
-            <button @click="toggleWishlistVisibility" class="nav-link border-0 bg-transparent">
-              <i class="bi bi-heart fs-4 mb-2 mx-2 icon-success">
-                <VaBadge
-                  v-if="wishItemCount > 0"
-                  :text="wishItemCount.toString()"
-                  overlap
-                  placement="top-end"
-                  color="danger"
-                ></VaBadge>
-              </i>
-            </button>
-
             <button @click="toggleCartVisibility" class="nav-link border-0 bg-transparent">
               <i class="bi bi-cart fs-4 mb-2 mx-2 icon-success">
                 <VaBadge
@@ -353,12 +341,6 @@ export default {
 
     toggleCartVisibility() {
       this.$emit('toggle-cart')
-      if (this.windowWidth < 768) {
-        this.toggleOffcanvasVisibility()
-      }
-    },
-    toggleWishlistVisibility() {
-      this.$emit('toggle-wish')
       if (this.windowWidth < 768) {
         this.toggleOffcanvasVisibility()
       }

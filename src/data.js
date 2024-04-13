@@ -1,3 +1,5 @@
+import Product from './models/Product'
+
 export const products = [
   {
     id: 1,
@@ -1857,27 +1859,5 @@ export const products = [
       '32GB RAM and 512GB PCIe SSD',
       'OMRON mechanical key switches'
     ]
-  },
-  {
-    id: 81,
-    name: 'Gigabyte AORUS 17G',
-    brand: 'Gigabyte',
-    category: 'Kitten',
-    price: 2199.99,
-    image: '/TechTrove-Web-Vue-V3/images/gigabyte-aorus-17g.webp',
-    description:
-      'The Gigabyte AORUS 17G stands out with its mechanical keyboard in a portable form factor, along with impressive specs designed for intense gaming sessions.',
-    stock: 6,
-    ratings: {
-      average: 4.4,
-      totalReviews: 52
-    },
-    features: [
-      '17.3-inch FHD 300Hz display',
-      '10th Gen Intel Core i7/i9 processors',
-      'NVIDIA GeForce RTX 3080 GPU',
-      '32GB RAM and 512GB PCIe SSD',
-      'OMRON mechanical key switches'
-    ]
   }
-]
+].map((productData) => new Product(productData))

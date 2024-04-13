@@ -42,6 +42,7 @@ export default {
     },
     // This function creates an <iframe> (and YouTube player) after the API code downloads.
     onYouTubeIframeAPIReady() {
+      var YT = window.YT
       this.player = new YT.Player('player', {
         height: '100%',
         width: '100%',
@@ -76,6 +77,7 @@ export default {
     },
 
     onPlayerStateChange(event) {
+      const YT = window.YT
       if (event.data === YT.PlayerState.PLAYING) {
         const currentTime = event.target.getCurrentTime()
         if (currentTime >= this.loopEnd) {

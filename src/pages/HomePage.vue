@@ -1,61 +1,50 @@
 <template>
-  <router-view>
-    <HeaderComponent
-      :products="allProducts"
-      @search="performSearch"
-      @load-product-cards="filterProducts"
-      @toggle-cart="toggleCartVisibility"
-      @toggle-wish="toggleWishlistVisibility"
-      @toggle-blog="toggleBlogVisibility"
-      @toggle-build="toggleBuildVisibility"
-      @toggle-support="toggleSupportVisibility"
-      @toggle-builder-zone="toggleBuilderZoneVisibility"
-      @toggle-board="toggleMessageBoard"
-      :cart-item-count="cartItemCount"
-      :wish-item-count="wishItemCount"
-      @update-cart-count="updateCartItemCount"
-    />
-    <ShoppingCart
-      class="shopping-cart"
-      :cart-items="cartItems"
-      v-if="cartVisible"
-      @remove-cart-item="removeCartItem"
-      @update-cart="updateCart"
-      @edit-item="editIteminCart"
-      @toggle-shipping="toggleShippingVisibility"
-    />
-    <WishListSection
-      :wishlistItems="wishlistItems"
-      :wish-items="wishItems"
-      @remove-wishlist-item="handleRemoveWishlistItem"
-      @move-to-cart="handleMoveToCart"
-    />
-    <ShippingSection v-show="shippingVisible" />
-    <BuilderZone v-show="builderZoneVisible" />
-    <BlogSection v-show="blogVisible" />
-    <SupportSection v-show="isSupportVisible" />
-    <MessageBoard :products="allProducts" v-show="boardVisible" />
-    <PcBuilder
-      :products="allProducts"
-      v-show="buildVisible"
-      @add-to-cart="addToCart"
-      @toggle-build="closeBuilder"
-    />
-    <ProductDetailModal
-      :product="selectedProduct"
-      :wishlistItems="wishlistItems"
-      :initialQuantity="selectedProductQuantity"
-      :isEditMode="isEditModal"
-      v-model="detailsVisible"
-      @add-to-cart="addToCart"
-      @update-cart-item="updateCartItem"
-      @toggle-wishlist="toggleWishlistItem"
-    />
+  <HeaderComponent
+    :products="allProducts"
+    @search="performSearch"
+    @load-product-cards="filterProducts"
+    @toggle-cart="toggleCartVisibility"
+    @toggle-blog="toggleBlogVisibility"
+    @toggle-build="toggleBuildVisibility"
+    @toggle-support="toggleSupportVisibility"
+    @toggle-builder-zone="toggleBuilderZoneVisibility"
+    @toggle-board="toggleMessageBoard"
+    :cart-item-count="cartItemCount"
+    @update-cart-count="updateCartItemCount"
+  />
+  <ShoppingCart
+    class="shopping-cart"
+    :cart="cart"
+    v-if="cartVisible"
+    @remove-cart-item="removeCartItem"
+    @update-cart="updateCart"
+    @edit-item="editIteminCart"
+    @toggle-Shipping="toggleShippingVisibility"
+  />
+  <BuilderZone v-show="builderZoneVisible" />
+  <BlogSection v-show="blogVisible" />
+  <SupportSection v-show="isSupportVisible" />
+  <MessageBoard :products="allProducts" v-show="boardVisible" />
+  <PcBuilder
+    :products="allProducts"
+    v-show="buildVisible"
+    @add-to-cart="addToCart"
+    @toggle-build="closeBuilder"
+  />
+  <ProductDetailModal
+    :product="selectedProduct"
+    :initialQuantity="selectedProductQuantity"
+    :isEditMode="isEditModal"
+    v-model="detailsVisible"
+    @add-to-cart="addToCart"
+    @update-cart-item="updateCartItem"
+    :cart="cart"
+  />
 
-    <HeroImage />
+  <HeroImage />
 
-    <ProductCarousel :products="filteredProducts" @view-details="handleViewDetails" />
-  </router-view>
+  <ProductCarousel :products="filteredProducts" @view-details="handleViewDetails" />
+
   <AppFooter />
 </template>
 
@@ -67,21 +56,18 @@ import HeroImage from '@/components/PageSections/HeroImage.vue'
 import MessageBoard from '@/components/PageSections/MessageBoard.vue'
 import PcBuilder from '@/components/PageSections/PcBuilder.vue'
 import ProductCarousel from '@/components/PageSections/ProductCarousel.vue'
-import ShippingSection from '@/components/PageSections/ShippingSection.vue'
 import ShoppingCart from '@/components/PageSections/ShoppingCart.vue'
 import SupportSection from '@/components/PageSections/SupportSection.vue'
-import WishListSection from '@/components/PageSections/WishListSection.vue'
 import ProductDetailModal from '@/components/modals/ProductDetailModal.vue'
 import HeaderComponent from '@/components/siteNavs/HeaderComponent.vue'
 import { products } from '@/data.js'
+import CartCollection from '@/models/Cart.js'
 
 export default {
   components: {
     HeaderComponent,
     ShoppingCart,
-    WishListSection,
     BlogSection,
-    ShippingSection,
     MessageBoard,
     SupportSection,
     PcBuilder,
@@ -93,19 +79,16 @@ export default {
   },
   data() {
     return {
+      shippingVisibility: false,
       activeCategory: null,
       activeBrand: null,
       boardVisible: false,
-      wishVisible: false,
       builderZoneVisible: false,
       selectedProductQuantity: 0,
       isEditModal: false,
       cartItemCount: 0,
-      wishItemCount: 0,
-      cartItems: [],
-      wishlistItems: [],
+      cart: new CartCollection(),
       isSupportVisible: false,
-      shippingVisible: false,
       quantity: 1,
       detailsVisible: false,
       selectedProduct: null,
@@ -122,21 +105,12 @@ export default {
   },
   mounted() {
     this.loadCart()
-    this.loadWish()
   },
   watch: {
-    cartItems: {
+    'cart.cartItems': {
       handler() {
         this.saveCart()
         this.updateCartItemCount()
-      },
-      deep: true,
-      immediate: false
-    },
-    wishItems: {
-      handler() {
-        this.saveWish()
-        this.updateWishItemCount()
       },
       deep: true,
       immediate: false
@@ -147,69 +121,94 @@ export default {
     loadCart() {
       const storedCart = localStorage.getItem('cartItems')
       if (storedCart) {
-        this.cartItems = JSON.parse(storedCart)
-      }
-    },
-    loadWish() {
-      const storedWish = localStorage.getItem('wishListItems')
-      if (storedWish) {
-        this.wishListItems = JSON.parse(storedWish)
-      }
-    },
-    saveCart() {
-      localStorage.setItem('cartItems', JSON.stringify(this.cartItems))
-    },
-    saveWish() {
-      localStorage.setItem('wishListItems', JSON.stringify(this.wishListItems))
-    },
+        const cartData = JSON.parse(storedCart)
 
-    removeCartItem(index) {
-      if (index !== -1) {
-        this.cartItems.splice(index, 1)
-      }
-    },
-    addToCart(item) {
-      const product = item.product ? item.product : item
-      const quantity = item.quantity ? item.quantity : 1
+        console.log('Loaded cart data:', cartData)
 
-      const existingItemIndex = this.cartItems.findIndex((cartItem) => cartItem.id === product.id)
-      console.log(existingItemIndex)
-
-      if (existingItemIndex !== -1) {
-        this.cartItems[existingItemIndex].quantity += quantity
+        cartData.forEach((productData, index) => {
+          if (productData && productData.product && 'id' in productData.product) {
+            const productInstance = this.products.find((p) => p.id === productData.product.id)
+            if (productInstance) {
+              this.cart.addItem(productInstance, productData.quantity)
+            } else {
+              console.error(`Could not find product with ID ${productData.product.id}`)
+            }
+          } else {
+            console.error(`Invalid product data at index ${index}:`, productData)
+          }
+        })
       } else {
-        this.cartItems.push({ ...product, quantity: quantity })
+        console.log('No cart found in localStorage.')
       }
+    },
 
-      this.cartVisible = true
+    saveCart() {
+      localStorage.setItem('cartItems', JSON.stringify(this.cart.cartItems))
+    },
 
-      this.scrollToCart()
+    removeCartItem(productId) {
+      try {
+        this.cart.removeItem(productId)
+        this.saveCart()
+        this.updateCartItemCount()
+      } catch (error) {
+        alert(error.message)
+      }
+    },
+    addToCart(product) {
+      try {
+        this.cart.addItem(product)
+        this.saveCart()
+
+        this.toggleCartVisibility()
+
+        this.scrollToCart()
+      } catch (error) {
+        alert(error.message)
+      }
     },
     updateCart(updatedCartItems) {
-      this.cartItems = updatedCartItems
+      this.cart.cartItems = updatedCartItems
       this.updateCartItemCount()
     },
-    editIteminCart(index) {
-      const item = this.cartItems[index]
-      this.selectedProduct = item.product || item
-      this.selectedProductQuantity = item.quantity || 1
-      this.isEditModal = true
-      this.detailsVisible = true
+    editIteminCart(item) {
+      // Assuming you want to edit the quantity of a cart item when editing
+      try {
+        this.cart.editItem(item.product, item.quantity) // This is calling the 'editItem' method correctly
+        this.isEditModal = true
+        this.detailsVisible = true
+        this.saveCart()
+      } catch (error) {
+        alert(error.message)
+      }
     },
     updateCartItem(item) {
-      const index = this.cartItems.findIndex((cartItem) => cartItem.id === item.product.id)
+      try {
+        // Update the usage here to call the correct method, which is 'updateQuantity'
+        this.cart.updateQuantity(item.product.id, item.quantity)
 
-      if (index >= 0) {
-        this.cartItems[index].quantity = item.quantity
-        this.updateCart(this.cartItems)
+        // There seems to be additional logic referring to 'this.cartItems' and 'this.updateCart'
+        // Please verify if these parts are relevant and correctly placed in the expected scope
+
+        // The following code block may not be necessary if you are already watching the cart items
+        // in another component to handle updates, or if updateQuantity method already covers this logic.
+        const index = this.cart.cartItems.findIndex((cartItem) => cartItem.id === item.product.id)
+
+        if (index >= 0) {
+          this.cart.cartItems[index].quantity = item.quantity
+          // Ensure 'updateCart' is an existing and correct method for updating the cart view.
+          this.updateCart(this.cart.cartItems)
+        }
+
+        this.handleViewDetails(item)
+        this.isEditModal = false
+      } catch (error) {
+        alert(error.message)
       }
-
-      this.detailsVisible = false
-      this.isEditModal = false
     },
 
     updateCartItemCount() {
-      this.cartItemCount = this.cartItems.reduce((total, item) => total + item.quantity, 0)
+      this.cartItemCount = this.cart.cartItems.reduce((total, item) => total + item.quantity, 0)
     },
 
     calculateUniqueCategories(products) {
@@ -287,9 +286,6 @@ export default {
     toggleCartVisibility() {
       this.cartVisible = !this.cartVisible
     },
-    toggleWishlistVisibility() {
-      this.wishVisible = !this.wishVisible
-    },
     toggleBlogVisibility() {
       this.blogVisible = !this.blogVisible
     },
@@ -303,7 +299,7 @@ export default {
       this.isSupportVisible = !this.isSupportVisible
     },
     toggleShippingVisibility() {
-      this.shippingVisible = !this.shippingVisible
+      this.isShippingVisible = !this.isShippingVisible
     },
 
     handleViewDetails(product) {
@@ -322,27 +318,6 @@ export default {
           )
         }
       })
-    },
-    toggleWishlistItem({ product, isFavorite }) {
-      if (isFavorite) {
-        // Remove the item from the wishlist
-        const index = this.wishlistItems.findIndex((item) => item.id === product.id)
-        if (index !== -1) {
-          this.wishlistItems.splice(index, 1)
-        }
-      } else {
-        // Add the item to the wishlist
-        if (!this.wishlistItems.some((item) => item.id === product.id)) {
-          this.wishlistItems.push(product)
-        }
-      }
-    },
-    handleRemoveWishlistItem(index) {
-      this.wishlistItems.splice(index, 1)
-    },
-    handleMoveToCart(item) {
-      this.addToCart({ product: item })
-      this.handleRemoveWishlistItem(this.wishlistItems.indexOf(item))
     }
   }
 }

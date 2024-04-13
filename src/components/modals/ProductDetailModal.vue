@@ -25,19 +25,11 @@
             <div class="col-3 text-right">
               <input
                 type="checkbox"
-                :checked="isProductInWishlist(product)"
                 id="heartCheckbox"
                 v-model="isFavorite"
-                @change="toggleWishlistItem({ product, isFavorite: $event.target.checked })"
                 class="hidden-checkbox"
               />
-
-              <label
-                for="heartCheckbox"
-                class="heart"
-                :class="{ 'is-favorite': isFavorite }"
-                @click="addToWishlist"
-              ></label>
+              <label for="heartCheckbox" class="heart"></label>
             </div>
           </div>
           <p class="text-white">{{ productFormattedPrice }}</p>
@@ -96,8 +88,8 @@
 </template>
 
 <script>
+import CartCollection from '@/models/Cart.js'
 import { VaInput, VaModal } from 'vuestic-ui'
-
 export default {
   name: 'ProductDetailModal',
   components: {
@@ -108,17 +100,22 @@ export default {
   props: {
     product: {
       type: Object,
-      default: () => ({}),
       required: false
     },
-    isEditMode: Boolean,
+    cart: {
+      type: CartCollection,
+      required: false
+    },
+    isEditMode: {
+      type: Boolean,
+      default: false
+    },
     initialQuantity: {
       type: Number,
       default: 1
-    },
-    wishListItems: Array
+    }
   },
-  emits: ['update:modelValue', 'add-to-cart', 'toggle-wishlist'],
+  emits: ['update:modelValue', 'add-to-cart'],
   data() {
     return {
       detailsVisible: false,
@@ -141,26 +138,9 @@ export default {
   watch: {
     initialQuantity(newQty) {
       this.quantity = newQty
-    },
-    product(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        this.checkIfProductIsFavorite()
-      }
-    },
-    wishlistItems: {
-      handler() {
-        this.checkIfProductIsFavorite()
-      },
-      deep: true
     }
   },
-  mounted() {
-    this.checkIfProductIsFavorite()
-  },
   methods: {
-    checkIfProductIsFavorite() {
-      this.isFavorite = this.wishlistItems.some((item) => item.id === this.product.id)
-    },
     closeModal() {
       this.detailsVisible = false
       this.$emit('update:modelValue', false)
@@ -181,36 +161,29 @@ export default {
       }
     },
     updateCartItem() {
-      this.$emit('update-cart-item', { product: this.product, quantity: this.quantity })
-      this.closeModal()
+      try {
+        this.cart.updateQuantity(this.product, this.quantity)
+        this.closeModal()
+        this.cartVisible = true
+        this.scrollToCart()
+      } catch (error) {
+        console.log(error)
+      }
     },
     addToCart() {
-      this.$emit('add-to-cart', { product: this.product, quantity: this.quantity })
-      console.log({ product: this.product, quantity: this.quantity })
-      this.closeModal()
-      this.scrollToCart()
+      try {
+        this.cart.addItem(this.product, this.quantity)
+        this.closeModal()
+        this.cartVisible = true
+        this.scrollToCart()
+      } catch (error) {
+        console.error(error.message)
+      }
     },
     scrollToCart() {
       const cartElement = document.getElementById('shopping-cart')
       if (cartElement) {
         cartElement.scrollIntoView({ behavior: 'smooth' })
-      }
-    },
-    isProductInWishlist(product) {
-      return this.wishlistItems.some((item) => item.id === product.id)
-    },
-    toggleWishlistItem({ product, isFavorite }) {
-      if (isFavorite) {
-        // Adding to the wishlist
-        if (!this.isProductInWishlist(product)) {
-          this.wishlistItems.push(product)
-        }
-      } else {
-        // Removing from the wishlist
-        const index = this.wishlistItems.findIndex((item) => item.id === product.id)
-        if (index !== -1) {
-          this.wishlistItems.splice(index, 1)
-        }
       }
     }
   }
@@ -243,10 +216,5 @@ export default {
 
 .hidden-checkbox:checked + .heart {
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M24.8,47l-2.9-2.7C9.6,31.1,1,22.9,1,14.5C1,7.1,6.6,1,13.4,1c4.3,0,8.1,2.2,10.6,5.7C26,3.2,29.8,1,34.1,1C40.9,1,46.5,7.1,46.5,14.5c0,8.5-8.6,16.6-20.9,30L24.8,47z" fill="%23FF0000"/></svg>');
-}
-
-.product-detail-modal {
-  position: relative;
-  z-index: 1050;
 }
 </style>
