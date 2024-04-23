@@ -36,19 +36,20 @@ body {
   overflow-x: hidden;
 }
 
-main {
-  min-height: calc(100vh - 70px - 30px);
-}
+// main {
+//   min-height: calc(100vh - 70px - 30px);
+// }
 
 .container {
   width: 100vw;
 }
 
-.header-main .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+// .header-main .navbar {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+// }
+
 .nav-tabs {
   .nav-item {
     display: block;
@@ -490,8 +491,6 @@ select.select-input {
   display: flex;
 }
 .product-card {
-  padding: 1rem;
-
   &:hover {
     background-color: darken($custom-primary, 10%) 0.5s ease;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2) 0.5s ease;
@@ -518,8 +517,6 @@ select.select-input {
   }
 }
 .card.product-card {
-  padding: 1rem;
-
   &:hover {
     background-color: darken($custom-primary, 10%) 0.5s ease;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2) 0.5s ease;
@@ -561,21 +558,6 @@ select.select-input {
   height: 38vh;
 }
 
-.product-card .card-img-contain {
-  height: 220px;
-  max-width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.product-card .card-img-top {
-  width: auto;
-  max-width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .icon-success {
   color: white;
   transform: translateY(-5px) 0.5s ease;
@@ -605,14 +587,6 @@ select.select-input {
   &:active {
     transform: scale(0.9) 0.5s ease;
   }
-}
-
-.card-img-top {
-  border-radius: 10px;
-  max-height: 250px;
-  max-width: 250px;
-  object-fit: contain;
-  margin: auto;
 }
 
 .modal.pill {
@@ -880,5 +854,5 @@ select.select-input {
 }
 
 .login-modal {
-  z-index: 999;
+  z-index: 999 important;
 }

@@ -12,6 +12,7 @@
     :cart-item-count="cartItemCount"
     @update-cart-count="updateCartItemCount"
   />
+
   <ShoppingCart
     class="shopping-cart"
     :cart="cart"
@@ -31,7 +32,16 @@
     @add-to-cart="addToCart"
     @toggle-build="closeBuilder"
   />
+
+  <HeroImage />
+
+  <CardCarousel :items="filteredProducts">
+    <template v-slot:item="{ item }">
+      <ProductCard :key="item.id" :product="item" @view-details="handleViewDetails" />
+    </template>
+  </CardCarousel>
   <ProductDetailModal
+    class="product-detail-modal"
     :product="selectedProduct"
     :initialQuantity="selectedProductQuantity"
     :isEditMode="isEditModal"
@@ -40,11 +50,6 @@
     @update-cart-item="updateCartItem"
     :cart="cart"
   />
-
-  <HeroImage />
-
-  <ProductCarousel :products="filteredProducts" @view-details="handleViewDetails" />
-
   <AppFooter />
 </template>
 
@@ -52,10 +57,11 @@
 import AppFooter from '@/components/PageSections/AppFooter.vue'
 import BlogSection from '@/components/PageSections/BlogSection.vue'
 import BuilderZone from '@/components/PageSections/BuilderZone.vue'
+import CardCarousel from '@/components/PageSections/CardCarousel.vue'
 import HeroImage from '@/components/PageSections/HeroImage.vue'
 import MessageBoard from '@/components/PageSections/MessageBoard.vue'
 import PcBuilder from '@/components/PageSections/PcBuilder.vue'
-import ProductCarousel from '@/components/PageSections/ProductCarousel.vue'
+import ProductCard from '@/components/PageSections/ProductCard.vue'
 import ShoppingCart from '@/components/PageSections/ShoppingCart.vue'
 import SupportSection from '@/components/PageSections/SupportSection.vue'
 import ProductDetailModal from '@/components/modals/ProductDetailModal.vue'
@@ -74,8 +80,9 @@ export default {
     ProductDetailModal,
     BuilderZone,
     AppFooter,
-    ProductCarousel,
-    HeroImage
+    CardCarousel,
+    HeroImage,
+    ProductCard
   },
   data() {
     return {
@@ -95,8 +102,8 @@ export default {
       cartVisible: false,
       blogVisible: false,
       buildVisible: false,
-      products: products,
-      searchQuery: '',
+      items: products,
+      searchTerm: '',
       uniqueCategories: this.calculateUniqueCategories(products),
       uniqueBrands: this.calculateUniqueBrands(products),
       allProducts: products,
@@ -126,7 +133,12 @@ export default {
         console.log('Loaded cart data:', cartData)
 
         cartData.forEach((productData, index) => {
-          if (productData && productData.product && 'id' in productData.product) {
+          // Fix the 'in' operator issue
+          if (
+            productData &&
+            productData.product &&
+            Object.prototype.hasOwnProperty.call(productData.product, 'id')
+          ) {
             const productInstance = this.products.find((p) => p.id === productData.product.id)
             if (productInstance) {
               this.cart.addItem(productInstance, productData.quantity)
@@ -248,32 +260,32 @@ export default {
     },
     performSearch(query) {
       if (typeof query !== 'string' || !query.trim()) {
-        return { products: this.products, searchQuery: '' }
+        return { products: this.products, searchTerm: '' }
       }
 
-      this.searchQuery = query.trim().toLowerCase()
+      this.searchTerm = query.trim().toLowerCase()
 
       try {
         this.filteredProducts = this.allProducts.filter((product) => {
           return (
-            (product.name && product.name.toLowerCase().includes(this.searchQuery)) ||
-            (product.description && product.description.toLowerCase().includes(this.searchQuery)) ||
-            (product.brand && product.brand.toLowerCase().includes(this.searchQuery)) ||
-            (product.category && product.category.toLowerCase().includes(this.searchQuery))
+            (product.name && product.name.toLowerCase().includes(this.searchTerm)) ||
+            (product.description && product.description.toLowerCase().includes(this.searchTerm)) ||
+            (product.brand && product.brand.toLowerCase().includes(this.searchTerm)) ||
+            (product.category && product.category.toLowerCase().includes(this.searchTerm))
           )
         })
 
         if (this.filteredProducts.length === 0) {
           alert('No results found. Showing all products.')
           // Return all products since no results matched the search query.
-          return { products: this.allProducts, searchQuery: this.searchQuery }
+          return { products: this.allProducts, searchTerm: this.searchTerm }
         }
 
         // Return the filtered list of products and the search query.
-        return { products: this.filteredProducts, searchQuery: this.searchQuery }
+        return { products: this.filteredProducts, searchTerm: this.searchTerm }
       } catch (error) {
         console.error('Error occurred during search:', error)
-        return { products: this.allProducts, searchQuery: this.searchQuery }
+        return { products: this.allProducts, searchTerm: this.searchTerm }
       }
     },
     toggleBuilderZoneVisibility() {
@@ -307,6 +319,12 @@ export default {
       this.detailsVisible = true
       console.log(this.selectedProduct)
     },
+    // handleViewDetails(product) {
+    //   // Handle view details event here
+    //   console.log('Product details:', product)
+    //   // Optionally emit an event if the parent component needs to be notified
+    //   this.$emit('view-details', product)
+    // },
     scrollToCart() {
       this.$nextTick(() => {
         const cartElement = document.getElementById('shopping-cart')
@@ -325,5 +343,8 @@ export default {
 <style>
 .login-modal {
   z-index: 300;
+}
+.product-detail-modal {
+  z-index: 900;
 }
 </style>

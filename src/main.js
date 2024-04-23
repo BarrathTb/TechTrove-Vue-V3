@@ -8,14 +8,15 @@ import '@quasar/extras/themify/themify.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
+import 'bootstrap'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.min.css'
+import { Quasar } from 'quasar'
+import { createVuestic } from 'vuestic-ui'
 import 'vuestic-ui/css'
 import './assets/Styles/_site.scss'
 import './assets/main.css'
-
-import 'bootstrap'
-import { Quasar } from 'quasar'
-import { createVuestic } from 'vuestic-ui'
 import router from './router/index.js'
 import Scrollbar from './smooth-scrollbar-plugin.js'
 
@@ -69,5 +70,5 @@ app.use(Quasar, {
 app.use(vuestic)
 app.use(router)
 app.use(Scrollbar)
-
+app.use(ElementPlus)
 app.mount('#app')

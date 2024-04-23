@@ -125,13 +125,13 @@ export default {
   emits: ['toggle-login-modal'],
   data() {
     return {
-      searchQuery: ''
+      searchTerm: ''
     }
   },
   methods: {
     performSearch(event) {
       event.preventDefault()
-      this.$emit('search', this.searchQuery)
+      this.$emit('search', this.searchTerm)
     },
 
     toggleLoginModal() {

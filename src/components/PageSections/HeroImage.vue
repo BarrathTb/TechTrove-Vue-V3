@@ -199,11 +199,12 @@ export default {
     background-size: cover;
     position: relative;
     width: 100vw;
-    height: 25vh;
+    height: 20vh;
+    animation-duration: 2000ms smooth;
   }
 }
 
-@keyframes slideGradient {
+/* @keyframes slideGradient {
   0% {
     background-position: 100% center;
   }
@@ -211,9 +212,9 @@ export default {
   100% {
     background-position: 0% center;
   }
-}
+} */
 
-.rainbow-text-animate {
+/* .rainbow-text-animate {
   background: linear-gradient(
     90deg,
     red,
@@ -237,30 +238,38 @@ export default {
   animation: slideGradient 15s linear infinite;
   -webkit-text-fill-color: transparent;
   display: inline-block;
+} */
+
+.rainbow-text-animate {
+  background: radial-gradient(
+    circle closest-side at center,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: radialGradientExpand 15s infinite linear;
+  z-index: 3;
+  -webkit-text-fill-color: transparent;
+  display: block;
 }
 
-/* .rainbow-text-animate {
-
-    background: radial-gradient(circle closest-side at center, red, orange, yellow, green, blue, indigo, violet);
-    background-size: 400% 400%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: radialGradientExpand 15s infinite linear;
-    z-index: 3;
-    -webkit-text-fill-color: transparent;
-    display: block;
+@keyframes radialGradientExpand {
+  0% {
+    background-size: 0% 0%;
   }
 
-  @keyframes radialGradientExpand {
-    0% {
-      background-size: 0% 0%;
-    }
-
-    100% {
-      background-size: 200% 200%;
-    }
-  } */
+  100% {
+    background-size: 200% 200%;
+  }
+}
 
 .hero-minimize {
   animation: reduceSize 3s forwards;
@@ -292,11 +301,11 @@ export default {
   }
 
   75% {
-    transform: translateY(30vh);
+    transform: translateY(20vh);
   }
 
   100% {
-    transform: translateY(30vh);
+    transform: translateY(20vh);
   }
 }
 

@@ -8,7 +8,7 @@
           <div class="d-none d-md-flex ms-2 flex-grow-1">
             <form class="search-form w-100 d-flex">
               <input
-                v-model="searchQuery"
+                v-model="searchTerm"
                 class="form-control search-input"
                 type="search"
                 placeholder="Search for computer parts, brands, and accessories"
@@ -43,6 +43,11 @@
               <li class="nav-item mx-2">
                 <a class="nav-link text-light-bold-2">Sale</a>
               </li>
+              <li class="nav-item mx-2">
+                <router-link to="/news" class="nav-link text-light-bold-2 nav-item" id="news-link">
+                  News
+                </router-link>
+              </li>
             </ul>
           </div>
 
@@ -63,6 +68,9 @@
             <button @click="toggleLoginModal" class="nav-link" id="login-modal">
               <i class="bi bi-person fs-4 mb-2 mx-2 icon-success"></i>
             </button>
+            <router-link to="/profile" class="nav-item avatar-container" id="profile-page-link">
+              <img src="/images/avatar.png" alt="Profile Avatar" class="user-avatar ms-2" />
+            </router-link>
           </div>
         </div>
       </nav>
@@ -73,7 +81,7 @@
     <nav class="navbar navbar-expand-md bg-body-secondary bg-secondary">
       <div class="container-fluid align-items-center justify-content-between">
         <a href="/">
-          <img src="/images/TechTrove-logo.png" alt="TechTrove Logo" width="250" height="53"
+          <img src="/images/TechTrove-logo.png" alt="TechTrove Logo" width="150" height="30"
         /></a>
 
         <button
@@ -100,7 +108,7 @@
                 PRODUCTS
               </a>
               <ul
-                class="dropdown-menu ms-2 my-auto border-primary"
+                class="dropdown-menu ms-2 border-primary"
                 aria-labelledby="navbarDropdownMenuLinkProducts"
               >
                 <li v-for="category in uniqueCategories" :key="category">
@@ -263,7 +271,7 @@
           <VaSidebarItemContent>
             <form class="search-form w-100 d-flex">
               <input
-                v-model="searchQuery"
+                v-model="searchTerm"
                 class="form-control search-input"
                 type="search"
                 placeholder="Search for computer parts, brands, and accessories"
@@ -311,7 +319,7 @@ export default {
   data() {
     return {
       sidebarVisible: false,
-      searchQuery: '',
+      searchTerm: '',
       isModalVisible: false
     }
   },
@@ -327,7 +335,7 @@ export default {
     },
     performSearch(event) {
       event.preventDefault()
-      this.$emit('search', this.searchQuery)
+      this.$emit('search', this.searchTerm)
       if (this.windowWidth < 768) {
         this.toggleOffcanvasVisibility()
       }
@@ -449,5 +457,17 @@ export default {
 
 .menu-item {
   border-bottom: 1px solid white;
+}
+.avatar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 </style>
