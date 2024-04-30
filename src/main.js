@@ -1,18 +1,19 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-
+import { supabase } from '@/utils/Supabase.js'
 import '@quasar/extras/animate/fadeIn.css'
 import '@quasar/extras/animate/fadeOut.css'
 import '@quasar/extras/roboto-font/roboto-font.css'
 import '@quasar/extras/themify/themify.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
-
+import authService from '@/utils/AuthService.js'
 import 'bootstrap'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.min.css'
 import { Quasar } from 'quasar'
+import { LuzmoDashboard } from '@luzmo/vue-embed'
 import { createVuestic } from 'vuestic-ui'
 import 'vuestic-ui/css'
 import './assets/Styles/_site.scss'
@@ -67,8 +68,11 @@ app.use(Quasar, {
     }
   }
 })
+app.config.globalProperties.$supabase = supabase
+app.config.globalProperties.$authService = authService
 app.use(vuestic)
 app.use(router)
 app.use(Scrollbar)
+app.component('luzmo-dashboard', LuzmoDashboard)
 app.use(ElementPlus)
 app.mount('#app')

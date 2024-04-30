@@ -1,3 +1,5 @@
+import { supabase } from '@/utils/Supabase'
+
 class Product {
   constructor(data) {
     this.id = data.id
@@ -13,6 +15,12 @@ class Product {
     this.dimensions = data.dimensions
     this.weight = data.weight
     this.warranty = data.warranty
+  }
+
+  static async fetchProducts() {
+    const { data: products, error } = await supabase.from('products').select('*')
+    if (error) throw error
+    return products.map((product) => new Product(product))
   }
 
   // Returns the formatted price as a string

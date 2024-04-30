@@ -1,11 +1,19 @@
 <template>
   <div id="app">
-    <router-view />
+    <router-view :session="session" />
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App'
-}
+<script setup>
+import { ref, onMounted } from 'vue'
+import { supabase } from '@/utils/Supabase'
+
+const session = ref(null)
+
+onMounted(() => {
+  // Listen for authentication state changes
+  supabase.auth.onAuthStateChange((_event, newSession) => {
+    session.value = newSession
+  })
+})
 </script>

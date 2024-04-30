@@ -43,7 +43,7 @@ export default {
   background: linear-gradient(180deg, #161616 0%, black 100%);
   min-height: 40vh;
   max-height: 60vh;
-  z-index: 5;
+  z-index: 1;
   margin-bottom: 1rem;
   margin-top: 1rem;
 }

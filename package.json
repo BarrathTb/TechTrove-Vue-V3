@@ -12,12 +12,15 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@luzmo/vue-embed": "^5.0.3",
     "@popperjs/core": "^2.11.8",
     "@quasar/extras": "^1.16.9",
+    "@supabase/supabase-js": "^2.42.7",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "bootstrap-vue-3": "^0.3.12",
+    "dotenv": "^16.4.5",
     "element-plus": "^2.7.1",
     "install": "^0.13.0",
     "material-icons": "^1.13.12",

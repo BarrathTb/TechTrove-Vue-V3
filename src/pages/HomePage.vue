@@ -66,10 +66,15 @@ import ShoppingCart from '@/components/PageSections/ShoppingCart.vue'
 import SupportSection from '@/components/PageSections/SupportSection.vue'
 import ProductDetailModal from '@/components/modals/ProductDetailModal.vue'
 import HeaderComponent from '@/components/siteNavs/HeaderComponent.vue'
-import { products } from '@/data.js'
-import CartCollection from '@/models/Cart.js'
+
+import { CartCollection } from '@/models/Cart.js'
+import Product from '@/models/Product'
 
 export default {
+  name: 'HomePage',
+  props: {
+    session: Object // Define the 'session' prop
+  },
   components: {
     HeaderComponent,
     ShoppingCart,
@@ -86,6 +91,7 @@ export default {
   },
   data() {
     return {
+      products: [],
       shippingVisibility: false,
       activeCategory: null,
       activeBrand: null,
@@ -102,16 +108,25 @@ export default {
       cartVisible: false,
       blogVisible: false,
       buildVisible: false,
-      items: products,
+      items: [],
       searchTerm: '',
-      uniqueCategories: this.calculateUniqueCategories(products),
-      uniqueBrands: this.calculateUniqueBrands(products),
-      allProducts: products,
-      filteredProducts: products
+      uniqueCategories: [],
+      uniqueBrands: [],
+      allProducts: [],
+      filteredProducts: []
     }
   },
-  mounted() {
-    this.loadCart()
+  async mounted() {
+    try {
+      const products = await Product.fetchProducts()
+      this.allProducts = products
+      this.filteredProducts = products
+      this.uniqueCategories = this.calculateUniqueCategories(products)
+      this.uniqueBrands = this.calculateUniqueBrands(products)
+      this.loadCart()
+    } catch (error) {
+      console.error('Error fetching products:', error.message)
+    }
   },
   watch: {
     'cart.cartItems': {
@@ -132,15 +147,19 @@ export default {
 
         console.log('Loaded cart data:', cartData)
 
+        // Assuming this.allProducts is an array of all available products
+        if (!this.allProducts || this.allProducts.length === 0) {
+          console.error("The list of all products is empty or hasn't been loaded.")
+          return
+        }
+
         cartData.forEach((productData, index) => {
-          // Fix the 'in' operator issue
-          if (
-            productData &&
-            productData.product &&
-            Object.prototype.hasOwnProperty.call(productData.product, 'id')
-          ) {
-            const productInstance = this.products.find((p) => p.id === productData.product.id)
+          // Verify if the product data structure is correct and id property exists
+          if (productData && productData.product && typeof productData.product.id !== 'undefined') {
+            // Find the corresponding product instance by id
+            const productInstance = this.allProducts.find((p) => p.id === productData.product.id)
             if (productInstance) {
+              // Add item to cart with the found product instance and desired quantity
               this.cart.addItem(productInstance, productData.quantity)
             } else {
               console.error(`Could not find product with ID ${productData.product.id}`)

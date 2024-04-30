@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import CartCollection from '@/models/Cart.js'
+import { CartCollection } from '@/models/Cart.js'
 import ShippingSection from './ShippingSection.vue'
 export default {
   name: 'ShoppingCart',

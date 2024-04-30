@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import CartCollection from '@/models/Cart.js'
+import { CartCollection } from '@/models/Cart.js'
 import { VaInput, VaModal } from 'vuestic-ui'
 export default {
   name: 'ProductDetailModal',

@@ -29,29 +29,32 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        isSupportVisible: false
-      }
-    },
-    methods: {
-      toggleSupportVisibility() {
-        this.isSupportVisible = !this.isSupportVisible
-      }
+export default {
+  data() {
+    return {
+      isSupportVisible: false
+    }
+  },
+  methods: {
+    toggleSupportVisibility() {
+      this.isSupportVisible = !this.isSupportVisible
     }
   }
+}
 </script>
 
 <style>
+.slide-enter-active,
+.slide-leave-active {
+  transition:
+    opacity 1.5s,
+    transform 1.5s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  .slide-enter-active,
-  .slide-leave-active {
-    transition: opacity 0.5s;
-  }
-
-  .slide-enter-from,
-  .slide-leave-to {
-    opacity: 0;
-  }
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+  transform: translateY(20px) ease in-out;
+}
 </style>

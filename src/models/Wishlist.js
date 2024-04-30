@@ -1,46 +1,72 @@
+import { supabase } from '@/utils/Supabase'
+
 class WishlistItem {
-  constructor(item) {
-    this.product = item
+  constructor(product) {
+    this.product = product
   }
 }
 
 class Wishlist {
-  constructor() {
-    this.wishlistItems = []
+  constructor(user) {
+    this.user = user
+    this.items = new Map()
   }
 
-  addProduct(product) {
-    const exists = this.wishlistItems.some((item) => item.product.id === product.id)
-    if (!exists) {
-      this.wishlistItems.push(new WishlistItem(product))
+  async fetchWishlistItems() {
+    const { data, error } = await supabase
+      .from('wishlists')
+      .select('*, products(*)')
+      .eq('user_id', this.user.id)
+
+    if (error) {
+      throw error
+    }
+
+    data.forEach((item) => {
+      this.items.set(item.product.id, new WishlistItem(item.product))
+    })
+  }
+
+  addItem(product) {
+    if (this.items.has(product.id)) {
+      throw new Error(`${product.name} is already in your wishlist`)
+    }
+
+    this.items.set(product.id, new WishlistItem(product))
+  }
+
+  removeItem(product) {
+    if (!this.items.has(product.id)) {
+      throw new Error(`${product.name} is not in your wishlist`)
+    }
+
+    this.items.delete(product.id)
+  }
+
+  moveToCart(product) {
+    if (!this.items.has(product.id)) {
+      throw new Error(`${product.name} is not in your wishlist`)
+    }
+
+    try {
+      this.cartCollection.addItem(product)
+      this.removeItem(product)
+    } catch (error) {
+      throw new Error(`Failed to move ${product.name} to cart: ${error.message}`)
     }
   }
 
-  removeProduct(productId) {
-    this.wishlistItems = this.wishlistItems.filter((item) => item.product.id !== productId)
+  hasItem(product) {
+    return this.items.has(product.id)
   }
 
   clearWishlist() {
-    this.wishlistItems = []
-  }
-
-  moveToCart(productId, cart) {
-    const productIndex = this.wishlistItems.findIndex((item) => item.product.id === productId)
-
-    if (productIndex !== -1) {
-      const [wishlistItem] = this.wishlistItems.splice(productIndex, 1) // Remove the item from the wishlist
-      try {
-        cart.addItem(wishlistItem.product) // Add the removed item's product to the cart
-      } catch (error) {
-        console.error(error.message)
-        this.wishlistItems.splice(productIndex, 0, wishlistItem)
-      }
-    }
+    this.items.clear()
   }
 
   get itemCount() {
-    return this.wishlistItems.length
+    return this.items.size
   }
 }
 
-export default Wishlist
+export { WishlistItem, Wishlist }

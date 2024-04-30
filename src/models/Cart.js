@@ -1,76 +1,79 @@
+import { supabase } from '@/utils/Supabase'
+
 class CartItem {
-  constructor(item) {
-    this.product = item
-    this.quantity = 1
+  constructor(product, quantity = 1) {
+    this.product = product
+    this.quantity = quantity
+  }
+
+  getTotal() {
+    return this.product.price * this.quantity
   }
 }
 
 class CartCollection {
-  constructor() {
-    this.cartItems = []
+  constructor(user) {
+    this.user = user
+    this.items = new Map()
   }
+
+  async fetchCartItems() {
+    const { data, error } = await supabase
+      .from('carts')
+      .select('*, products(*)')
+      .eq('user_id', this.user.id)
+
+    if (error) {
+      throw error
+    }
+
+    data.forEach((item) => {
+      this.items.set(item.product.id, new CartItem(item.product, item.quantity))
+    })
+  }
+
   addItem(product, quantity = 1) {
-    let found = this.cartItems.find((item) => item.product.id === product.id)
-    if (found) {
-      found.quantity += quantity
+    if (quantity <= 0) {
+      throw new Error('Quantity must be a positive number')
+    }
 
-      if (found.quantity > product.stock) {
-        throw new Error('Not enough stock available')
-      }
+    if (quantity > product.stock) {
+      throw new Error(`Not enough stock available for ${product.name}`)
+    }
+
+    if (this.items.has(product.id)) {
+      this.updateQuantity(product, this.items.get(product.id).quantity + quantity)
     } else {
-      const newItem = new CartItem(product)
-      newItem.quantity = quantity
-      this.cartItems.push(newItem)
+      this.items.set(product.id, new CartItem(product, quantity))
     }
   }
 
-  editItem(product, newQuantity) {
-    let found = this.cartItems.find((item) => item.product.id === product.id)
-
-    if (!found) {
-      throw new Error('Item not found in cart')
-    }
-
-    if (newQuantity <= 0) {
-      this.removeItem(product.id)
-    } else if (newQuantity > found.product.stock) {
-      throw new Error('Not enough stock available')
-    } else {
-      const newItem = new CartItem(product)
-      newItem.quantity = newQuantity
-      this.cartItems.push(newItem)
-    }
-  }
-  removeItem(product) {
-    this.cartItems = this.cartItems.filter((item) => item.product.id !== product.id)
-  }
   updateQuantity(product, quantity) {
-    let found = this.cartItems.find((item) => item.product.id === product.id)
-    if (found) {
-      if (quantity <= 0) {
-        this.removeItem(product.id)
-      } else if (quantity <= found.product.stock) {
-        found.quantity = quantity
-      } else {
-        throw new Error('Not enough stock available')
-      }
+    if (quantity <= 0) {
+      this.removeItem(product)
+    } else if (quantity > product.stock) {
+      throw new Error(`Not enough stock available for ${product.name}`)
+    } else {
+      const item = this.items.get(product.id)
+      item.quantity = quantity
     }
   }
+
+  removeItem(product) {
+    this.items.delete(product.id)
+  }
+
   clearCart() {
-    this.cartItems = []
+    this.items.clear()
+  }
+
+  get total() {
+    return Array.from(this.items.values()).reduce((total, item) => total + item.getTotal(), 0)
+  }
+
+  get itemCount() {
+    return Array.from(this.items.values()).reduce((count, item) => count + item.quantity, 0)
   }
 }
 
-Object.defineProperty(CartCollection.prototype, 'total', {
-  get: function () {
-    return this.cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0)
-  }
-})
-
-Object.defineProperty(CartCollection.prototype, 'itemCount', {
-  get: function () {
-    return this.cartItems.reduce((count, item) => count + item.quantity, 0)
-  }
-})
-
-export default CartCollection
+export { CartItem, CartCollection }

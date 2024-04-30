@@ -7,20 +7,16 @@
         <div class="d-none d-md-flex justify-content-between flex-grow-1">
           <ul class="navbar-nav ms-auto" aria-label="Tertiary Navigation">
             <li class="nav-item mx-2">
-              <router-link to="/home" class="nav-link text-light-bold-2 nav-item" id="news-link">
-                Personal
-              </router-link>
+              <a class="nav-link text-light-bold" href="#" @click="toggleDetails">Personal</a>
             </li>
 
             <li class="nav-item mx-2">
-              <router-link to="/news" class="nav-link text-light-bold-2 nav-item" id="news-link">
-                Orders
-              </router-link>
+              <a class="nav-link text-light-bold" href="#" @click="toggleDetails">orders</a>
             </li>
             <li class="nav-item mx-2">
-              <router-link to="/news" class="nav-link text-light-bold-2 nav-item" id="news-link">
-                Achievments
-              </router-link>
+              <a class="nav-link text-light-bold" href="#" @click="toggleAchievments"
+                >Achievments</a
+              >
             </li>
           </ul>
         </div>
@@ -156,185 +152,131 @@
           </nav>
         </div>
       </div>
-      <div class="col-6 h-100 bg-primary p-4 rounded-2">
-        <div class="container-fluid">
-          <h4 class="text-white ms-4 align-items-center justify-content-start">Personal Details</h4>
-          <p class="text-white ms-4 align-items-center justify-content-start">
-            Edit your personal details here.
-          </p>
-
-          <img src="/images/avatar.png" alt="Profile Avatar" class="ms-4 my-2 avatar" />
-        </div>
-
-        <div class="container-fluid mt-2 ms-4">
-          <form class="mt-4">
-            <div class="row">
-              <div class="col-3">
-                <label class="text-white d-flex align-items-center"
-                  ><i class="bi bi-pencil-fill me-4"></i>Full Name</label
-                >
-              </div>
-              <div class="col-6">
-                <input type="text" class="form-control" placeholder="John Doe" />
-              </div>
-            </div>
-            <div class="row mt-4">
-              <div class="col-3">
-                <label class="text-white d-flex align-items-center"
-                  ><i class="bi bi-pencil-fill me-4"></i>Location</label
-                >
-              </div>
-              <div class="col-6">
-                <input type="text" class="form-control" placeholder="e.g. Sydney, Australia" />
-              </div>
-            </div>
-            <div class="row mt-4">
-              <div class="col-3">
-                <label class="text-white d-flex align-items-center"
-                  ><i class="bi bi-pencil-fill me-4"></i>Email</label
-                >
-              </div>
-              <div class="col-6">
-                <input type="email" class="form-control" placeholder="johndoe@example.com" />
-              </div>
-            </div>
-            <div class="row mt-4">
-              <div class="col-3">
-                <label class="text-white d-flex align-items-center"
-                  ><i class="bi bi-pencil-fill me-4"></i>Date of Birth</label
-                >
-              </div>
-              <div class="col-6">
-                <input type="date" class="form-control" />
-              </div>
-            </div>
-            <div class="row mt-4">
-              <div class="col-3">
-                <label class="text-white d-flex align-items-center"
-                  ><i class="bi bi-pencil-fill me-4"></i>Shipping Address</label
-                >
-              </div>
-              <div class="col-6">
-                <textarea class="form-control" placeholder="123 Main St, Anytown AU"></textarea>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-      <div class="col-3 h-100 bg-primary">
-        <div class="container-fluid mt-2 ms-4">
-          <div class="bg-secondary p-4 rounded-2 mt-4 me-4">
-            <h3 class="text-white">Exclusive Offers!</h3>
-            <p>
-              Get access to exclusive offers and the best prices for high-quality computer parts and
-              accessories. Join our VIP club now!
-            </p>
-            <button class="btn btn-success btn-sm px-4 text-black btn-bold my-2">Join Now</button>
-          </div>
-        </div>
+      <div class="col-9 bg-primary mt-4">
+        <ProfileAchievments v-show="achievmentsVisible" :session="session" v-if="session" />
+        <ProfileDetails
+          v-show="detailsVisible"
+          :session="session"
+          v-if="session"
+          @Update="updateProfile"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import { products } from '@/data.js'
-// import CartCollection from '@/models/Cart.js'
+import { supabase } from '@/utils/Supabase'
+import LoginModal from '@/components/modals/LoginModal.vue'
+import ProfileDetails from '@/components/PageSections/ProfileDetails.vue'
+import ProfileAchievments from '@/components/PageSections/ProfileAchievments.vue'
 
 export default {
-  components: {},
-  data() {
-    return {
-      // shippingVisibility: false,
-      // activeCategory: null,
-      // activeBrand: null,
-      // boardVisible: false,
-      // builderZoneVisible: false,
-      // selectedProductQuantity: 0,
-      // isEditModal: false,
-      // cartItemCount: 0,
-      // cart: new CartCollection(),
-      // isSupportVisible: false,
-      // quantity: 1,
-      // detailsVisible: false,
-      // selectedProduct: null,
-      // cartVisible: false,
-      // blogVisible: false,
-      // buildVisible: false,
-      // products: products,
-      // searchTerm: '',
-      // uniqueCategories: this.calculateUniqueCategories(products),
-      // uniqueBrands: this.calculateUniqueBrands(products),
-      // allProducts: products,
-      // filteredProducts: products
+  name: 'ProfilePage',
+  props: {
+    session: {
+      type: Object,
+      default: () => ({}),
+      required: true
     }
   },
-  mounted() {
-    // this.loadCart()
-  },
-  watch: {
-    // 'cart.cartItems': {
-    //   handler() {
-    //     this.saveCart()
-    //     this.updateCartItemCount()
-    //   },
-    //   deep: true,
-    //   immediate: false
-    // }
+  components: {
+    LoginModal,
+    ProfileDetails,
+    ProfileAchievments
   },
 
+  data() {
+    return {
+      achievmentsVisible: false,
+      detailsVisible: true,
+      loading: true,
+      username: '',
+      website: '',
+      avatar_url: '',
+      isModalVisible: false
+    }
+  },
+
+  created() {
+    this.getProfile()
+  },
   methods: {
-    filterProducts(selectedItem) {
-      // Determine if selectedItem is a category or a brand.
-      this.resetFilters()
-      const isCategory = this.uniqueCategories.includes(selectedItem)
-      const isBrand = this.uniqueBrands.includes(selectedItem)
-
-      // Update the active filters based on the selection.
-      if (isCategory) {
-        this.activeCategory = selectedItem
-      } else if (isBrand) {
-        this.activeBrand = selectedItem
-      }
-
-      // Perform filtering based on the active category and/or brand.
-      this.filteredProducts = this.allProducts.filter((product) => {
-        return (
-          (!this.activeCategory || product.category === this.activeCategory) &&
-          (!this.activeBrand || product.brand === this.activeBrand)
-        )
-      })
+    toggleAchievments() {
+      this.achievmentsVisible = true
+      this.detailsVisible = false
     },
-
-    performSearch(query) {
-      if (typeof query !== 'string' || !query.trim()) {
-        return { products: this.products, searchTerm: '' }
-      }
-
-      this.searchTerm = query.trim().toLowerCase()
-
+    toggleDetails() {
+      this.detailsVisible = true
+      this.achievmentsVisible = false
+    },
+    async getProfile() {
       try {
-        this.filteredProducts = this.allProducts.filter((product) => {
-          return (
-            (product.name && product.name.toLowerCase().includes(this.searchTerm)) ||
-            (product.description && product.description.toLowerCase().includes(this.searchTerm)) ||
-            (product.brand && product.brand.toLowerCase().includes(this.searchTerm)) ||
-            (product.category && product.category.toLowerCase().includes(this.searchTerm))
-          )
-        })
-
-        if (this.filteredProducts.length === 0) {
-          alert('No results found. Showing all products.')
-          // Return all products since no results matched the search query.
-          return { products: this.allProducts, searchTerm: this.searchTerm }
+        this.loading = true
+        // Check if session exists and has a user
+        if (!this.session || !this.session.user) {
+          throw new Error('Session or user information is unavailable.')
         }
 
-        // Return the filtered list of products and the search query.
-        return { products: this.filteredProducts, searchTerm: this.searchTerm }
+        const { data, error, status } = await supabase
+          .from('profiles')
+          .select(`username, website, avatar_url`)
+          .eq('id', this.session.user.id) // Now we're confident user exists
+          .single()
+
+        if (error && status !== 406) throw error
+
+        if (data) {
+          this.username = data.username
+          this.website = data.website
+          this.avatar_url = data.avatar_url
+        }
       } catch (error) {
-        console.error('Error occurred during search:', error)
-        return { products: this.allProducts, searchTerm: this.searchTerm }
+        alert(error.message)
+      } finally {
+        this.loading = false
       }
+    },
+
+    async updateProfile() {
+      try {
+        this.loading = true
+        const { user } = this.session
+        if (!this.session || !this.session.user) {
+          throw new Error('Session or user information is unavailable.')
+        }
+
+        const updates = {
+          id: user.id,
+          username: this.username,
+          website: this.website,
+          avatar_url: this.avatar_url,
+          updated_at: new Date()
+        }
+
+        const { error } = await supabase.from('profiles').upsert(updates)
+
+        if (error) throw error
+      } catch (error) {
+        alert(error.message)
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async signOut() {
+      try {
+        this.loading = true
+        const { error } = await supabase.auth.signOut()
+        if (error) throw error
+      } catch (error) {
+        alert(error.message)
+      } finally {
+        this.loading = false
+      }
+    },
+    toggleLoginModal() {
+      this.isModalVisible = !this.isModalVisible
     }
   }
 }
