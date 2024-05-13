@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "deploy": "gh-pages -d dist -r https:BarrathTb/github.io/TechTrove-Vue-V3.git",
+    "deploy": "gh-pages -d dist -r https://github.com/BarrathTb/TechTrove-Web-Vue-V3.git",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
