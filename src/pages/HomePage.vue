@@ -3,13 +3,7 @@
     :products="allProducts"
     @search="performSearch"
     @load-product-cards="filterProducts"
-    @toggle-cart="toggleCartVisibility"
-    @toggle-blog="toggleBlogVisibility"
-    @toggle-build="toggleBuildVisibility"
-    @toggle-support="toggleSupportVisibility"
-    @toggle-builder-zone="toggleBuilderZoneVisibility"
-    @toggle-board="toggleMessageBoard"
-    @toggle-wishlist="toggleWishlistVisibility"
+    @handle-visibility="handleSectionVisibility"
     :cart-item-count="cartItemCount"
     @update-cart-count="updateCartItemCount"
   />
@@ -487,6 +481,46 @@ export default {
       this.wishlistVisible = !this.wishlistVisible
     },
 
+    handleSectionVisibility(section) {
+      // First, reset all visibility states to false
+      this.builderZoneVisible = false
+      this.boardVisible = false
+      this.cartVisible = false
+      this.blogVisible = false
+      this.buildVisible = false
+      this.isSupportVisible = false
+      this.shippingVisible = false
+      this.wishlistVisible = false
+
+      // Then, toggle the visibility of the desired section only
+      switch (section) {
+        case 'builder':
+          this.builderZoneVisible = true
+          break
+        case 'messageBoard':
+          this.boardVisible = true
+          break
+        case 'cart':
+          this.cartVisible = true
+          break
+        case 'blog':
+          this.blogVisible = true
+          break
+        case 'build':
+          this.buildVisible = true
+          break
+        case 'support':
+          this.isSupportVisible = true
+          break
+        case 'shipping':
+          this.shippingVisible = true
+          break
+        case 'wishlist':
+          this.wishlistVisible = true
+          break
+      }
+    },
+
     handleViewDetails(product) {
       this.selectedProduct = product
       this.detailsVisible = true
@@ -522,6 +556,13 @@ export default {
     }
   }
 }
+// @toggle-cart="toggleCartVisibility"
+//     @toggle-blog="toggleBlogVisibility"
+//     @toggle-build="toggleBuildVisibility"
+//     @toggle-support="toggleSupportVisibility"
+//     @toggle-builder-zone="toggleBuilderZoneVisibility"
+//     @toggle-board="toggleMessageBoard"
+//     @toggle-wishlist="toggleWishlistVisibility"
 </script>
 <style>
 .login-modal {

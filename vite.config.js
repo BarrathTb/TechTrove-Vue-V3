@@ -5,7 +5,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: '/TechTrove-Web-Vue-V3/',
+  base: './',
   plugins: [vue()],
   resolve: {
     alias: {
