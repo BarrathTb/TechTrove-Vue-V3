@@ -4,6 +4,13 @@
     @search="performSearch"
     @load-product-cards="filterProducts"
     @handle-visibility="handleSectionVisibility"
+    @toggle-cart="toggleCartVisibility"
+    @toggle-blog="toggleBlogVisibility"
+    @toggle-build="toggleBuildVisibility"
+    @toggle-support="toggleSupportVisibility"
+    @toggle-builder-zone="toggleBuilderZoneVisibility"
+    @toggle-board="toggleMessageBoard"
+    @toggle-wishlist="toggleWishlistVisibility"
     :cart-item-count="cartItemCount"
     @update-cart-count="updateCartItemCount"
   />
@@ -556,13 +563,6 @@ export default {
     }
   }
 }
-// @toggle-cart="toggleCartVisibility"
-//     @toggle-blog="toggleBlogVisibility"
-//     @toggle-build="toggleBuildVisibility"
-//     @toggle-support="toggleSupportVisibility"
-//     @toggle-builder-zone="toggleBuilderZoneVisibility"
-//     @toggle-board="toggleMessageBoard"
-//     @toggle-wishlist="toggleWishlistVisibility"
 </script>
 <style>
 .login-modal {
