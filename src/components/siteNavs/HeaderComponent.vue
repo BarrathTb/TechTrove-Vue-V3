@@ -64,12 +64,27 @@
                 ></VaBadge>
               </i>
             </button>
+            <button @click="toggleWishlistVisibility" class="nav-link border-0 bg-transparent">
+              <i class="bi bi-heart fs-5 mb-2 mx-2 icon-success">
+                <VaBadge
+                  v-if="wishlistItemCount > 0"
+                  :text="wishlistItemCount.toString()"
+                  overlap
+                  placement="center"
+                  color="danger"
+                ></VaBadge>
+              </i>
+            </button>
 
             <button @click="toggleLoginModal" class="nav-link" id="login-modal">
               <i class="bi bi-person fs-4 mb-2 mx-2 icon-success"></i>
             </button>
             <router-link to="/profile" class="nav-item avatar-container" id="profile-page-link">
-              <img src="/images/avatar.png" alt="Profile Avatar" class="user-avatar ms-2" />
+              <img
+                :src="localUser?.avatar_url || defaultAvatarUrl"
+                alt="Profile Avatar"
+                class="user-avatar ms-2"
+              />
             </router-link>
           </div>
         </div>
@@ -238,6 +253,59 @@
         </VaAccordion>
 
         <!-- Other Main Navigation Links -->
+        <router-link to="/profile" class="nav-link text-light-bold-2 nav-item" id="news-link">
+          <VaSidebarItem class="menu-item">
+            <VaSidebarItemContent>
+              <VaIcon color="white" name="person" />
+              <VaSpacer class="spacer" />
+
+              <VaSidebarItemTitle class="text-light-bold-2">PROFILE</VaSidebarItemTitle>
+            </VaSidebarItemContent>
+          </VaSidebarItem>
+        </router-link>
+        <VaSidebarItem @click.prevent="toggleLoginModal" class="menu-item">
+          <VaSidebarItemContent>
+            <VaIcon color="white" name="login" />
+            <VaSpacer class="spacer" />
+
+            <VaSidebarItemTitle class="text-light-bold-2">LOGIN</VaSidebarItemTitle>
+          </VaSidebarItemContent>
+        </VaSidebarItem>
+        <VaSidebarItem @click.prevent="toggleMessageBoard" class="menu-item">
+          <VaSidebarItemContent>
+            <VaIcon color="white" name="message" />
+            <VaSpacer class="spacer" />
+
+            <VaSidebarItemTitle class="text-light-bold-2">MESSAGE BOARD</VaSidebarItemTitle>
+          </VaSidebarItemContent>
+        </VaSidebarItem>
+        <VaSidebarItem @click.prevent="toggleBuilderZoneVisibility" class="menu-item">
+          <VaSidebarItemContent>
+            <VaIcon color="white" name="computer" />
+            <VaSpacer class="spacer" />
+
+            <VaSidebarItemTitle class="text-light-bold-2">BUILDER ZONE</VaSidebarItemTitle>
+          </VaSidebarItemContent>
+        </VaSidebarItem>
+        <VaSidebarItem @click.prevent="toggleBuilderZoneVisibility" class="menu-item">
+          <VaSidebarItemContent>
+            <VaIcon color="white" name="discount" />
+            <VaSpacer class="spacer" />
+
+            <VaSidebarItemTitle class="text-light-bold-2">SALE</VaSidebarItemTitle>
+          </VaSidebarItemContent>
+        </VaSidebarItem>
+
+        <router-link to="/news" class="nav-link text-light-bold-2 nav-item" id="news-link">
+          <VaSidebarItem class="menu-item">
+            <VaSidebarItemContent>
+              <VaIcon color="white" name="article" />
+              <VaSpacer class="spacer" />
+
+              <VaSidebarItemTitle class="text-light-bold-2">NEWS</VaSidebarItemTitle>
+            </VaSidebarItemContent>
+          </VaSidebarItem>
+        </router-link>
         <VaSidebarItem @click="toggleSupportVisibility" class="menu-item">
           <VaSidebarItemContent>
             <VaIcon color="danger" name="help" />
@@ -300,6 +368,8 @@
 
 <script>
 import LoginModal from '../modals/LoginModal.vue'
+
+import { useUserStore } from '@/stores/User'
 export default {
   components: {
     LoginModal
@@ -318,12 +388,51 @@ export default {
 
   data() {
     return {
+      defaultAvatarUrl: 'https://avatarfiles.alphacoders.com/367/367929.jpg',
+      src: null,
+      avatar_url: '',
       sidebarVisible: false,
       searchTerm: '',
       isModalVisible: false
     }
   },
+  async mounted() {
+    const userStore = useUserStore()
+
+    // Run this only if there is an existing session
+    if (userStore.isLoggedIn) {
+      await userStore.fetchProfile()
+    }
+
+    window.addEventListener('resize', this.handleResize)
+  },
+
   methods: {
+    // async getProfile() {
+    //   this.loading = true
+
+    //   try {
+    //     const userStore = useUserStore()
+
+    //     if (!userStore.session || !userStore.session.user) {
+    //       console.warn('Guest session or no user; skipping profile fetch.')
+    //       return
+    //     }
+
+    //     const profile = await Profile.fetchUser(userStore.session.user.id)
+
+    //     if (profile) {
+    //       this.localUser = profile
+    //       console.log('User profile:', this.localUser)
+    //     } else {
+    //       console.warn('No profile could be fetched.')
+    //     }
+    //   } catch (error) {
+    //     console.error('Error fetching profile:', error.message)
+    //   } finally {
+    //     this.loading = false
+    //   }
+    // },
     handleResize() {
       this.windowWidth = window.innerWidth
     },
@@ -342,6 +451,12 @@ export default {
     },
     toggleBuilderZoneVisibility() {
       this.$emit('toggle-builder-zone')
+      if (this.windowWidth < 768) {
+        this.toggleOffcanvasVisibility()
+      }
+    },
+    toggleWishlistVisibility() {
+      this.$emit('toggle-wishlist')
       if (this.windowWidth < 768) {
         this.toggleOffcanvasVisibility()
       }
@@ -408,11 +523,22 @@ export default {
     //   }
     // }
   },
-  mounted() {
-    window.addEventListener('resize', this.handleResize)
-  },
+
   beforeUnmount() {
     window.removeEventListener('resize', this.handleResize)
+  },
+  watch: {
+    isLoggedIn: {
+      handler(loggedIn) {
+        if (loggedIn) {
+          const userStore = useUserStore()
+          userStore.fetchProfile() // Fetch profile on login
+        } else {
+          console.log('No user is logged in.')
+        }
+      },
+      immediate: true // This ensures the handler runs immediately after mount
+    }
   },
   computed: {
     uniqueCategories() {
@@ -430,6 +556,15 @@ export default {
           return acc
         }, new Set())
       )
+    },
+    isLoggedIn() {
+      const userStore = useUserStore()
+      return userStore.isLoggedIn
+    },
+    // Use the user information from the profile in the store
+    localUser() {
+      const userStore = useUserStore()
+      return userStore.profile || {} // Fallback to an empty object if no profile found
     }
   }
 }
@@ -469,5 +604,8 @@ export default {
   height: 40px;
   border-radius: 50%;
   cursor: pointer;
+}
+.va-sidebar {
+  z-index: 900;
 }
 </style>

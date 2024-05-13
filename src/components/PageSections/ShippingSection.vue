@@ -1,6 +1,6 @@
 <template>
   <transition name="slide">
-    <section v-show="shippingVisible" class="shipping-section bg-primary mb-2">
+    <section v-show="toggleShippingVisibility" class="shipping-section bg-primary mb-2">
       <div class="container">
         <div class="row">
           <div class="col-md-6 col-sm-12 mx-auto">
@@ -171,9 +171,7 @@ export default {
   name: 'ShippingSection',
   props: {},
   data() {
-    return {
-      shippingVisible: false
-    }
+    return {}
   },
 
   methods: {

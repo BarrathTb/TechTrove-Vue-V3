@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <section v-show="detailsVisible">
+    <section v-show="detailsVisible == true">
       <div class="container-fluid">
         <div class="row bg-primary">
           <div class="col-4">
@@ -11,12 +11,11 @@
               Edit your personal details here.
             </p>
 
-            <VaAvatar v-if="src" :src="src" alt="Avatar" :size="size + 'em'" />
-            <div
-              v-else
-              class="avatar no-image"
-              :style="{ height: size + 'em', width: size + 'em' }"
-            ></div>
+            <img
+              :src="localUser?.avatar_url || defaultAvatarUrl"
+              class="avatar ms-4"
+              alt="Avatar"
+            />
           </div>
         </div>
 
@@ -34,8 +33,8 @@
                     <input
                       id="username"
                       type="text"
-                      v-model="username"
-                      class="form-control"
+                      v-model="localUser.full_name"
+                      class="form-control select-input"
                       placeholder="John Doe"
                     />
                   </div>
@@ -43,11 +42,16 @@
                 <div class="row mt-4">
                   <div class="col-4">
                     <label class="text-white d-flex align-items-center"
-                      ><i class="bi bi-pencil-fill me-4"></i>Location</label
+                      ><i class="bi bi-pencil-fill me-4"></i>User Name</label
                     >
                   </div>
                   <div class="col-8">
-                    <input type="text" class="form-control" placeholder="e.g. Sydney, Australia" />
+                    <input
+                      type="text"
+                      v-model="localUser.username"
+                      class="form-control select-input"
+                      placeholder="username..."
+                    />
                   </div>
                 </div>
                 <div class="row mt-4">
@@ -59,11 +63,10 @@
                   <div class="col-8">
                     <input
                       type="email"
-                      class="form-control"
+                      class="form-control select-input"
                       placeholder="johndoe@example.com"
                       id="email"
-                      :value="email"
-                      disabled
+                      v-model="localUser.email"
                     />
                   </div>
                 </div>
@@ -74,7 +77,7 @@
                     >
                   </div>
                   <div class="col-8">
-                    <input type="date" class="form-control" />
+                    <input type="date" class="form-control select-input" />
                   </div>
                 </div>
                 <div class="row mt-4">
@@ -84,7 +87,10 @@
                     >
                   </div>
                   <div class="col-8">
-                    <textarea class="form-control" placeholder="123 Main St, Anytown AU"></textarea>
+                    <textarea
+                      class="form-control select-input"
+                      placeholder="123 Main St, Anytown AU"
+                    ></textarea>
                   </div>
                 </div>
                 <div class="row mt-4">
@@ -94,7 +100,7 @@
                     >
                   </div>
                   <div class="col-8">
-                    <Avatar v-model="avatar_url" @upload="updateProfile" size="10" />
+                    <Avatar @avatar-uploaded="onAvatarUpload($event)" />
                   </div>
                 </div>
 
@@ -133,106 +139,127 @@
 </template>
 
 <script>
-import { supabase } from '@/utils/Supabase'
-
 import Avatar from '@/components/PageSections/ProfileAvatar.vue'
+import Profile from '@/models/Profile'
+import { useUserStore } from '@/stores/User'
 
 export default {
-  props: ['session'],
   components: {
-    Avatar
+    Avatar // Make sure the Avatar component is correctly imported
   },
-  computed: {
-    user() {
-      return this.session.user
-    }
-  },
-  emits: ['update'],
   data() {
     return {
-      loading: true,
+      defaultAvatarUrl: 'https://avatarfiles.alphacoders.com/367/367929.jpg',
+      loading: false,
+      full_name: '',
       username: '',
-      website: '',
+      email: '', // Assuming we're displaying the email (email field is managed by Supabase Auth)
       avatar_url: '',
-      isModalVisible: false,
+      src: null,
       detailsVisible: true
     }
   },
-  created() {
-    console.log(this.session)
-    this.getProfile()
+  async mounted() {
+    const userStore = useUserStore()
+
+    // Run this only if there is an existing session
+    if (userStore.isLoggedIn) {
+      await userStore.fetchProfile()
+    }
   },
-  methods: {
-    async getProfile() {
-      if (!this.session || !this.session.user) {
-        console.error('Invalid session object:', this.session)
-        return
-      }
-      try {
-        this.loading = true
-        const { user } = this.session
 
-        const { data, error, status } = await supabase
-          .from('profiles')
-          .select(`username, website, avatar_url`)
-          .eq('id', user.id)
-          .single()
-
-        if (error && status !== 406) throw error
-
-        if (data) {
-          this.username = data.username
-          this.website = data.website
-          this.avatar_url = data.avatar_url
-        }
-      } catch (error) {
-        alert(error.message)
-      } finally {
-        this.loading = false
-      }
+  computed: {
+    isLoggedIn() {
+      const userStore = useUserStore()
+      return userStore.isLoggedIn
     },
+    // Use the user information from the profile in the store
+    localUser() {
+      const userStore = useUserStore()
+      return userStore.profile || {} // Fallback to an empty object if no profile found
+    }
+  },
+  watch: {
+    isLoggedIn: {
+      handler(loggedIn) {
+        if (loggedIn) {
+          const userStore = useUserStore()
+          userStore.fetchProfile() // Fetch profile on login
+        } else {
+          console.log('No user is logged in.')
+        }
+      },
+      immediate: true // This ensures the handler runs immediately after mount
+    }
+  },
+
+  methods: {
+    // async getProfile() {
+    //   this.loading = true
+    //   try {
+    //     const userStore = useUserStore() // Obtain the store instance
+    //     if (!userStore.session || !userStore.session.user) {
+    //       throw new Error('Session or user information is unavailable.')
+    //     }
+
+    //     const profile = await Profile.fetchUser(userStore.session.user.id)
+    //     if (profile) {
+    //       this.localUser = profile // Update the local user with fetched profile info
+    //     }
+    //     console.log(this.localUser)
+    //   } catch (error) {
+    //     console.error(error.message)
+    //   } finally {
+    //     this.loading = false
+    //   }
+    // },
 
     async updateProfile() {
+      this.loading = true
       try {
-        this.loading = true
-        // Get the current session directly from supabase.auth
-        const session = supabase.auth.session
-
-        if (!session || !session.user) {
-          throw new Error('User not authenticated')
-        }
-
+        const userId = this.localUser.id // Extract the user ID from the localUser object
         const updates = {
-          id: session.user.id,
-          username: this.username,
-          website: this.website,
-          avatar_url: this.avatar_url,
-          updated_at: new Date()
+          full_name: this.localUser.full_name,
+          username: this.localUser.username,
+          email: this.localUser.email,
+          avatar_url: this.localUser.avatar_url,
+          shipping_address: this.localUser.shipping_address
         }
 
-        const { error } = await supabase.from('profiles').upsert(updates)
+        const result = await Profile.updateUser(userId, updates) // userId should be the first argument
 
-        if (error) throw error
+        if (result && result.error) {
+          throw new Error(result.error.message)
+        }
+
+        // Update the user store with the new user details after they have been successfully updated
+        const userStore = useUserStore()
+        userStore.setUser(this.localUser)
+
+        // Possibly do something with the result, like showing a success message
       } catch (error) {
-        alert(error.message)
+        console.error(error.message)
       } finally {
         this.loading = false
       }
     },
 
-    async signOut() {
+    async onAvatarUpload(publicURL) {
+      console.log('New avatar URL:', publicURL)
+
       try {
         this.loading = true
-        const { error } = await supabase.auth.signOut()
-        if (error) throw error
+
+        // Update the local user's avatar_url directly
+        this.localUser.avatar_url = publicURL
+
+        // Now that we have the URL, we display it
+        this.src = publicURL
       } catch (error) {
         alert(error.message)
       } finally {
         this.loading = false
       }
-    },
-    toggleLoginModal() {
-      this.isModalVisible = !this.isModalVisible
     }
   }
 }
@@ -258,8 +285,8 @@ export default {
   height: 80vh; /* or height: 100vh; if you prefer it to be full height */
 }
 .avatar {
-  width: 70px;
-  height: 70px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
 }

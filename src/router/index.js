@@ -2,8 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import WelcomePage from '@/pages/WelcomePage.vue'
 import HomePage from '@/pages/HomePage.vue'
 import NewsPage from '@/pages/NewsPage.vue'
+import LoginPage from '@/pages/LoginPage.vue'
 import ProfilePage from '@/pages/ProfilePage.vue'
-import { supabase } from '@/utils/Supabase'
+import { useUserStore } from '@/stores/User'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,7 +17,13 @@ const router = createRouter({
     {
       path: '/home',
       name: 'Home',
-      component: HomePage
+      component: HomePage,
+      meta: { requiresAuth: false }
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: LoginPage
     },
     {
       path: '/profile',
@@ -33,33 +40,13 @@ const router = createRouter({
   ]
 })
 
-// This helper function checks if the user is authenticated.
-async function isAuthenticated() {
-  const {
-    data: { session },
-    error
-  } = await supabase.auth.getSession()
-  if (error) {
-    console.error('Error getting session:', error)
-  }
-  return session
-}
-
 router.beforeEach(async (to, _, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+  const userStore = useUserStore()
 
-  if (requiresAuth) {
-    const userSession = await isAuthenticated()
-
-    if (!userSession) {
-      // If there's no session, redirect to the welcome page.
-      next({ name: 'Welcome' })
-    } else {
-      // If there is a session, proceed to the requested route.
-      next()
-    }
+  if (requiresAuth && !userStore.isLoggedIn) {
+    next({ name: 'Login' })
   } else {
-    // If authentication is not required for the route, just proceed.
     next()
   }
 })

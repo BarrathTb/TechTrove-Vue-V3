@@ -11,7 +11,7 @@
             </li>
 
             <li class="nav-item mx-2">
-              <a class="nav-link text-light-bold" href="#" @click="toggleDetails">orders</a>
+              <a class="nav-link text-light-bold" href="#" @click="toggleOrders">orders</a>
             </li>
             <li class="nav-item mx-2">
               <a class="nav-link text-light-bold" href="#" @click="toggleAchievments"
@@ -27,7 +27,11 @@
             <i class="bi bi-person fs-4 mb-2 mx-2 icon-success"></i>
           </button>
           <router-link to="/profile" class="nav-item avatar-container" id="profile-page-link">
-            <img src="/images/avatar.png" alt="Profile Avatar" class="user-avatar ms-2" />
+            <img
+              :src="localUser?.avatar_url || defaultAvatarUrl"
+              alt="Profile Avatar"
+              class="user-avatar ms-2"
+            />
           </router-link>
         </div>
       </nav>
@@ -54,32 +58,11 @@
         </button>
 
         <!-- Other Main Navigation Links -->
-        <VaSidebarItem @click="toggleSupportVisibility" class="menu-item">
+        <VaSidebarItem class="menu-item">
           <VaSidebarItemContent>
             <VaIcon color="danger" name="help" />
             <VaSpacer class="spacer" />
             <VaSidebarItemTitle class="text-light-bold-2">SUPPORT</VaSidebarItemTitle>
-          </VaSidebarItemContent>
-        </VaSidebarItem>
-
-        <VaSidebarItem class="menu-item">
-          <VaSidebarItemContent>
-            <form class="search-form w-100 d-flex">
-              <input
-                v-model="searchTerm"
-                class="form-control search-input"
-                type="search"
-                placeholder="Search for computer parts, brands, and accessories"
-                aria-label="Search"
-              />
-              <button
-                class="btn btn-success-2 ms-2"
-                @click.prevent="performSearch($event)"
-                type="submit"
-              >
-                Search
-              </button>
-            </form>
           </VaSidebarItemContent>
         </VaSidebarItem>
       </div>
@@ -153,13 +136,9 @@
         </div>
       </div>
       <div class="col-9 bg-primary mt-4">
-        <ProfileAchievments v-show="achievmentsVisible" :session="session" v-if="session" />
-        <ProfileDetails
-          v-show="detailsVisible"
-          :session="session"
-          v-if="session"
-          @Update="updateProfile"
-        />
+        <ProfileAchievments v-show="achievmentsVisible" />
+        <ProfileDetails v-show="detailsVisible" @Update="updateProfile" />
+        <ProfileOrders v-show="ordersVisible" />
       </div>
     </div>
   </div>
@@ -170,95 +149,137 @@ import { supabase } from '@/utils/Supabase'
 import LoginModal from '@/components/modals/LoginModal.vue'
 import ProfileDetails from '@/components/PageSections/ProfileDetails.vue'
 import ProfileAchievments from '@/components/PageSections/ProfileAchievments.vue'
+import ProfileOrders from '@/components/PageSections/ProfileOrders.vue'
+import Profile from '@/models/Profile'
+import { useUserStore } from '@/stores/User'
 
 export default {
   name: 'ProfilePage',
   props: {
-    session: {
-      type: Object,
-      default: () => ({}),
-      required: true
-    }
+    // session: {
+    //   type: Object,
+    //   required: true
+    // }
   },
   components: {
     LoginModal,
     ProfileDetails,
-    ProfileAchievments
+    ProfileAchievments,
+    ProfileOrders
   },
 
   data() {
     return {
+      defaultAvatarUrl: 'https://avatarfiles.alphacoders.com/367/367929.jpg', // Placeholder image URL
+
+      sidebarVisible: false,
+      ordersVisible: false,
       achievmentsVisible: false,
       detailsVisible: true,
       loading: true,
+      full_name: '',
       username: '',
       website: '',
       avatar_url: '',
-      isModalVisible: false
+      isModalVisible: false,
+      src: ''
+    }
+  },
+  async mounted() {
+    const userStore = useUserStore()
+
+    // Run this only if there is an existing session
+    if (userStore.isLoggedIn) {
+      await userStore.fetchProfile()
     }
   },
 
-  created() {
-    this.getProfile()
+  computed: {
+    isLoggedIn() {
+      const userStore = useUserStore()
+      return userStore.isLoggedIn
+    },
+    // Use the user information from the profile in the store
+    localUser() {
+      const userStore = useUserStore()
+      return userStore.profile || {} // Fallback to an empty object if no profile found
+    }
   },
+  watch: {
+    isLoggedIn: {
+      handler(loggedIn) {
+        if (loggedIn) {
+          const userStore = useUserStore()
+          userStore.fetchProfile() // Fetch profile on login
+        } else {
+          console.log('No user is logged in.')
+        }
+      },
+      immediate: true // This ensures the handler runs immediately after mount
+    }
+  },
+
   methods: {
     toggleAchievments() {
       this.achievmentsVisible = true
       this.detailsVisible = false
+      this.ordersVisible = false
     },
     toggleDetails() {
       this.detailsVisible = true
       this.achievmentsVisible = false
+      this.ordersVisible = false
     },
-    async getProfile() {
-      try {
-        this.loading = true
-        // Check if session exists and has a user
-        if (!this.session || !this.session.user) {
-          throw new Error('Session or user information is unavailable.')
-        }
-
-        const { data, error, status } = await supabase
-          .from('profiles')
-          .select(`username, website, avatar_url`)
-          .eq('id', this.session.user.id) // Now we're confident user exists
-          .single()
-
-        if (error && status !== 406) throw error
-
-        if (data) {
-          this.username = data.username
-          this.website = data.website
-          this.avatar_url = data.avatar_url
-        }
-      } catch (error) {
-        alert(error.message)
-      } finally {
-        this.loading = false
-      }
+    toggleOrders() {
+      this.ordersVisible = true
+      this.achievmentsVisible = false
+      this.detailsVisible = false
     },
+    // async getProfile() {
+    //   this.loading = true
+    //   try {
+    //     const userStore = useUserStore() // Obtain the store instance
+    //     if (!userStore.session || !userStore.session.user) {
+    //       throw new Error('Session or user information is unavailable.')
+    //     }
+
+    //     const profile = await Profile.fetchUser(userStore.session.user.id)
+    //     if (profile) {
+    //       this.localUser = profile // Update the local user with fetched profile info
+    //     }
+    //     console.log(this.localUser)
+    //   } catch (error) {
+    //     console.error(error.message)
+    //   } finally {
+    //     this.loading = false
+    //   }
+    // },
 
     async updateProfile() {
+      this.loading = true
       try {
-        this.loading = true
-        const { user } = this.session
-        if (!this.session || !this.session.user) {
-          throw new Error('Session or user information is unavailable.')
-        }
-
+        const userId = this.localUser.id // Extract the user ID from the localUser object
         const updates = {
-          id: user.id,
-          username: this.username,
-          website: this.website,
-          avatar_url: this.avatar_url,
-          updated_at: new Date()
+          full_name: this.localUser.full_name,
+          username: this.localUser.username,
+          email: this.localUser.email,
+          avatar_url: this.localUser.avatar_url,
+          shipping_address: this.localUser.shipping_address
         }
 
-        const { error } = await supabase.from('profiles').upsert(updates)
+        const result = await Profile.updateUser(userId, updates) // userId should be the first argument
 
-        if (error) throw error
+        if (result && result.error) {
+          throw new Error(result.error.message)
+        }
+
+        // Update the user store with the new user details after they have been successfully updated
+        const userStore = useUserStore()
+        userStore.setUser(this.localUser)
+
+        // Possibly do something with the result, like showing a success message
       } catch (error) {
-        alert(error.message)
+        console.error(error.message)
       } finally {
         this.loading = false
       }

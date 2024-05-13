@@ -38,16 +38,16 @@
 
                 <hr />
               </div>
-              <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-              <form @submit.prevent="login">
+
+              <form v-show="!showSignUpForm" @submit.prevent="login">
                 <div class="form-group p-2">
-                  <label for="username">Username or Email</label>
+                  <label for="email">Email</label>
                   <input
                     v-model="credentials.email"
                     type="text"
                     class="form-control text-light bg-primary login-input"
-                    id="username"
-                    placeholder="Enter username or email"
+                    id="email"
+                    placeholder=" Enter email"
                   />
                 </div>
                 <div class="form-group p-2">
@@ -71,9 +71,69 @@
                   <label for="rememberMe">Remember me</label>
                 </div>
               </form>
+              <form v-if="showSignUpForm" @submit.prevent="signUp">
+                <!-- Sign-up form fields -->
+                <div class="form-group p-2">
+                  <label for="username">Username</label>
+                  <input
+                    v-model="signUpData.username"
+                    type="text"
+                    class="form-control text-light bg-primary login-input"
+                    id="username"
+                    placeholder="Enter a username"
+                  />
+                </div>
+                <div class="form-group p-2">
+                  <label for="fullName">Full Name</label>
+                  <input
+                    v-model="signUpData.fullName"
+                    type="text"
+                    class="form-control text-light bg-primary login-input"
+                    id="fullName"
+                    placeholder="Enter your full name"
+                  />
+                </div>
+                <div class="form-group p-2">
+                  <label for="email">Email</label>
+                  <input
+                    v-model="signUpData.email"
+                    type="text"
+                    class="form-control text-light bg-primary login-input"
+                    id="email"
+                    placeholder=" Enter email"
+                  />
+                </div>
+                <div class="form-group p-2">
+                  <label for="password">Password</label>
+                  <input
+                    v-model="signUpData.password"
+                    type="password"
+                    class="form-control text-light bg-primary login-input"
+                    id="password"
+                    placeholder="Enter a password..."
+                  />
+                </div>
+                <div class="d-flex mt-2 justify-content-between">
+                  <button
+                    type="button"
+                    class="btn btn-transparent btn-sm"
+                    @click="showSignUpForm = false"
+                  >
+                    <i class="bi bi-arrow-left fs-4 me-2 tube-text-pink me-4"></i>
+                  </button>
+                  <button
+                    v-if="!isLoggedIn"
+                    type="submit"
+                    class="btn btn-outline-success btn-sm rounded-4 text-bold ms-2 me-2 custom-size"
+                    @click="signUp"
+                  >
+                    Create Account
+                  </button>
+                </div>
+              </form>
             </div>
 
-            <div class="modal-footer bg-primary p-2 mx-auto">
+            <div v-if="!showSignUpForm" class="modal-footer bg-primary p-2 mx-auto">
               <div class="row mt-3">
                 <div class="col">
                   <div class="btn-group">
@@ -104,7 +164,7 @@
                       v-if="!isLoggedIn"
                       type="button"
                       class="btn btn-outline-success text-bold ms-2"
-                      @click="signUp"
+                      @click="toggleSignUpForm"
                     >
                       Sign Up
                     </button>
@@ -120,23 +180,34 @@
 </template>
 
 <script>
+import { useUserStore } from '@/stores/User'
 export default {
   name: 'LoginModal',
 
   data() {
     return {
+      showLoginForm: true,
       isModalVisible: false,
       credentials: {
         email: '',
         password: '',
         rememberMe: false,
         errorMessage: ''
+      },
+      showSignUpForm: false,
+      signUpData: {
+        username: '',
+        fullName: '',
+        email: '',
+        password: '',
+        errorMessage: ''
       }
     }
   },
   computed: {
     isLoggedIn() {
-      return this.$authService.isLoggedIn()
+      const userStore = useUserStore() // Correct usage of useUserStore
+      return userStore.isLoggedIn
     }
   },
 
@@ -150,43 +221,105 @@ export default {
       this.isModalVisible = false
       this.$emit('update:modelValue', false)
     },
+    toggleSignUpForm() {
+      this.showSignUpForm = !this.showSignUpForm
+    },
 
     async login() {
       try {
-        await this.$authService.login(this.credentials.email, this.credentials.password)
-        console.log(this.credentials.email)
+        const response = await this.$authService.login(
+          this.credentials.email,
+          this.credentials.password
+        )
+        const userStore = useUserStore()
+        userStore.setUser(response.user)
+        this.$toast.show('Welcome back!', {
+          type: 'success',
+          position: 'bottom-left',
+          duration: 3000,
+          theme: 'bubble'
+        })
         this.$router.push({ name: 'Home' })
       } catch (error) {
-        // Update local data property to show error message in template
         this.credentials.errorMessage = error.message
       }
     },
 
     async signUp() {
       try {
-        await this.$authService.signUp(this.credentials.email, this.credentials.password)
-        console.log(this.credentials.email)
+        const options = {
+          data: {
+            username: this.signUpData.username,
+            fullName: this.signUpData.fullName
+          }
+        }
+
+        const response = await this.$authService.signUp(
+          this.signUpData.email,
+          this.signUpData.password,
+          options // Pass the options object with the data property
+        )
+
+        console.log(`Sign up successful for ${this.signUpData.email}`)
+        const userStore = useUserStore()
+        userStore.setUser(response.user)
+        this.$toast.show('Thanks for signing up!', {
+          type: 'success',
+          position: 'bottom-left',
+          duration: 3000,
+          theme: 'bubble'
+        })
         this.$router.push({ name: 'Home' })
       } catch (error) {
-        // Update local data property to show error message in template
-        this.credentials.errorMessage = error.message
+        this.signUpData.errorMessage = error.message
       }
     },
 
     async logout() {
       try {
         await this.$authService.logout()
+        const userStore = useUserStore()
+        userStore.clearUser()
+        this.$toast('Goodbye! Come back soon!', {
+          type: 'success',
+          position: 'bottom-left',
+          duration: 3000
+        })
         this.$router.push({ name: 'Welcome' })
       } catch (error) {
-        // Update local data property to show error message in template
         this.credentials.errorMessage = error.message
       }
     },
 
+    // async logout() {
+    //   try {
+    //     // Perform any pre-logout actions needed (like calling clearAndPersistCart)
+    //     await this.clearAndPersistCart()
+
+    //     await this.$authService.logout()
+    //     const userStore = useUserStore()
+    //     userStore.clearUser() // Clears user data from the store
+    //     // Possibly perform other cleanup tasks here (e.g., clearing session tokens, cookies)
+
+    //     this.closeModal() // Close the modal if it's open
+    //     this.$router.push({ name: 'Welcome' }) // Redirects user to the welcome page
+    //   } catch (error) {
+    //     this.credentials.errorMessage = error.message
+    //   }
+    // },
+
     async signInWithGoogle() {
       try {
-        await this.$authService.loginWithProvider('google')
-        this.closeModal()
+        // Make sure "google" is passed as the provider name
+        const response = await this.$authService.loginWithProvider('google')
+        const userStore = useUserStore()
+        userStore.setUser(response.user)
+        this.$toast.show('Welcome back!', {
+          type: 'success',
+          position: 'bottom-left',
+          duration: 3000,
+          theme: 'bubble'
+        })
         this.$router.push({ name: 'Home' })
       } catch (error) {
         console.error('Login error:', error.message)
@@ -196,6 +329,7 @@ export default {
   }
 }
 </script>
+
 <style>
 .login-modal {
   z-index: 999;
@@ -211,5 +345,9 @@ export default {
 .btn-twitter {
   background-color: #55acee;
   color: white;
+}
+.custom-size {
+  padding: 1rem;
+  font-size: 0.875rem;
 }
 </style>

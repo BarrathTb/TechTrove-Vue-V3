@@ -15,21 +15,19 @@
         <div class="modal-body rounded justify-content-center">
           <img
             :src="product.image"
-            class="img-fluid card-img-top"
+            class="img-fluid details-image"
             style="border-radius: 10px; margin-bottom: 20px"
             :alt="product.name"
           />
           <div class="row">
             <h5 class="col text-white">{{ product.name }}</h5>
 
-            <div class="col-3 text-right">
-              <input
-                type="checkbox"
+            <div class="col-3">
+              <button
                 id="heartCheckbox"
-                v-model="isFavorite"
-                class="hidden-checkbox"
-              />
-              <label for="heartCheckbox" class="heart"></label>
+                @click="handleManageWish"
+                class="btn btn-outline-danger"
+              ></button>
             </div>
           </div>
           <p class="text-white">{{ productFormattedPrice }}</p>
@@ -60,12 +58,7 @@
                 >
                   -
                 </button>
-                <va-input
-                  v-model.number="quantity"
-                  type="number"
-                  min="1"
-                  class="form-control ms-2 me-2"
-                />
+                <va-input v-model="quantity" type="number" min="1" class="form-control ms-2 me-2" />
                 <button
                   size="small"
                   class="rounded-circle ms-2 btn btn-success-2"
@@ -76,7 +69,7 @@
               </div>
             </div>
             <div class="col-3">
-              <button class="flex-end btn btn-success-2" @click="handleCartOperation">
+              <button class="flex-end btn btn-success-2" @click="handleManageCart">
                 {{ buttonText }}
               </button>
             </div>
@@ -89,12 +82,12 @@
 
 <script>
 import { CartCollection } from '@/models/Cart.js'
+import { Wishlist } from '@/models/Wishlist.js'
 import { VaInput, VaModal } from 'vuestic-ui'
 export default {
   name: 'ProductDetailModal',
   components: {
     VaModal,
-
     VaInput
   },
   props: {
@@ -106,6 +99,10 @@ export default {
       type: CartCollection,
       required: false
     },
+    wishlist: {
+      type: Wishlist,
+      required: false
+    },
     isEditMode: {
       type: Boolean,
       default: false
@@ -115,11 +112,11 @@ export default {
       default: 1
     }
   },
-  emits: ['update:modelValue', 'add-to-cart'],
+  emits: ['update:modelValue', 'manage-cart', 'manage-wishlist'],
   data() {
     return {
       detailsVisible: false,
-      quantity: 1,
+      quantity: this.initialQuantity, // Initialize quantity with the prop value
       isFavorite: false
     }
   },
@@ -153,43 +150,44 @@ export default {
         this.quantity--
       }
     },
-    handleCartOperation() {
-      if (this.isEditMode) {
-        this.updateCartItem()
-      } else {
-        this.addToCart()
-      }
+    handleManageCart() {
+      this.$emit('manage-cart', {
+        product: this.product,
+        quantity: this.quantity,
+        isUpdate: this.isEditMode
+      })
+      this.closeModal()
     },
-    updateCartItem() {
-      try {
-        this.cart.updateQuantity(this.product, this.quantity)
-        this.closeModal()
-        this.cartVisible = true
-        this.scrollToCart()
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    addToCart() {
-      try {
-        this.cart.addItem(this.product, this.quantity)
-        this.closeModal()
-        this.cartVisible = true
-        this.scrollToCart()
-      } catch (error) {
-        console.error(error.message)
-      }
+    handleManageWish() {
+      this.$emit('manage-wishlist', {
+        product: this.product,
+        isFavorite: !this.isFavorite
+      })
+      this.scrollToWish()
+      this.closeModal()
     },
     scrollToCart() {
       const cartElement = document.getElementById('shopping-cart')
       if (cartElement) {
         cartElement.scrollIntoView({ behavior: 'smooth' })
       }
+    },
+    scrollToWish() {
+      const wishElement = document.getElementById('wishlist')
+      if (wishElement) {
+        wishElement.scrollIntoView({ behavior: 'smooth' })
+      }
     }
   }
 }
 </script>
 <style scoped>
+.details-image {
+  width: 50%;
+  height: 50%;
+  position: center;
+  object-fit: cover;
+}
 .product-detail-modal {
   position: relative;
   z-index: 1000;

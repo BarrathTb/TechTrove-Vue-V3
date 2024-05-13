@@ -4,13 +4,11 @@
       <nav class="navbar navbar-expand navbar-dark bg-primary">
         <div class="container-fluid align-items-center justify-content-start">
           <div class="d-none d-lg-flex justify-content-end align-items-center flex-grow-1 pe-4">
-            <button
-              @click="toggleLoginModal"
-              class="nav-link border-0 bg-transparent"
-              id="login-modal"
-            >
-              <i class="bi bi-person fs-4 mb-2 mx-2 icon-success"></i>
-            </button>
+            <router-link to="/login">
+              <button class="nav-link border-0 bg-transparent" id="login-modal">
+                <i class="bi bi-person fs-4 mb-2 mx-2 icon-success"></i>
+              </button>
+            </router-link>
           </div>
         </div>
       </nav>
@@ -26,29 +24,26 @@
           <ul class="nav nav-tabs d-none d-lg-flex mx-2">
             <li class="nav-item left-tab border-none">
               <a
-                class="nav-link text-light-bold main-nav-menu-item dropdown"
+                class="nav-link text-light-bold main-nav-menu-item"
                 href="#"
-                id="navbarDropdownMenuLinkProducts"
                 role="button"
                 @click="toStore"
               >
                 PRODUCTS
               </a>
             </li>
-
-            <li class="nav-item left-tab border-none">
-              <a
-                class="nav-link text-light-bold main-nav-menu-item dropdown"
-                href="#"
-                id="navbarDropdownMenuLinkProducts"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="true"
-                @click="toggleLoginModal"
-              >
-                LOGIN
-              </a>
-            </li>
+            <router-link to="/login">
+              <li class="nav-item left-tab border-none">
+                <a
+                  class="nav-link text-light-bold main-nav-menu-item"
+                  href="#"
+                  role="button"
+                  aria-expanded="true"
+                >
+                  LOGIN
+                </a>
+              </li>
+            </router-link>
           </ul>
 
           <button
@@ -84,17 +79,18 @@
               </li>
 
               <li class="nav-item left-tab border-none">
-                <a
-                  class="nav-link text-light-bold main-nav-menu-item dropdown"
-                  href="#"
-                  id="navbarDropdownMenuLinkProducts"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="true"
-                  @click="toggleLoginModal"
-                >
-                  LOGIN
-                </a>
+                <router-link to="/login" class="nav-link text-light-bold main-nav-menu-item">
+                  <a
+                    class="nav-link text-light-bold main-nav-menu-item dropdown"
+                    href="#"
+                    id="navbarDropdownMenuLinkProducts"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="true"
+                  >
+                    LOGIN
+                  </a>
+                </router-link>
               </li>
             </ul>
           </div>
@@ -107,22 +103,18 @@
 <script>
 export default {
   name: 'HeaderComponent',
-  props: {
-    products: {
-      type: Array,
-      required: true
-    },
-    modelValue: {
-      type: Boolean,
-      default: false
-    }
-  },
-  watch: {
-    modelValue(newValue) {
-      this.isModalVisible = newValue
-    }
-  },
-  emits: ['toggle-login-modal'],
+  // props: {
+  //   modelValue: {
+  //     type: Boolean,
+  //     default: false
+  //   }
+  // },
+  // watch: {
+  //   modelValue(newValue) {
+  //     this.isModalVisible = newValue
+  //   }
+  // },
+  // emits: ['toggle-login-modal'],
   data() {
     return {
       searchTerm: ''
@@ -134,11 +126,14 @@ export default {
       this.$emit('search', this.searchTerm)
     },
 
-    toggleLoginModal() {
-      this.$emit('toggle-login-modal')
-    },
+    // toggleLoginModal() {
+    //   this.$emit('toggle-login-modal')
+    // },
     toStore() {
-      this.$router.push('/Home')
+      this.$router.push('/home')
+    },
+    toLogin() {
+      this.$router.push('/login')
     }
   }
 }

@@ -9,6 +9,7 @@
     @toggle-support="toggleSupportVisibility"
     @toggle-builder-zone="toggleBuilderZoneVisibility"
     @toggle-board="toggleMessageBoard"
+    @toggle-wishlist="toggleWishlistVisibility"
     :cart-item-count="cartItemCount"
     @update-cart-count="updateCartItemCount"
   />
@@ -16,11 +17,20 @@
   <ShoppingCart
     class="shopping-cart"
     :cart="cart"
-    v-if="cartVisible"
+    v-show="cartVisible"
     @remove-cart-item="removeCartItem"
-    @update-cart="updateCart"
+    @manage-cart="manageCart"
     @edit-item="editIteminCart"
+    @toggle-cart="toggleCartVisibility"
     @toggle-Shipping="toggleShippingVisibility"
+  />
+  <shipping-section v-show="shippingVisible" @toggle-shipping="toggleShippingVisibility" />
+  <WishlistSection
+    v-show="wishlistVisible"
+    @move-wish-item="moveWishItem"
+    @remove-wish-item="removeWishItem"
+    @manage-wishlist-item="manageWishlist"
+    :wishlist="wishlist"
   />
   <BuilderZone v-show="builderZoneVisible" />
   <BlogSection v-show="blogVisible" />
@@ -29,7 +39,7 @@
   <PcBuilder
     :products="allProducts"
     v-show="buildVisible"
-    @add-to-cart="addToCart"
+    @manage-cart="manageCart"
     @toggle-build="closeBuilder"
   />
 
@@ -46,8 +56,9 @@
     :initialQuantity="selectedProductQuantity"
     :isEditMode="isEditModal"
     v-model="detailsVisible"
-    @add-to-cart="addToCart"
-    @update-cart-item="updateCartItem"
+    @manage-cart="manageCart"
+    @manage-wishlist="manageWishlist"
+    :wishlist="wishlist"
     :cart="cart"
   />
   <AppFooter />
@@ -63,18 +74,20 @@ import MessageBoard from '@/components/PageSections/MessageBoard.vue'
 import PcBuilder from '@/components/PageSections/PcBuilder.vue'
 import ProductCard from '@/components/PageSections/ProductCard.vue'
 import ShoppingCart from '@/components/PageSections/ShoppingCart.vue'
+import ShippingSection from '@/components/PageSections/ShippingSection.vue'
 import SupportSection from '@/components/PageSections/SupportSection.vue'
 import ProductDetailModal from '@/components/modals/ProductDetailModal.vue'
 import HeaderComponent from '@/components/siteNavs/HeaderComponent.vue'
-
+import WishlistSection from '@/components/PageSections/WishListSection.vue'
+import { useUserStore } from '@/stores/User'
 import { CartCollection } from '@/models/Cart.js'
 import Product from '@/models/Product'
+import Profile from '@/models/Profile.js'
+import { Wishlist } from '@/models/Wishlist'
 
 export default {
   name: 'HomePage',
-  props: {
-    session: Object // Define the 'session' prop
-  },
+
   components: {
     HeaderComponent,
     ShoppingCart,
@@ -87,12 +100,14 @@ export default {
     AppFooter,
     CardCarousel,
     HeroImage,
-    ProductCard
+    ProductCard,
+    WishlistSection,
+    ShippingSection
   },
   data() {
     return {
       products: [],
-      shippingVisibility: false,
+      shippingVisible: false,
       activeCategory: null,
       activeBrand: null,
       boardVisible: false,
@@ -101,6 +116,9 @@ export default {
       isEditModal: false,
       cartItemCount: 0,
       cart: new CartCollection(),
+      wishlist: new Wishlist(),
+      defaultAvatarUrl: 'https://avatarfiles.alphacoders.com/367/367929.jpg',
+      wishlistVisible: false,
       isSupportVisible: false,
       quantity: 1,
       detailsVisible: false,
@@ -118,128 +136,247 @@ export default {
   },
   async mounted() {
     try {
+      await this.initializeProducts()
+      await this.initializeUserProfile()
+      await this.initializeCart()
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
+  computed: {
+    isLoggedIn() {
+      const userStore = useUserStore()
+      return userStore.isLoggedIn
+    },
+
+    localUser() {
+      const userStore = useUserStore()
+      return userStore.profile || {}
+    }
+  },
+
+  watch: {
+    'cart.items': {
+      handler() {
+        this.updateCartItemCount()
+      },
+      deep: true,
+      immediate: false
+    },
+
+    isLoggedIn: {
+      handler(loggedIn) {
+        if (loggedIn) {
+          const userStore = useUserStore()
+          userStore.fetchProfile() // Fetch profile on login
+        } else {
+          console.log('No user is logged in.')
+        }
+      },
+      immediate: true // This ensures the handler runs immediately after mount
+    }
+  },
+
+  methods: {
+    /**
+     * Initializes the products by fetching them from the server and setting them to the component's state.
+     *
+     * @return {Promise<void>} - A promise that resolves when the products have been fetched and the state has been updated.
+     */
+    async initializeProducts() {
       const products = await Product.fetchProducts()
       this.allProducts = products
       this.filteredProducts = products
       this.uniqueCategories = this.calculateUniqueCategories(products)
       this.uniqueBrands = this.calculateUniqueBrands(products)
-      this.loadCart()
-    } catch (error) {
-      console.error('Error fetching products:', error.message)
-    }
-  },
-  watch: {
-    'cart.cartItems': {
-      handler() {
-        this.saveCart()
-        this.updateCartItemCount()
-      },
-      deep: true,
-      immediate: false
-    }
-  },
+    },
 
-  methods: {
-    loadCart() {
-      const storedCart = localStorage.getItem('cartItems')
-      if (storedCart) {
-        const cartData = JSON.parse(storedCart)
+    /**
+     * Initializes the user profile based on the user's login status.
+     *
+     * @return {Promise<void>} - A promise that resolves when the user profile is initialized.
+     */
+    async initializeUserProfile() {
+      const userStore = useUserStore()
 
-        console.log('Loaded cart data:', cartData)
+      if (userStore.isLoggedIn) {
+        // Fetch user profile and set it in the store
+        const profile = await userStore.fetchProfile()
+        if (profile) {
+          userStore.setUser(profile)
+        }
+      }
+    },
 
-        // Assuming this.allProducts is an array of all available products
-        if (!this.allProducts || this.allProducts.length === 0) {
-          console.error("The list of all products is empty or hasn't been loaded.")
+    /**
+     * Initializes the cart based on the user's login status.
+     *
+     * @return {Promise<void>} - A promise that resolves when the cart is initialized.
+     */
+    async initializeCart() {
+      const userStore = useUserStore()
+
+      if (userStore.isLoggedIn) {
+        // Initialize cart for logged-in users
+        await this.cart.initializeCart()
+        if (this.cart.items.size === 0) {
+          // Maybe notify user their cart is empty
+        }
+      } else {
+        // Load cart from local storage for guests
+        this.cart.loadCartFromLocalStorage()
+      }
+    },
+    /**
+     * Asynchronously fetches the user's profile and initializes the cart collection.
+     *
+     * @return {Promise<void>} Promise that resolves when the profile is fetched and the cart is initialized.
+     */
+    async getProfile() {
+      this.loading = true
+
+      try {
+        const userStore = useUserStore()
+
+        if (!userStore.session || !userStore.session.user) {
+          console.warn('Guest session or no user; skipping profile fetch.')
           return
         }
 
-        cartData.forEach((productData, index) => {
-          // Verify if the product data structure is correct and id property exists
-          if (productData && productData.product && typeof productData.product.id !== 'undefined') {
-            // Find the corresponding product instance by id
-            const productInstance = this.allProducts.find((p) => p.id === productData.product.id)
-            if (productInstance) {
-              // Add item to cart with the found product instance and desired quantity
-              this.cart.addItem(productInstance, productData.quantity)
-            } else {
-              console.error(`Could not find product with ID ${productData.product.id}`)
-            }
-          } else {
-            console.error(`Invalid product data at index ${index}:`, productData)
-          }
-        })
-      } else {
-        console.log('No cart found in localStorage.')
-      }
-    },
+        const profile = await Profile.fetchUser(userStore.session.user.id)
 
-    saveCart() {
-      localStorage.setItem('cartItems', JSON.stringify(this.cart.cartItems))
-    },
+        if (profile) {
+          this.localUser = profile
+          console.log('User profile:', this.localUser)
 
-    removeCartItem(productId) {
-      try {
-        this.cart.removeItem(productId)
-        this.saveCart()
-        this.updateCartItemCount()
+          this.cart = new CartCollection(profile)
+          await this.cart.fetchCartItems()
+          console.log('Authenticated user cart after fetching items:', this.cart)
+        } else {
+          console.warn('No profile could be fetched.')
+        }
       } catch (error) {
-        alert(error.message)
+        console.error('Error fetching profile:', error.message)
+      } finally {
+        this.loading = false
       }
     },
-    addToCart(product) {
+
+    /**
+     * A function to remove an item from the cart.
+     *
+     * @param {Object} item - The item to be removed from the cart
+     */
+    removeCartItem(item) {
       try {
-        this.cart.addItem(product)
-        this.saveCart()
+        console.log('Attempting to remove item from cart:', item)
 
-        this.toggleCartVisibility()
-
-        this.scrollToCart()
-      } catch (error) {
-        alert(error.message)
-      }
-    },
-    updateCart(updatedCartItems) {
-      this.cart.cartItems = updatedCartItems
-      this.updateCartItemCount()
-    },
-    editIteminCart(item) {
-      // Assuming you want to edit the quantity of a cart item when editing
-      try {
-        this.cart.editItem(item.product, item.quantity) // This is calling the 'editItem' method correctly
-        this.isEditModal = true
-        this.detailsVisible = true
-        this.saveCart()
-      } catch (error) {
-        alert(error.message)
-      }
-    },
-    updateCartItem(item) {
-      try {
-        // Update the usage here to call the correct method, which is 'updateQuantity'
-        this.cart.updateQuantity(item.product.id, item.quantity)
-
-        // There seems to be additional logic referring to 'this.cartItems' and 'this.updateCart'
-        // Please verify if these parts are relevant and correctly placed in the expected scope
-
-        // The following code block may not be necessary if you are already watching the cart items
-        // in another component to handle updates, or if updateQuantity method already covers this logic.
-        const index = this.cart.cartItems.findIndex((cartItem) => cartItem.id === item.product.id)
-
-        if (index >= 0) {
-          this.cart.cartItems[index].quantity = item.quantity
-          // Ensure 'updateCart' is an existing and correct method for updating the cart view.
-          this.updateCart(this.cart.cartItems)
+        if (!item || !item.product || typeof item.product.id === 'undefined') {
+          console.error('Invalid product structure:', item)
+          throw new Error('Cannot remove a product without a valid id.')
         }
 
-        this.handleViewDetails(item)
-        this.isEditModal = false
+        const realProduct = this.unwrapProxy(item.product)
+
+        this.cart.removeItem(realProduct.id) // Pass only the product ID
+
+        console.log('Item successfully removed from cart:', realProduct)
+
+        this.cart.synchronizeCart()
+        this.$toast('Item removed from cart.')
+        this.updateCartItemCount()
       } catch (error) {
-        alert(error.message)
+        console.error('Error while removing item from cart:', error.message)
       }
+    },
+
+    unwrapProxy(proxy) {
+      return JSON.parse(JSON.stringify(proxy))
+    },
+
+    /**
+     * Manages the cart based on the payload provided.
+     *
+     * @param {Object} payload - The payload containing product, quantity, and isUpdate flag.
+     */
+    manageCart(payload) {
+      try {
+        const { product, quantity, isUpdate } = payload
+        if (isUpdate) {
+          this.cart.updateQuantity(product.id, quantity)
+          this.$toast('Item quantity updated.')
+        } else {
+          this.cart.addItem(product, quantity)
+          this.$toast('Item added to cart.')
+        }
+
+        this.cart.synchronizeCart()
+        console.log('Cart updated', this.cart.items)
+
+        if (!isUpdate) {
+          if (!this.cartVisible) {
+            this.toggleCartVisibility()
+          }
+          this.scrollToCart()
+        }
+
+        this.updateCartItemCount()
+      } catch (error) {
+        console.error(`Manage Cart Item Error: ${error.message}`)
+      }
+    },
+
+    editIteminCart(item) {
+      this.selectedProduct = item.product
+      this.isEditModal = true
+      this.detailsVisible = true
     },
 
     updateCartItemCount() {
-      this.cartItemCount = this.cart.cartItems.reduce((total, item) => total + item.quantity, 0)
+      this.cartItemCount = Array.from(this.cart.items.values()).reduce(
+        (acc, cur) => acc + cur.quantity,
+        0
+      )
+      console.log(this.cartItemCount)
+    },
+    removeWishItem(item) {
+      this.wishlistItems = this.wishlistItems.filter((i) => i.id !== item.id)
+      this.wishlist.synchronizeWishlist()
+      console.log(this.wishlistItems)
+      this.updateWishlistItemCount()
+    },
+
+    /**
+     * A function to manage the wishlist items based on the payload.
+     *
+     * @param {Object} payload - The payload containing information about the product and whether it is a favorite.
+     */
+    manageWishlist(payload) {
+      try {
+        const { product, isFavorite } = payload
+        if (isFavorite) {
+          this.wishlist.addItem(product)
+          if (this.wishlistVisible) {
+            this.toggleWishlistVisibility()
+          }
+          this.scrollToWishlist()
+          console.log(this.wishlistItems)
+          this.detailsVisible = false
+        } else {
+          this.wishlist.removeItem(product)
+        }
+        this.wishlist.synchronizeWishlist()
+        this.updateWishlistItemCount()
+      } catch (error) {
+        console.error(`Manage Wishlist Item Error: ${error.message}`)
+      }
+    },
+
+    moveWishItem(item) {
+      this.wishlist.moveToCart(item)
+      this.wishlist.synchronizeWishlist()
+      this.updateWishlistItemCount()
     },
 
     calculateUniqueCategories(products) {
@@ -250,6 +387,13 @@ export default {
       // Logic to get unique brands from products.
       return [...new Set(products.map((p) => p.brand))]
     },
+
+    /**
+     * Filters the products based on the selected item.
+     *
+     * @param {string} selectedItem - The selected item to filter the products by.
+     * @return {void} This function does not return anything.
+     */
     filterProducts(selectedItem) {
       // Determine if selectedItem is a category or a brand.
       this.resetFilters()
@@ -277,6 +421,13 @@ export default {
       this.activeBrand = null
       this.filteredProducts = this.allProducts
     },
+
+    /**
+     * Performs a search operation based on the provided query.
+     *
+     * @param {string} query - The search query to filter products.
+     * @return {Object} An object containing filtered products and the search term used.
+     */
     performSearch(query) {
       if (typeof query !== 'string' || !query.trim()) {
         return { products: this.products, searchTerm: '' }
@@ -330,7 +481,10 @@ export default {
       this.isSupportVisible = !this.isSupportVisible
     },
     toggleShippingVisibility() {
-      this.isShippingVisible = !this.isShippingVisible
+      this.shippingVisible = !this.shippingVisible
+    },
+    toggleWishlistVisibility() {
+      this.wishlistVisible = !this.wishlistVisible
     },
 
     handleViewDetails(product) {
@@ -353,6 +507,16 @@ export default {
           console.error(
             'Failed to get the shopping cart element or scrollIntoView is not available'
           )
+        }
+      })
+    },
+    scrollToWish() {
+      this.$nextTick(() => {
+        const wishElement = document.getElementById('wishlist')
+        if (wishElement && typeof wishElement.scrollIntoView === 'function') {
+          wishElement.scrollIntoView({ behavior: 'smooth' })
+        } else {
+          console.error('Failed to get the wishlist element or scrollIntoView is not available')
         }
       })
     }

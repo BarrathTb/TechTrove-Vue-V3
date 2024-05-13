@@ -1,0 +1,319 @@
+<template>
+  <div class="container-fluid d-flex h-100 align-items-center justify-content-center bg-primary">
+    <div class="row w-100">
+      <div class="col-md-6 bg-primary rounded-2 d-flex align-items-center justify-content-start">
+        <img class="img-fluid login-img rounded-2" src="/images/login.png" alt="Login Image" />
+      </div>
+      <div class="col-md-6 bg-primary rounded-2">
+        <div class="modal-header bg-primary">
+          <h5 class="modal-title my-4 text-center w-100">Login to Your Account</h5>
+        </div>
+        <div class="modal-body rounded bg-primary p-4">
+          <div class="text-center text-light p-2">
+            <p>Login via magic link with email below</p>
+            <a
+              href="#"
+              class="btn btn-outline btn-block mb-2 me-2"
+              style="background-color: #3b5998; color: white"
+            >
+              <i class="fab fa-facebook-f"></i> Facebook
+            </a>
+            <a
+              href="#"
+              @click="signInWithGoogle"
+              class="btn btn-outline-danger btn-block mb-2 ms-2 me-2"
+              style="background-color: #dd4b39; color: white"
+            >
+              <i class="fab fa-google"></i> Google
+            </a>
+            <a
+              href="#"
+              class="btn btn-outline-info btn-block mb-2 ms-2"
+              style="background-color: #55acee; color: white"
+            >
+              <i class="fab fa-twitter"></i> Twitter
+            </a>
+
+            <hr />
+          </div>
+
+          <form v-show="!showSignUpForm" @submit.prevent="login">
+            <div class="form-group p-2">
+              <label for="email">Email</label>
+              <input
+                v-model="credentials.email"
+                type="text"
+                class="form-control text-light login-input"
+                id="email"
+                placeholder=" Enter email"
+              />
+            </div>
+            <div class="form-group p-2">
+              <label for="password">Password</label>
+              <input
+                v-model="credentials.password"
+                type="password"
+                class="form-control text-light login-input"
+                id="password"
+                placeholder="Enter a password..."
+              />
+            </div>
+
+            <div class="form-check mt-2 ms-2">
+              <input
+                v-model="credentials.rememberMe"
+                type="checkbox"
+                class="form-check-input"
+                id="rememberMe"
+              />
+              <label for="rememberMe">Remember me</label>
+            </div>
+          </form>
+          <form v-if="showSignUpForm" @submit.prevent="signUp">
+            <!-- Sign-up form fields -->
+            <div class="form-group p-2">
+              <label for="username">Username</label>
+              <input
+                v-model="signUpData.username"
+                type="text"
+                class="form-control text-light login-input"
+                id="username"
+                placeholder="Enter a username"
+              />
+            </div>
+            <div class="form-group p-2">
+              <label for="fullName">Full Name</label>
+              <input
+                v-model="signUpData.fullName"
+                type="text"
+                class="form-control text-light login-input"
+                id="fullName"
+                placeholder="Enter your full name"
+              />
+            </div>
+            <div class="form-group p-2">
+              <label for="email">Email</label>
+              <input
+                v-model="signUpData.email"
+                type="text"
+                class="form-control text-light login-input"
+                id="email"
+                placeholder=" Enter email"
+              />
+            </div>
+            <div class="form-group p-2 justify-content-center">
+              <label for="password">Password</label>
+              <input
+                v-model="signUpData.password"
+                type="password"
+                class="form-control text-light login-input"
+                id="password"
+                placeholder="Enter a password..."
+              />
+            </div>
+
+            <div class="d-flex mt-2 justify-content-between">
+              <button
+                type="button"
+                class="btn btn-transparent btn-sm"
+                @click="showSignUpForm = false"
+              >
+                <i class="bi bi-arrow-left fs-4 me-2 tube-text-pink me-4"></i>
+              </button>
+              <button
+                v-if="!isLoggedIn"
+                type="submit"
+                class="btn btn-outline-success btn-sm rounded-4 text-bold ms-2 me-2 custom-size"
+                @click="signUp"
+              >
+                Create Account
+              </button>
+            </div>
+          </form>
+        </div>
+        <hr v-if="!showSignUpForm" />
+        <div v-if="!showSignUpForm" class="bg-primary p-2">
+          <div class="row mt-3">
+            <div class="d-flex justify-content-center w-100">
+              <div class="btn-group">
+                <button
+                  v-if="!isLoggedIn"
+                  type="button"
+                  class="btn btn-outline-success text-bold ms-2 me-2"
+                  @click="login"
+                >
+                  Login
+                </button>
+                <button
+                  v-else
+                  type="button"
+                  class="btn btn-outline-danger text-bold me-2"
+                  @click="logout"
+                >
+                  Logout
+                </button>
+                <i class="bi bi-question-square fs-4 ms-4 me-4 tube-text-blue"></i>
+                <button
+                  v-if="!isLoggedIn"
+                  type="button"
+                  class="btn btn-outline-success text-bold ms-2"
+                  @click="toggleSignUpForm"
+                >
+                  Sign Up
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { useUserStore } from '@/stores/User'
+export default {
+  name: 'LoginPage',
+
+  data() {
+    return {
+      showLoginForm: true,
+
+      credentials: {
+        email: '',
+        password: '',
+        rememberMe: false,
+        errorMessage: ''
+      },
+      showSignUpForm: false,
+      signUpData: {
+        username: '',
+        fullName: '',
+        email: '',
+        password: '',
+        errorMessage: ''
+      }
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      const userStore = useUserStore() // Correct usage of useUserStore
+      return userStore.isLoggedIn
+    }
+  },
+
+  methods: {
+    openModal() {
+      this.isModalVisible = true
+      this.$emit('update:modelValue', true)
+    },
+
+    closeModal() {
+      this.isModalVisible = false
+      this.$emit('update:modelValue', false)
+    },
+    toggleSignUpForm() {
+      this.showSignUpForm = !this.showSignUpForm
+    },
+
+    async login() {
+      try {
+        const response = await this.$authService.login(
+          this.credentials.email,
+          this.credentials.password
+        )
+        const userStore = useUserStore()
+        userStore.setUser(response.user)
+        this.$toast('Welcome back!')
+        this.$router.push({ name: 'Home' })
+      } catch (error) {
+        this.credentials.errorMessage = error.message
+      }
+    },
+
+    async signUp() {
+      try {
+        const options = {
+          data: {
+            username: this.signUpData.username,
+            fullName: this.signUpData.fullName
+          }
+        }
+
+        const response = await this.$authService.signUp(
+          this.signUpData.email,
+          this.signUpData.password,
+          options // Pass the options object with the data property
+        )
+
+        console.log(`Sign up successful for ${this.signUpData.email}`)
+        const userStore = useUserStore()
+        userStore.setUser(response.user)
+
+        this.$toast('Account created! Welcome to --> TechTrove!')
+        this.$router.push({ name: 'Home' })
+      } catch (error) {
+        this.signUpData.errorMessage = error.message
+      }
+    },
+
+    async logout() {
+      try {
+        await this.$authService.logout()
+        const userStore = useUserStore()
+        userStore.clearUser()
+        this.$toast('Goodbye!')
+        this.$router.push({ name: 'Welcome' })
+      } catch (error) {
+        this.credentials.errorMessage = error.message
+      }
+    },
+
+    async signInWithGoogle() {
+      console.log('signInWithGoogle method called') // Add this line for debugging.
+
+      try {
+        const response = await this.$authService.loginWithProvider('google')
+
+        console.log('Response received:', response) // Check if the promise resolves.
+
+        if (response?.user) {
+          console.log('User object:', response.user)
+          const userStore = useUserStore()
+          userStore.setUser(response.user)
+          this.$toast('Welcome back!')
+          this.$router.push({ name: 'Home' })
+        } else {
+          console.error('No user object in response.')
+        }
+      } catch (error) {
+        console.error('Login error:', error)
+        this.credentials.errorMessage = error.message
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+.container-fluid {
+  padding: 0;
+}
+.row {
+  margin: 0; /* Removes default margins from .row */
+}
+.img-fluid {
+  max-width: 100%;
+  height: auto; /* Ensures the image scales properly */
+}
+@media (max-width: 767px) {
+  .container-fluid {
+    flex-direction: column;
+  }
+  .col-md-6 {
+    /* Stacks on smaller screens */
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+}
+</style>

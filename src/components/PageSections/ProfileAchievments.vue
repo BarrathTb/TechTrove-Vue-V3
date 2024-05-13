@@ -6,15 +6,13 @@
           <div class="col-3">
             <h3 class="text-white text-center align-items-center">Achievments</h3>
 
-            <Avatar v-if="src" :src="src" alt="Avatar" :size="size + 'em'" />
-            <div
-              v-else
-              class="avatar no-image"
-              :style="{ height: size + 'em', width: size + 'em' }"
-            ></div>
+            <img
+              class="avatar rounded-4 d-flex align-items-center justify-content-center mt-4 mb-4 ms-4"
+              :src="localUser?.avatar_url || defaultAvatarUrl"
+            />
 
             <div class="row">
-              <h1 for="username" class="text-light-bold text-center align-items-center">
+              <h1 class="text-light-bold text-center align-items-center me-2">
                 <i class="bi bi-star-fill me-4"></i>874
               </h1>
             </div>
@@ -24,7 +22,7 @@
 
           <div class="col-5 me-4">
             <div class="container-fluid mt-2">
-              <div class="bg-secondary p-4 rounded-4 me-4">
+              <div class="bg-secondary p-4 rounded-4">
                 <h4 class="text-white text-center">User Level</h4>
                 <div class="row">
                   <div class="col-4">
@@ -50,38 +48,30 @@
                 <div class="row">
                   <div class="col-3">
                     <div
-                      class="bg-secondary align-items-center justify-content-center p-4 rounded-4"
+                      class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
                     >
-                      <VaAvatar
-                        size="large"
-                        position="center"
-                        class="centeralign-items-center justify-content-center"
-                        src="images/badge1.png"
-                      />
+                      <VaAvatar src="images/badge1.png" />
                     </div>
                   </div>
                   <div class="col-3">
-                    <div class="bg-secondary p-4 rounded-4 me-4">
-                      <VaAvatar
-                        class="ms-2 align-items-center justify-content-center"
-                        src="images/badge2.png"
-                      />
+                    <div
+                      class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
+                    >
+                      <VaAvatar src="images/badge2.png" />
                     </div>
                   </div>
                   <div class="col-3">
-                    <div class="bg-secondary p-4 rounded-4 me-4">
-                      <VaAvatar
-                        class="ms-2 align-items-center justify-content-center"
-                        src="images/badge3.png"
-                      />
+                    <div
+                      class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
+                    >
+                      <VaAvatar src="images/badge3.png" />
                     </div>
                   </div>
                   <div class="col-3">
-                    <div class="bg-secondary p-4 rounded-4 me-4">
-                      <VaAvatar
-                        class="ms-2 align-items-center justify-content-center"
-                        src="images/badge4.png"
-                      />
+                    <div
+                      class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
+                    >
+                      <VaAvatar src="images/badge4.png" />
                     </div>
                   </div>
                 </div>
@@ -91,32 +81,29 @@
           <div class="col-3">
             <div class="container-fluid mt-2 ms-4">
               <div class="bg-secondary p-4 rounded-4">
-                <h5 class="text-light-bold p-4">
+                <h5 class="text-light-bold p-2">
                   Discover How to Earn Badges and Unlock Amazing Rewards and Discounts.
                 </h5>
-                <div class="row">
+                <div class="row d-flex align-items-center justify-content-between me-2">
                   <div class="col-3">
-                    <div class="bg-secondary p-4 rounded-4 me-4">
-                      <VaAvatar
-                        class="ms-2 align-items-center justify-content-center"
-                        src="images/badge2.png"
-                      />
+                    <div
+                      class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
+                    >
+                      <VaAvatar src="images/badge2.png" />
                     </div>
                   </div>
                   <div class="col-3">
-                    <div class="bg-secondary p-4 rounded-4 me-4">
-                      <VaAvatar
-                        class="ms-2 align-items-center justify-content-center"
-                        src="images/badge3.png"
-                      />
+                    <div
+                      class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
+                    >
+                      <VaAvatar src="images/badge3.png" />
                     </div>
                   </div>
                   <div class="col-3">
-                    <div class="bg-secondary p-4 rounded-4 me-4">
-                      <VaAvatar
-                        class="ms-2 align-items-center justify-content-center"
-                        src="images/badge4.png"
-                      />
+                    <div
+                      class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
+                    >
+                      <VaAvatar src="images/badge4.png" />
                     </div>
                   </div>
                 </div>
@@ -159,11 +146,14 @@
                 <div class="row">
                   <div class="col-12">
                     <div class="mt-4 rounded-4 bg-secondary">
-                      <!-- <LuzmoDashboard
-                        mainColor="#000000"
-                        accent-color="#000000"
-                        class="mt-4 rounded-4 bg-secondary"
-                      /> -->
+                      <!-- <luzmo-dashboard
+                        dashboardId="945620d9-3013-4ec5-986c-d858008faa0b"
+                        authKey="< embed key (id property) returned by step 1 >"
+                        authToken="< embed token (token property) returned by step 1 >"
+                        appServer="https://app.us.luzmo.com/"
+                      >
+                      </luzmo-dashboard> -->
+
                       <img width="100%" src="/images/stats.png" class="" alt="display tech image" />
                     </div>
                   </div>
@@ -178,104 +168,94 @@
 </template>
 
 <script>
-import { supabase } from '@/utils/Supabase'
 // import { LuzmoDashboard } from '@luzmo/vue-embed'
-import Avatar from '@/components/PageSections/ProfileAvatar.vue'
+// import Avatar from '@/components/PageSections/ProfileAvatar.vue'
+import { useUserStore } from '@/stores/User'
 
 export default {
-  props: ['session'],
-  components: {
-    Avatar
-    // LuzmoDashboard
-  },
-  computed: {
-    user() {
-      return this.session.user
+  name: 'ProfileAchievments',
+  // components: {
+  //   Avatar
+  //   // LuzmoDashboard
+  // },
+  props: {
+    achievmentsVisible: {
+      type: Boolean,
+      default: false
     }
   },
+
   emits: ['update'],
+
   data() {
     return {
+      defaultAvatarUrl: 'https://avatarfiles.alphacoders.com/367/367929.jpg',
+      src: null,
+      size: 10,
       loading: true,
       username: '',
       website: '',
       avatar_url: '',
-      isModalVisible: false,
-      achievmentsVisible: false
+      isModalVisible: false
     }
   },
-  created() {
-    console.log(this.session)
-    this.getProfile()
+  async mounted() {
+    const userStore = useUserStore()
+
+    // Run this only if there is an existing session
+    if (userStore.isLoggedIn) {
+      await userStore.fetchProfile()
+    }
   },
+
+  computed: {
+    isLoggedIn() {
+      const userStore = useUserStore()
+      return userStore.isLoggedIn
+    },
+    // Use the user information from the profile in the store
+    localUser() {
+      const userStore = useUserStore()
+      return userStore.profile || {} // Fallback to an empty object if no profile found
+    }
+  },
+  watch: {
+    isLoggedIn: {
+      handler(loggedIn) {
+        if (loggedIn) {
+          const userStore = useUserStore()
+          userStore.fetchProfile() // Fetch profile on login
+        } else {
+          console.log('No user is logged in.')
+        }
+      },
+      immediate: true // This ensures the handler runs immediately after mount
+    }
+  },
+
   methods: {
-    async getProfile() {
-      if (!this.session || !this.session.user) {
-        console.error('Invalid session object:', this.session)
-        return
-      }
-      try {
-        this.loading = true
-        const { user } = this.session
+    // async fetchAndUpdateUser() {
+    //   this.loading = true
+    //   try {
+    //     const userStore = useUserStore() // Obtain the store instance
+    //     if (!userStore.session || !userStore.session.user) {
+    //       throw new Error('Session or user information is unavailable.')
+    //     }
 
-        const { data, error, status } = await supabase
-          .from('profiles')
-          .select(`username, website, avatar_url`)
-          .eq('id', user.id)
-          .single()
-
-        if (error && status !== 406) throw error
-
-        if (data) {
-          this.username = data.username
-          this.website = data.website
-          this.avatar_url = data.avatar_url
-        }
-      } catch (error) {
-        alert(error.message)
-      } finally {
-        this.loading = false
-      }
-    },
-
-    async updateProfile() {
-      try {
-        this.loading = true
-        // Get the current session directly from supabase.auth
-        const session = supabase.auth.session
-
-        if (!session || !session.user) {
-          throw new Error('User not authenticated')
-        }
-
-        const updates = {
-          id: session.user.id,
-          username: this.username,
-          website: this.website,
-          avatar_url: this.avatar_url,
-          updated_at: new Date()
-        }
-
-        const { error } = await supabase.from('profiles').upsert(updates)
-
-        if (error) throw error
-      } catch (error) {
-        alert(error.message)
-      } finally {
-        this.loading = false
-      }
-    },
+    //     const profile = await Profile.fetchUser(userStore.session.user.id)
+    //     if (profile) {
+    //       this.localUser = profile // Update the local user with fetched profile info
+    //     }
+    //     console.log(this.localUser)
+    //   } catch (error) {
+    //     console.error(error.message)
+    //   } finally {
+    //     this.loading = false
+    //   }
+    // },
 
     async signOut() {
-      try {
-        this.loading = true
-        const { error } = await supabase.auth.signOut()
-        if (error) throw error
-      } catch (error) {
-        alert(error.message)
-      } finally {
-        this.loading = false
-      }
+      this.authService.signOut()
     },
     toggleLoginModal() {
       this.isModalVisible = !this.isModalVisible
@@ -304,8 +284,8 @@ export default {
   height: 80vh; /* or height: 100vh; if you prefer it to be full height */
 }
 .avatar {
-  width: 70px;
-  height: 70px;
+  max-width: 70px;
+  max-height: 70px;
   border-radius: 50%;
   object-fit: cover;
 }

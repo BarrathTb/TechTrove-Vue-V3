@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
   <transition name="slide">
-    <div v-if="toggleCartVisibility" id="shopping-cart" class="bg-primary">
+    <div v-show="toggleCartVisibility" id="shopping-cart" class="bg-primary">
       <!-- Shopping Cart Section -->
       <section class="shopping-cart py-5">
         <div class="container">
@@ -23,7 +23,7 @@
                       </tr>
                     </thead>
                     <tbody class="mx-auto">
-                      <tr v-for="item in cart.cartItems" :key="item.product.id">
+                      <tr v-for="item in cartItems" :key="item.id">
                         <td>
                           <img
                             :src="item.product.image"
@@ -37,12 +37,12 @@
                         <td>${{ (item.product.price * item.quantity).toFixed(2) }}</td>
                         <td style="vertical-align: middle">
                           <div class="d-flex align-items-center justify-content-center mx-2 gap-2">
-                            <button class="border-0 bg-transparent" @click="editItem(item.product)">
+                            <button class="border-0 bg-transparent" @click="emitEditItem(item)">
                               <i class="bi bi-pencil icon-light fs-4"></i>
                             </button>
                             <button
                               class="border-0 bg-transparent"
-                              @click="removeCartItem(item.product)"
+                              @click="emitRemoveCartItem(item)"
                             >
                               <i class="bi bi-trash fs-4 icon-danger"></i>
                             </button>
@@ -58,7 +58,7 @@
                       </tr>
                       <tr>
                         <td colspan="4" class="text-left">
-                          <button class="btn btn-pill-light my-2" @click="closeCart">
+                          <button class="btn btn-pill-light my-2" @click="toggleCartContinue">
                             <i class="fas fa-chevron-left"></i> &lt; Continue Shopping
                           </button>
                         </td>
@@ -80,19 +80,15 @@
           </div>
         </div>
       </section>
-      <shipping-section @toggle-shipping="toggleShippingVisibility" />
     </div>
   </transition>
 </template>
 
 <script>
 import { CartCollection } from '@/models/Cart.js'
-import ShippingSection from './ShippingSection.vue'
+
 export default {
   name: 'ShoppingCart',
-  components: {
-    ShippingSection
-  },
 
   props: {
     cart: {
@@ -102,49 +98,68 @@ export default {
   },
   data() {
     return {
-      // cartVisible: false,
-      shippingVisible: false
+      cartVisible: false
     }
   },
+  // mounted() {
+  //   this.cartItems = async () => {
+  //     // Make sure this computed property can handle Promises if using async/await
+  //     try {
+  //       const itemsMap = await this.cart.fetchCartItems() // Fetch and wait for items, since it's an async function
+  //       return Array.from(itemsMap.values()) // Convert Map values to Array
+  //     } catch (error) {
+  //       console.error('Failed to fetch cart items:', error)
+  //       return [] // Return an empty array in case of an error
+  //     }
+  //   }
+  // },
 
   computed: {
     cartTotal() {
-      // Use the 'total' getter from CartCollection
       return this.cart.total.toFixed(2)
     },
 
+    cartItems() {
+      return Array.from(this.cart.items.values())
+    },
+
     cartItemCount() {
-      return this.cart.cartItems.reduce((count, item) => count + item.quantity, 0)
+      return this.cart.items.size
     }
   },
 
   methods: {
     toggleCartVisibility() {
       this.$emit('toggle-cart')
-      this.cartVisible = !this.cartVisible
     },
-    toggleShippingVisibility() {
-      this.shippingVisible = !this.shippingVisible
+    toggleCartContinue() {
+      this.toggleCartVisibility()
     },
-    updateCart() {
-      this.$emit('update-cart-count', this.cartItemCount)
-    },
-
-    removeCartItem(item) {
+    emitRemoveCartItem(item) {
+      // Make sure you're passing the correct item structure
       this.$emit('remove-cart-item', item)
     },
-    editItem(item) {
+
+    emitEditItem(item) {
+      // Pass the whole item for editing, not just the product
       this.$emit('edit-item', item)
     },
 
+    toggleShippingVisibility() {
+      this.$emit('toggle-shipping')
+    },
+    updateCart(updatedCartItems) {
+      this.$emit('update-cart', updatedCartItems)
+    },
+
     addToCart(item, quantity = 1) {
-      this.cart.addItem(item, quantity) // Call the addItem of CartCollection
-      this.updateCart() // Update the cart count after adding the item
+      this.cart.addItem(item, quantity)
+      this.updateCart()
 
       this.$emit('update-cart')
     },
     clearCart() {
-      this.cart.clearCart() // Use clearCart method from CartCollection
+      this.cart.clearCart()
     },
     addToWishlist(product) {
       if (!this.wishlistItems.find((item) => item.id === product.id)) {
@@ -166,11 +181,11 @@ export default {
 </script>
 
 <style scoped>
-.slide-enter-active,
-.slide-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition:
-    opacity 0.5s,
-    transform 0.5s;
+    opacity 1s,
+    transform 1s;
 }
 
 .slide-enter-from,

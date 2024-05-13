@@ -321,7 +321,52 @@ a.nav-link.text-light-bold.main-nav-menu-item:focus {
   }
 }
 
+input.login-input {
+  background-color: $custom-secondary;
+  border-radius: 50rem;
+  color: white;
+  border: $custom-success;
+
+  &::placeholder {
+    color: white;
+  }
+  &:hover {
+    background-color: darken($custom-success, 10%) 0.5s ease;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba($custom-success, 0.25);
+    background-color: $custom-secondary;
+    color: white;
+    border-color: $custom-success;
+  }
+  &:focus[icon] {
+    color: $custom-success;
+  }
+}
+
 select.select-input {
+  background-color: $custom-primary;
+  border-radius: 50rem;
+  color: white;
+  border-color: $custom-success;
+
+  &::placeholder {
+    color: white;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba($custom-success, 0.25);
+    background-color: $custom-primary;
+    color: white;
+    border-color: $custom-success;
+  }
+  &:focus[icon] {
+    color: $custom-success 0.5s ease;
+  }
+}
+
+.select-input {
   background-color: $custom-primary;
   border-radius: 50rem;
   color: white;

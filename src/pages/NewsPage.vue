@@ -2,6 +2,7 @@
   <div class="news-page">
     <NewsHeader />
     <SearchBar @search="performSearch" />
+    <h1 class="builder-zone-title my-4 text-center tube-text">PC Tech News</h1>
 
     <CardCarousel :items="filteredArticles">
       <template v-slot:item="{ item }">

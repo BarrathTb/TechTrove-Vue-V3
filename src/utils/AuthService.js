@@ -1,146 +1,143 @@
 import { supabase } from '@/utils/Supabase.js'
+import { useUserStore } from '@/stores/User'
 
 class AuthService {
   constructor() {
-    // Access the current session directly as a property
-    this._session = supabase.auth.session
-
-    // Listen for changes in authentication state
+    // Listen for changes in authentication state and update the Pinia store
     supabase.auth.onAuthStateChange((event, session) => {
-      this._session = session
+      const userStore = useUserStore()
+      if (session) {
+        // Updating user info and session in the store
+        userStore.setUser(session.user)
+        userStore.setSession(session)
+      } else {
+        // Clearing user info and session in the store when logged out
+        userStore.clearUser()
+      }
     })
   }
 
-  isLoggedIn() {
-    return !!this._session
+  // Use Pinia store to check if the user is logged in
+  async isLoggedIn() {
+    const userStore = useUserStore()
+    return userStore.isLoggedIn
   }
 
   async login(email) {
     try {
-      this.loading = true
-      const { error } = await supabase.auth.signInWithOtp({ email })
+      const { user, error } = await supabase.auth.signInWithOtp({ email })
       if (error) throw error
 
-      if (error instanceof Error) {
-        alert(error.message)
+      const userStore = useUserStore()
+      if (user) {
+        userStore.setUser(user)
       }
-    } finally {
-      this.loading = false
+
+      return user
+    } catch (error) {
+      throw new Error(`Login failed: ${error.message}`)
     }
   }
 
   async logout() {
-    try {
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
-      return true
-    } catch (error) {
-      console.error('Logout error:', error.message)
-      // Handle error by rethrowing or returning an error response
-      throw error
-    }
+    const { error } = await supabase.auth.signOut()
+    if (error) throw new Error(`Logout failed: ${error.message}`)
+    return true
   }
 
-  async signUp(email, password) {
-    try {
-      const { data, session, error } = await supabase.auth.signUp({
-        email,
-        password
-        // ...other relevant fields
-      })
-      if (error) throw error
-      console.log('data', data)
-      return { data, session }
-    } catch (error) {
-      console.error('Sign up failed:', error.message)
-      // Handle the error appropriately in your application
+  async signUp(email, password, options = {}) {
+    const { user, error } = await supabase.auth.signUp({
+      email,
+      password,
+      data: options.data || {}
+    })
+
+    if (error) {
+      throw new Error(`Sign up failed: ${error.message}`)
     }
+
+    if (!user) {
+      throw new Error('Sign up failed. Please try again.')
+    }
+
+    const userData = {
+      email,
+      profile_id: user.id,
+      level_id: 1,
+      points: 10
+    }
+
+    const { error: userError } = await supabase.from('users').insert([userData])
+    if (userError) throw userError
+
+    const userStore = useUserStore()
+    userStore.setUser(user)
+
+    return user
   }
 
   async resetPassword(email) {
-    try {
-      const { error } = await supabase.auth.api.resetPasswordForEmail(email)
-      if (error) throw error
-      return true
-    } catch (error) {
-      console.error('Reset password error:', error.message)
-      // Handle error by rethrowing or returning an error response
-      throw error
-    }
+    const { error } = await supabase.auth.api.resetPasswordForEmail(email)
+    if (error) throw new Error(`Reset password failed: ${error.message}`)
+    return true
   }
 
   async updatePassword(newPassword) {
-    try {
-      const { error } = await supabase.auth.update({ password: newPassword })
-      if (error) throw error
-      return true
-    } catch (error) {
-      console.error('Update password error:', error.message)
-      // Handle error by rethrowing or returning an error response
-      throw error
-    }
+    const { error } = await supabase.auth.update({ password: newPassword })
+    if (error) throw new Error(`Update password failed: ${error.message}`)
+    return true
   }
 
   async updateEmail(newEmail) {
+    const { user, error } = await supabase.auth.update({ email: newEmail })
+    if (error) throw new Error(`Update email failed: ${error.message}`)
+    return user
+  }
+
+  async loginWithProvider(providerName) {
     try {
-      const { user, error } = await supabase.auth.update({ email: newEmail })
-      if (error) throw error
+      console.log(`Attempting to sign in with ${providerName}`)
+      const { user, error } = await supabase.auth.signInWithOAuth({
+        provider: providerName
+      })
+      if (error) {
+        console.error('Error during signInWithOAuth:', error)
+        throw new Error(`Login with provider failed: ${error.message}`)
+      }
+      console.log('User object returned from signInWithOAuth:', user)
       return user
     } catch (error) {
-      console.error('Update email error:', error.message)
-      // Handle error by rethrowing or returning an error response
-      throw error
+      console.error('Exception caught in loginWithProvider:', error)
+      throw error // Re-throwing the error to be caught by the caller
     }
   }
 
-  async loginWithProvider(provider) {
-    try {
-      const { user, error } = await supabase.auth.signIn({ provider })
-      if (error) throw error
-      return user
-    } catch (error) {
-      console.error('Login with provider error:', error.message)
-      // Handle error by rethrowing or returning an error response
-      throw error
-    }
+  async getUser() {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', this._session.user.id)
+      .single()
+
+    if (error) throw new Error(`Get user failed: ${error.message}`)
+    return data
   }
-  async getUser(user) {
-    try {
-      const { data, error } = await supabase.from('users').select('*').eq('id', user.id).single()
-      if (error) throw error
-      return data
-    } catch (error) {
-      console.error('Get user error:', error.message)
-      // Handle error by rethrowing or returning an error response
-      throw error
-    }
-  }
-  //isLoggedIn()
-  // utils/AuthService.js
 
   async storeUserOrders(user) {
-    try {
-      const { error } = await supabase.from('orders').insert(user.orders)
-      if (error) throw error
-      return true
-    } catch (error) {
-      console.error('Store user orders error:', error.message)
-      // Handle error by rethrowing or returning an error response
-      throw error
-    }
+    const { error } = await supabase.from('orders').insert(user.orders)
+    if (error) throw new Error(`Store user orders failed: ${error.message}`)
+    return true
   }
 
-  // admin
+  getSession() {
+    return this._session
+  }
+
   async adminLogin(email, password) {
-    try {
-      const { user, error } = await supabase.auth.signIn({ email, password })
-      if (error) throw error
-      return user
-    } catch (error) {
-      console.error('Login error:', error.message)
-      // Handle error by rethrowing or returning an error response
-      throw error
-    }
+    const { user, error } = await supabase.auth.signIn({ email, password })
+    if (error) throw new Error(`Admin login failed: ${error.message}`)
+    return user
   }
 }
+
 export default new AuthService()

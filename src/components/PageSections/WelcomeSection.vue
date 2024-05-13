@@ -1,95 +1,88 @@
-<!-- @format -->
-
 <template>
   <div class="bg-primary welcome-vid">
     <div class="bg-primary justify-content-center" id="welcome-section">
       <WelcomeBanner />
       <div class="video-container">
-        <div id="player"></div>
+        <!-- Using vue3-youtube component -->
+        <YouTube
+          width="100%"
+          :height="height"
+          :src="videoId"
+          ref="youtube"
+          :vars="playerVars"
+          @ready="onPlayerReady"
+          @state-change="onPlayerStateChange"
+        ></YouTube>
       </div>
     </div>
     <SearchBar />
   </div>
 </template>
+
 <script>
 import SearchBar from './SearchBar.vue'
 import WelcomeBanner from './WelcomeBanner.vue'
+import YouTube from 'vue3-youtube'
 
 export default {
   components: {
     WelcomeBanner,
-    SearchBar
+    SearchBar,
+    YouTube // Register the Youtube component
   },
   data() {
     return {
-      player: null,
+      width: window.innerWidth,
+      height: window.innerHeight * 0.8,
+      videoId: 'o6HJVBg1lNg',
       loopStart: 6,
-      loopEnd: 11
+      loopEnd: 11,
+      playerVars: {
+        autoplay: 1,
+        mute: 1,
+        enablejsapi: 1,
+        rel: 0,
+        controls: 0,
+        showinfo: 0,
+        modestbranding: 0,
+        start: 6,
+        loop: 1,
+        playlist: 'o6HJVBg1lNg'
+      },
+      checkTimeInterval: null
     }
   },
-  mounted() {
-    this.loadYouTubeAPI()
-  },
   methods: {
-    loadYouTubeAPI() {
-      const tag = document.createElement('script')
-      tag.src = 'https://www.youtube.com/iframe_api'
-      const firstScriptTag = document.getElementsByTagName('script')[0]
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
-
-      // Save the global callback
-      window.onYouTubeIframeAPIReady = this.onYouTubeIframeAPIReady
-    },
-    // This function creates an <iframe> (and YouTube player) after the API code downloads.
-    onYouTubeIframeAPIReady() {
-      var YT = window.YT
-      this.player = new YT.Player('player', {
-        height: '100%',
-        width: '100%',
-        videoId: 'o6HJVBg1lNg',
-        playerVars: {
-          autoplay: 1,
-          mute: 1,
-          enablejsapi: 1,
-          rel: 0,
-          controls: 0,
-          showinfo: 0,
-          modestbranding: 0,
-          start: this.loopStart,
-          loop: 1, // Enable looping
-          playlist: 'o6HJVBg1lNg'
-        },
-        events: {
-          onReady: this.onPlayerReady,
-          onStateChange: this.onPlayerStateChange
-        }
-      })
-    },
     onPlayerReady(event) {
-      event.target.playVideo()
+      const player = event.target
+      if (player && typeof player.playVideo === 'function') {
+        player.playVideo()
+      }
       clearInterval(this.checkTimeInterval)
       this.checkTimeInterval = setInterval(() => {
-        const currentTime = this.player.getCurrentTime()
-        if (currentTime >= this.loopEnd) {
-          this.player.seekTo(this.loopStart)
+        if (player && typeof player.getCurrentTime === 'function') {
+          const currentTime = player.getCurrentTime()
+          if (currentTime >= this.loopEnd) {
+            player.seekTo(this.loopStart)
+          }
         }
       }, 1000)
     },
 
     onPlayerStateChange(event) {
-      const YT = window.YT
       if (event.data === YT.PlayerState.PLAYING) {
-        const currentTime = event.target.getCurrentTime()
-        if (currentTime >= this.loopEnd) {
-          this.player.seekTo(this.loopStart)
+        const player = event.target
+        if (player && typeof player.getCurrentTime === 'function') {
+          const currentTime = player.getCurrentTime()
+          if (currentTime >= this.loopEnd) {
+            player.seekTo(this.loopStart)
+          }
         }
       }
     }
   },
   beforeUnmount() {
-    if (this.player && this.player.destroy) {
-      this.player.destroy()
-    }
+    clearInterval(this.checkTimeInterval) // Clear the interval when the component unmounts
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <WelcomeHeader :products="yourProductsArray" @toggle-login-modal="toggleLoginModal" />
+  <WelcomeHeader :session="session" @toggle-login-modal="toggleLoginModal" />
   <WelcomeSection />
   <HowItWorksAccordion
     v-model="activePanels"
@@ -58,7 +58,7 @@
     ></info-card>
   </HowItWorksAccordion>
   <PromotionalCard class="bg-primary" />
-  <LoginModal v-model="loginVisible" />
+  <LoginModal :session="session" v-model="loginVisible" />
 
   <AppFooter />
 </template>
@@ -82,6 +82,19 @@ export default {
     LoginModal,
     WelcomeSection
   },
+
+  props: {
+    session: {
+      type: Object,
+      default: () => ({}),
+      required: false
+    }
+  },
+  computed: {
+    user() {
+      return this.session?.user || null
+    }
+  },
   data() {
     return {
       loginVisible: false,
@@ -89,7 +102,7 @@ export default {
       collapseOne: 'collapseOne',
       headingTwo: 'headingTwo',
       collapseTwo: 'collapseTwo',
-      panels: {
+      activePanels: {
         type: Array,
         default: () => []
       }
