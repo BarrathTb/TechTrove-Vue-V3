@@ -6,7 +6,7 @@
       <div class="card h-100 bg-primary d-flex flex-column border-none">
         <a href="#" class="product-detail mt-2 me-2 ms-auto product-detail-icon"> </a>
         <img
-          src="/images/tech-entry-7.png"
+          src="@/assets/images/tech-entry-7.png"
           class="card-img-top img-fluid"
           alt="display tech image"
         />

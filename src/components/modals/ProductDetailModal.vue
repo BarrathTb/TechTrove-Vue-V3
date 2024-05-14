@@ -22,12 +22,20 @@
           <div class="row">
             <h5 class="col text-white">{{ product.name }}</h5>
 
-            <div class="col-3">
-              <button
+            <div class="col-3 text-right">
+              <input
+                type="checkbox"
                 id="heartCheckbox"
-                @click="handleManageWish"
-                class="btn btn-outline-danger"
-              ></button>
+                v-model="isFavorite"
+                @change="toggleWishlistItem({ product, isFavorite: $event.target.checked })"
+                class="hidden-checkbox"
+              />
+
+              <label
+                for="heartCheckbox"
+                class="heart"
+                :class="{ 'is-favorite': isFavorite }"
+              ></label>
             </div>
           </div>
           <p class="text-white">{{ productFormattedPrice }}</p>
@@ -99,10 +107,11 @@ export default {
       type: CartCollection,
       required: false
     },
-    wishlist: {
-      type: Wishlist,
-      required: false
+    wishlistItems: {
+      type: Array,
+      default: () => []
     },
+
     isEditMode: {
       type: Boolean,
       default: false
@@ -113,11 +122,13 @@ export default {
     }
   },
   emits: ['update:modelValue', 'manage-cart', 'manage-wishlist'],
+
   data() {
     return {
       detailsVisible: false,
       quantity: this.initialQuantity, // Initialize quantity with the prop value
-      isFavorite: false
+      isFavorite: false,
+      wishlist: new Wishlist()
     }
   },
   computed: {
@@ -138,6 +149,19 @@ export default {
     }
   },
   methods: {
+    checkIfFavorite() {
+      // Assuming 'product' has a unique identifier 'id'
+      this.isFavorite = this.wishlistItems.includes(this.product.id)
+    },
+    toggleWishlistItem(item) {
+      if (item.isFavorite) {
+        // this.wishlist.addItem(item.product)
+        this.$emit('manage-wishlist', { action: 'add', product: item.product })
+      } else {
+        // this.wishlist.removeItem(item.product)
+        this.$emit('manage-wishlist', { action: 'remove', product: item.product })
+      }
+    },
     closeModal() {
       this.detailsVisible = false
       this.$emit('update:modelValue', false)
@@ -158,14 +182,14 @@ export default {
       })
       this.closeModal()
     },
-    handleManageWish() {
-      this.$emit('manage-wishlist', {
-        product: this.product,
-        isFavorite: !this.isFavorite
-      })
-      this.scrollToWish()
-      this.closeModal()
-    },
+    // handleManageWish() {
+    //   this.$emit('manage-wishlist', {
+    //     product: this.product,
+    //     isFavorite: !this.isFavorite
+    //   })
+    //   this.scrollToWish()
+    //   this.closeModal()
+    // },
     scrollToCart() {
       const cartElement = document.getElementById('shopping-cart')
       if (cartElement) {

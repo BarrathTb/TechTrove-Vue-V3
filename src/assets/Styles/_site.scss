@@ -574,15 +574,15 @@ select.select-input {
   }
 }
 
-.hero-image {
-  background:
-    linear-gradient(to top, $custom-primary, rgba(0, 128, 128, 0)),
-    url('/images/ek-fluid-gaming-digital-reef-art-1.webp') no-repeat center center;
-  background-size: cover;
-  position: relative;
-  width: 100vw;
-  height: 20vh;
-}
+// .hero-image {
+//   background:
+//     linear-gradient(to top, $custom-primary, rgba(0, 128, 128, 0)),
+//     url('/images/ek-fluid-gaming-digital-reef-art-1.webp') no-repeat center center;
+//   background-size: cover;
+//   position: relative;
+//   width: 100vw;
+//   height: 20vh;
+// }
 
 .hero-text {
   position: absolute;
@@ -596,12 +596,12 @@ select.select-input {
   bottom: 0%;
   left: 15%;
 }
-.hero-image-sm {
-  background: url('/images/ek-fluid-gaming-digital-reef-art-1.webp') no-repeat bottom center;
-  background-size: cover;
-  position: relative;
-  height: 38vh;
-}
+// .hero-image-sm {
+//   background: url('/images/ek-fluid-gaming-digital-reef-art-1.webp') no-repeat bottom center;
+//   background-size: cover;
+//   position: relative;
+//   height: 38vh;
+// }
 
 .icon-success {
   color: white;

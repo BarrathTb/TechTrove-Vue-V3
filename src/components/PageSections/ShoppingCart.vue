@@ -166,9 +166,7 @@ export default {
         this.wishlistItems.push(product)
       }
     },
-    removeFromWishlist(index) {
-      this.wishlistItems.splice(index, 1)
-    },
+
     moveToCart(wishlistItem) {
       this.addToCart(wishlistItem)
       const wishlistIndex = this.wishlistItems.findIndex((item) => item.id === wishlistItem.id)

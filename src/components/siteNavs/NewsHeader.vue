@@ -10,19 +10,12 @@
           <div class="d-none d-md-flex justify-content-between flex-grow-1">
             <ul class="navbar-nav ms-auto" aria-label="Tertiary Navigation">
               <li class="nav-item mx-2">
-                <router-link to="/home" class="nav-link text-light-bold-2 nav-item" id="news-link">
-                  Store
-                </router-link>
-              </li>
-
-              <li class="nav-item mx-2">
-                <router-link to="/news" class="nav-link text-light-bold-2 nav-item" id="news-link">
-                  News
-                </router-link>
-              </li>
-              <li class="nav-item mx-2">
-                <router-link to="/news" class="nav-link text-light-bold-2 nav-item" id="news-link">
-                  Message Board
+                <router-link
+                  to="/home"
+                  class="nav-link align-items-center text-light-bold-2 nav-item"
+                >
+                  <i class="bi bi-arrow-left fs-4 mx-2 tube-text-pink icon-success"></i>
+                  Back toStore
                 </router-link>
               </li>
             </ul>
@@ -34,7 +27,12 @@
               <i class="bi bi-person fs-4 mb-2 mx-2 icon-success"></i>
             </button>
             <router-link to="/profile" class="nav-item avatar-container" id="profile-page-link">
-              <img src="/images/avatar.png" alt="Profile Avatar" class="user-avatar ms-2" />
+              <img
+                :src="localUser?.avatar_url || defaultAvatarUrl"
+                id="profile-avatar"
+                alt="Profile Avatar"
+                class="user-avatar ms-2"
+              />
             </router-link>
           </div>
         </div>
@@ -45,9 +43,7 @@
 
     <nav class="navbar navbar-expand-md bg-body-secondary bg-secondary">
       <div class="container-fluid align-items-center justify-content-between">
-        <a href="/">
-          <img src="/images/TechTrove-logo.png" alt="TechTrove Logo" width="250" height="53"
-        /></a>
+        <a href="/"> <img :src="logo" alt="TechTrove Logo" width="250" height="53" /></a>
 
         <button
           class="navbar-toggler border-0 bg-transparent"
@@ -151,6 +147,8 @@
 
 <script>
 import LoginModal from '../modals/LoginModal.vue'
+import logo from '@/assets/images/TechTrove-logo.png'
+import { useUserStore } from '@/stores/User'
 export default {
   name: 'NewsHeader',
   components: {
@@ -158,12 +156,52 @@ export default {
   },
   data() {
     return {
+      logo: logo,
+      avatar_url: '',
+      defaultAvatarUrl: 'https://avatarfiles.alphacoders.com/367/367929.jpg',
       isModalVisible: false
+    }
+  },
+  async mounted() {
+    const userStore = useUserStore()
+
+    // Run this only if there is an existing session
+    if (userStore.isLoggedIn) {
+      await userStore.fetchProfile()
+      this.getAvatarUrl() // Call getAvatarUrl only after the profile has been fetched
     }
   },
   methods: {
     toggleLoginModal() {
       this.isModalVisible = !this.isModalVisible
+    },
+    getAvatarUrl() {
+      const userStore = useUserStore()
+      this.avatar_url = userStore.profile.avatar_url
+    }
+  },
+  watch: {
+    isLoggedIn: {
+      handler(loggedIn) {
+        if (loggedIn) {
+          const userStore = useUserStore()
+          userStore.fetchProfile() // Fetch profile on login
+        } else {
+          console.log('No user is logged in.')
+        }
+      },
+      immediate: true // This ensures the handler runs immediately after mount
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      const userStore = useUserStore()
+      return userStore.isLoggedIn
+    },
+    // Use the user information from the profile in the store
+    localUser() {
+      const userStore = useUserStore()
+      return userStore.profile || {} // Fallback to an empty object if no profile found
     }
   }
 }

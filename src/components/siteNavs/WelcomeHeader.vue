@@ -18,7 +18,7 @@
       <nav class="navbar bg-body-secondary bg-secondary">
         <div class="container-lg mx-auto">
           <router-link class="navbar-brand me-5" to="/">
-            <img src="/images/TechTrove-logo.png" alt="TechTrove Logo" width="250" height="53" />
+            <img :src="logo" alt="TechTrove Logo" width="250" height="53" />
           </router-link>
 
           <ul class="nav nav-tabs d-none d-lg-flex mx-2">
@@ -101,6 +101,7 @@
 </template>
 
 <script>
+import logo from '@/assets/images/TechTrove-logo.png'
 export default {
   name: 'HeaderComponent',
   // props: {
@@ -117,6 +118,7 @@ export default {
   // emits: ['toggle-login-modal'],
   data() {
     return {
+      logo: logo,
       searchTerm: ''
     }
   },

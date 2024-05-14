@@ -154,7 +154,7 @@
                       >
                       </luzmo-dashboard> -->
 
-                      <img width="100%" src="/images/stats.png" class="" alt="display tech image" />
+                      <img width="100%" :src="stats" class="" alt="display tech image" />
                     </div>
                   </div>
                 </div>
@@ -189,6 +189,7 @@ export default {
 
   data() {
     return {
+      stats: '@/assets/images/stats.png',
       defaultAvatarUrl: 'https://avatarfiles.alphacoders.com/367/367929.jpg',
       src: null,
       size: 10,

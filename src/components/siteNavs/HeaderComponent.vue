@@ -28,7 +28,7 @@
           <div class="d-none d-md-flex justify-content-between flex-grow-1">
             <ul class="navbar-nav ms-auto" aria-label="Tertiary Navigation">
               <li class="nav-item mx-2">
-                <a class="nav-link text-light-bold-2" @click.prevent="toggleMessageBoard"
+                <a class="nav-link text-light-bold-2" href="#" @click.prevent="toggleMessageBoard"
                   >Message Board</a
                 >
               </li>
@@ -96,7 +96,11 @@
     <nav class="navbar navbar-expand-md bg-body-secondary bg-secondary">
       <div class="container-fluid align-items-center justify-content-between">
         <a href="/">
-          <img src="/images/TechTrove-logo.png" alt="TechTrove Logo" width="150" height="30"
+          <img
+            src="@/assets/images/TechTrove-logo.png"
+            alt="TechTrove Logo"
+            width="150"
+            height="30"
         /></a>
 
         <button
@@ -377,6 +381,10 @@ export default {
   name: 'HeaderComponent',
   props: {
     cartItemCount: {
+      type: Number,
+      required: true
+    },
+    wishlistItemCount: {
       type: Number,
       required: true
     },

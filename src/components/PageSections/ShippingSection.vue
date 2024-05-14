@@ -151,11 +151,21 @@
                       >Same as Billing Address?</label
                     >
                   </div>
-
-                  <div class="text-center">
-                    <button type="submit" class="btn btn-pill-light text-primary-bold mt-3">
-                      Continue to Payment >
-                    </button>
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <button
+                        type="button"
+                        @click="toggleShippingVisibility"
+                        class="btn btn-pill-light text-primary-bold mt-3"
+                      >
+                        <i class="bi bi-arrow-left me-2 icon-danger"></i> Back to Store
+                      </button>
+                    </div>
+                    <div>
+                      <button type="submit" class="btn btn-pill-light text-primary-bold mt-3">
+                        Continue to Payment <i class="bi bi-arrow-right ms-2 icon-success"></i>
+                      </button>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -177,6 +187,7 @@ export default {
   methods: {
     toggleShippingVisibility() {
       this.shippingVisible = !this.shippingVisible
+      this.$emit('toggle-shipping')
     }
   }
 }

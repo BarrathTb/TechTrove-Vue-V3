@@ -2,7 +2,7 @@
   <div class="container-fluid d-flex h-100 align-items-center justify-content-center bg-primary">
     <div class="row w-100">
       <div class="col-md-6 bg-primary rounded-2 d-flex align-items-center justify-content-start">
-        <img class="img-fluid login-img rounded-2" src="/images/login.png" alt="Login Image" />
+        <img class="img-fluid login-img rounded-2" :src="loginImage" alt="Login Image" />
       </div>
       <div class="col-md-6 bg-primary rounded-2">
         <div class="modal-header bg-primary">
@@ -172,13 +172,14 @@
 
 <script>
 import { useUserStore } from '@/stores/User'
+import loginImg from '@/assets/images/login.png'
 export default {
   name: 'LoginPage',
 
   data() {
     return {
       showLoginForm: true,
-
+      loginImage: loginImg,
       credentials: {
         email: '',
         password: '',

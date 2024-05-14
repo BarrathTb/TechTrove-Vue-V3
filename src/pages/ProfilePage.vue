@@ -88,37 +88,52 @@
               </li>
               <li class="nav-item mt-5 d-flex align-items-center">
                 <i class="bi bi-person fs-4 me-2 tube-text"></i>
-                <a class="nav-link text-light-bold" href="#" @click.prevent="togglePersonalDetails"
+                <a
+                  class="nav-link text-light-bold-2"
+                  href="#"
+                  @click.prevent="togglePersonalDetails"
                   >Edit Personal Details</a
                 >
               </li>
               <li class="nav-item my-2 d-flex align-items-center">
                 <i class="bi bi-credit-card fs-4 me-2 tube-text"></i>
-                <a class="nav-link text-light-bold" href="#" @click.prevent="togglePersonalDetails"
+                <a
+                  class="nav-link text-light-bold-2"
+                  href="#"
+                  @click.prevent="togglePersonalDetails"
                   >Payment Methods</a
                 >
               </li>
               <li class="nav-item my-2 d-flex align-items-center">
                 <i class="bi bi-shield-lock fs-4 me-2 tube-text"></i>
-                <a class="nav-link text-light-bold" href="#" @click.prevent="togglePersonalDetails"
+                <a
+                  class="nav-link text-light-bold-2"
+                  href="#"
+                  @click.prevent="togglePersonalDetails"
                   >Security</a
                 >
               </li>
               <li class="nav-item my-2 d-flex align-items-center">
                 <i class="bi bi-gear fs-4 me-2 tube-text"></i>
-                <a class="nav-link text-light-bold" href="#" @click.prevent="togglePersonalDetails"
+                <a class="nav-link text-light-bold-2" href="#" @click="togglePreferences"
                   >Preferences</a
                 >
               </li>
               <li class="nav-item my-2 d-flex align-items-center">
                 <i class="bi bi-bell fs-4 me-2 tube-text"></i>
-                <a class="nav-link text-light-bold" href="#" @click.prevent="togglePersonalDetails"
+                <a
+                  class="nav-link text-light-bold-2"
+                  href="#"
+                  @click.prevent="togglePersonalDetails"
                   >Notifications</a
                 >
               </li>
               <li class="nav-item my-2 d-flex align-items-center">
                 <i class="bi bi-person-plus fs-4 me-2 tube-text"></i>
-                <a class="nav-link text-light-bold" href="#" @click.prevent="togglePersonalDetails"
+                <a
+                  class="nav-link text-light-bold-2"
+                  href="#"
+                  @click.prevent="togglePersonalDetails"
                   >Add Family Member</a
                 >
               </li>
@@ -139,6 +154,7 @@
         <ProfileAchievments v-show="achievmentsVisible" />
         <ProfileDetails v-show="detailsVisible" @Update="updateProfile" />
         <ProfileOrders v-show="ordersVisible" />
+        <ProfilePrefrences v-show="prefrencesVisible" />
       </div>
     </div>
   </div>
@@ -150,6 +166,7 @@ import LoginModal from '@/components/modals/LoginModal.vue'
 import ProfileDetails from '@/components/PageSections/ProfileDetails.vue'
 import ProfileAchievments from '@/components/PageSections/ProfileAchievments.vue'
 import ProfileOrders from '@/components/PageSections/ProfileOrders.vue'
+import ProfilePrefrences from '@/components/PageSections/ProfilePreferences.vue'
 import Profile from '@/models/Profile'
 import { useUserStore } from '@/stores/User'
 
@@ -165,13 +182,14 @@ export default {
     LoginModal,
     ProfileDetails,
     ProfileAchievments,
-    ProfileOrders
+    ProfileOrders,
+    ProfilePrefrences
   },
 
   data() {
     return {
       defaultAvatarUrl: 'https://avatarfiles.alphacoders.com/367/367929.jpg', // Placeholder image URL
-
+      prefrencesVisible: false,
       sidebarVisible: false,
       ordersVisible: false,
       achievmentsVisible: false,
@@ -224,16 +242,25 @@ export default {
       this.achievmentsVisible = true
       this.detailsVisible = false
       this.ordersVisible = false
+      this.prefrencesVisible = false
     },
     toggleDetails() {
       this.detailsVisible = true
       this.achievmentsVisible = false
       this.ordersVisible = false
+      this.prefrencesVisible = false
     },
     toggleOrders() {
       this.ordersVisible = true
       this.achievmentsVisible = false
       this.detailsVisible = false
+      this.prefrencesVisible = false
+    },
+    togglePreferences() {
+      this.prefrencesVisible = true
+      this.detailsVisible = false
+      this.achievmentsVisible = false
+      this.ordersVisible = false
     },
     // async getProfile() {
     //   this.loading = true

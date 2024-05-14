@@ -20,10 +20,7 @@
                       </tr>
                     </thead>
                     <tbody class="mx-auto">
-                      <tr
-                        v-for="(item, index) in wishlist.items"
-                        :key="`wishlist-item-${item.product.id}`"
-                      >
+                      <tr v-for="item in wishlistItems" :key="item.id">
                         <td>
                           <img
                             :src="item.product.image"
@@ -35,15 +32,17 @@
                         <td>${{ item.product.price.toFixed(2) }}</td>
                         <td style="vertical-align: middle">
                           <div class="d-flex align-items-center justify-content-center mx-2 gap-2">
-                            <button @click="moveToCart(item.product)" class="btn btn-success">
-                              Add to Cart
-                              <i class="bi bi-trash"></i>
+                            <button
+                              @click="$emit('move-wish-item', item)"
+                              class="border-0 bg-transparent"
+                            >
+                              <i class="bi bi-cart-plus fs-4 icon-success"></i>
                             </button>
                             <button
-                              @click="removeFromWishlist(item.product)"
-                              class="btn btn-danger ml-2"
+                              @click="removeFromWishlist(item)"
+                              class="border-0 bg-transparent"
                             >
-                              <i class="bi bi-trash"></i>
+                              <i class="bi bi-trash fs-4 icon-danger"></i>
                             </button>
                           </div>
                         </td>
@@ -74,38 +73,56 @@ import { CartCollection } from '@/models/Cart'
 
 export default {
   name: 'WishlistSection',
+  props: {
+    wishlist: {
+      type: Wishlist,
+      required: true
+    },
+    cart: {
+      type: CartCollection,
+      required: true
+    }
+  },
 
   data() {
     return {
-      wishlist: new Wishlist(),
-      cart: new CartCollection()
+      wishlistVisible: false
+      // wishlist: new Wishlist(),
     }
   },
-  created() {
-    this.loadWishlist()
+
+  computed: {
+    wishlistTotal() {
+      return this.wishlist.total.toFixed(2)
+    },
+
+    wishlistItems() {
+      return Array.from(this.wishlist.items.values())
+    },
+
+    wishlistItemCount() {
+      return this.wishlist.items.size
+    }
+  },
+  watch: {
+    wishlistItemCount(newCount) {
+      this.$emit('update-wishlist-count', newCount)
+    }
   },
   methods: {
     toggleWishlistVisibility() {
       this.wishlistVisible = !this.wishlistVisible
     },
-    loadWishlist() {
-      this.wishlist.fetchWishlistItems().catch((error) => {
-        console.error('Error fetching wishlist items:', error.message)
-      })
-    },
 
-    async removeFromWishlist(product) {
-      await this.wishlist.removeItem(product).catch((error) => {
-        console.error('Error removing item from wishlist:', error.message)
-      })
-      // Optionally refresh the list or handle UI update
+    moveToCart(item) {
+      this.$emit('move-to-cart', item)
     },
-
-    async moveToCart(product) {
-      await this.wishlist.moveToCart(product).catch((error) => {
-        console.error('Error moving item to cart:', error.message)
-      })
-      // Optionally refresh the cart/wishlist or handle UI updates
+    removeFromWishlist(item) {
+      // Make sure you're passing the correct item structure
+      this.$emit('remove-wish-item', item)
+    },
+    updateWishlist(updatedWishlistItems) {
+      this.$emit('update-wishlist', updatedWishlistItems)
     }
   }
 }

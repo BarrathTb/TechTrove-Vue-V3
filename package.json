@@ -30,6 +30,7 @@
     "sass-loader": "^14.1.1",
     "smooth-scrollbar": "^8.8.4",
     "vue": "^3.4.15",
+    "vue-require": "^1.0.1",
     "vue-router": "^4.3.0",
     "vue3-toastify": "^0.2.1",
     "vue3-youtube": "^0.1.9",

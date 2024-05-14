@@ -3,7 +3,6 @@
     :products="allProducts"
     @search="performSearch"
     @load-product-cards="filterProducts"
-    @handle-visibility="handleSectionVisibility"
     @toggle-cart="toggleCartVisibility"
     @toggle-blog="toggleBlogVisibility"
     @toggle-build="toggleBuildVisibility"
@@ -12,34 +11,40 @@
     @toggle-board="toggleMessageBoard"
     @toggle-wishlist="toggleWishlistVisibility"
     :cart-item-count="cartItemCount"
+    :wishlist-item-count="wishlistItemCount"
     @update-cart-count="updateCartItemCount"
+    @update-wishlist-count="updateWishlistItemCount"
   />
 
   <ShoppingCart
     class="shopping-cart"
     :cart="cart"
-    v-show="cartVisible"
+    v-show="activeSection === 'cart'"
     @remove-cart-item="removeCartItem"
     @manage-cart="manageCart"
     @edit-item="editIteminCart"
     @toggle-cart="toggleCartVisibility"
     @toggle-Shipping="toggleShippingVisibility"
   />
-  <shipping-section v-show="shippingVisible" @toggle-shipping="toggleShippingVisibility" />
+  <shipping-section
+    v-show="activeSection === 'shipping'"
+    @toggle-shipping="toggleShippingVisibility"
+  />
   <WishlistSection
-    v-show="wishlistVisible"
+    v-show="activeSection === 'wishlist'"
     @move-wish-item="moveWishItem"
     @remove-wish-item="removeWishItem"
     @manage-wishlist-item="manageWishlist"
     :wishlist="wishlist"
+    @update-wishlist-count="updateWishlistItemCount"
   />
-  <BuilderZone v-show="builderZoneVisible" />
-  <BlogSection v-show="blogVisible" />
-  <SupportSection v-show="isSupportVisible" />
-  <MessageBoard :products="allProducts" v-show="boardVisible" />
+  <BuilderZone v-show="activeSection === 'builderZone'" />
+  <BlogSection v-show="activeSection === 'blog'" />
+  <SupportSection v-show="activeSection === 'support'" />
+  <MessageBoard :products="allProducts" v-show="activeSection === 'messageBoard'" />
   <PcBuilder
     :products="allProducts"
-    v-show="buildVisible"
+    v-show="activeSection === 'build'"
     @manage-cart="manageCart"
     @toggle-build="closeBuilder"
   />
@@ -58,9 +63,9 @@
     :isEditMode="isEditModal"
     v-model="detailsVisible"
     @manage-cart="manageCart"
-    @manage-wishlist="manageWishlist"
-    :wishlist="wishlist"
     :cart="cart"
+    :wishlist="wishlistItems"
+    @manage-wishlist="manageWishlist"
   />
   <AppFooter />
 </template>
@@ -115,7 +120,9 @@ export default {
       builderZoneVisible: false,
       selectedProductQuantity: 0,
       isEditModal: false,
+      activeSection: null,
       cartItemCount: 0,
+      wishlistItemCount: 0,
       cart: new CartCollection(),
       wishlist: new Wishlist(),
       defaultAvatarUrl: 'https://avatarfiles.alphacoders.com/367/367929.jpg',
@@ -140,6 +147,7 @@ export default {
       await this.initializeProducts()
       await this.initializeUserProfile()
       await this.initializeCart()
+      await this.initializeWishlist()
     } catch (error) {
       console.error(error)
     }
@@ -163,7 +171,14 @@ export default {
         this.updateCartItemCount()
       },
       deep: true,
-      immediate: false
+      immediate: true
+    },
+    'wishlist.items': {
+      handler() {
+        this.updateWishlistItemCount()
+      },
+      deep: true,
+      immediate: true
     },
 
     isLoggedIn: {
@@ -229,6 +244,21 @@ export default {
         this.cart.loadCartFromLocalStorage()
       }
     },
+
+    async initializeWishlist() {
+      const userStore = useUserStore()
+
+      if (userStore.isLoggedIn) {
+        // Initialize cart for logged-in users
+        await this.wishlist.initializeWishlist()
+        if (this.wishlist.items.size === 0) {
+          // Maybe notify user their cart is empty
+        }
+      } else {
+        // Load cart from local storage for guests
+        this.wishlist.loadWishlistFromLocalStorage()
+      }
+    },
     /**
      * Asynchronously fetches the user's profile and initializes the cart collection.
      *
@@ -250,9 +280,10 @@ export default {
         if (profile) {
           this.localUser = profile
           console.log('User profile:', this.localUser)
-
+          this.wishlist = new Wishlist(profile)
           this.cart = new CartCollection(profile)
           await this.cart.fetchCartItems()
+          await this.wishlist.fetchWishlistItems()
           console.log('Authenticated user cart after fetching items:', this.cart)
         } else {
           console.warn('No profile could be fetched.')
@@ -341,11 +372,33 @@ export default {
       )
       console.log(this.cartItemCount)
     },
+
+    updateWishlistItemCount() {
+      this.wishlistItemCount = this.wishlist.items.size
+      console.log(this.wishlistItemCount)
+    },
+
     removeWishItem(item) {
-      this.wishlistItems = this.wishlistItems.filter((i) => i.id !== item.id)
-      this.wishlist.synchronizeWishlist()
-      console.log(this.wishlistItems)
-      this.updateWishlistItemCount()
+      try {
+        console.log('Attempting to remove item from wishlist:', item)
+
+        if (!item || !item.product || typeof item.product.id === 'undefined') {
+          console.error('Invalid product structure:', item)
+          throw new Error('Cannot remove a product without a valid id.')
+        }
+
+        const realProduct = this.unwrapProxy(item.product)
+
+        this.wishlist.removeItem(realProduct.id) // Pass only the product ID
+
+        console.log('Item successfully removed from wishlist:', realProduct)
+
+        this.wishlist.synchronizeWishlist()
+        this.$toast('Item removed from wishlist.')
+        this.updateWishlistItemCount()
+      } catch (error) {
+        console.error('Error while removing item from wishlist:', error.message)
+      }
     },
 
     /**
@@ -353,31 +406,30 @@ export default {
      *
      * @param {Object} payload - The payload containing information about the product and whether it is a favorite.
      */
-    manageWishlist(payload) {
-      try {
-        const { product, isFavorite } = payload
-        if (isFavorite) {
-          this.wishlist.addItem(product)
-          if (this.wishlistVisible) {
-            this.toggleWishlistVisibility()
-          }
-          this.scrollToWishlist()
-          console.log(this.wishlistItems)
-          this.detailsVisible = false
-        } else {
-          this.wishlist.removeItem(product)
-        }
-        this.wishlist.synchronizeWishlist()
-        this.updateWishlistItemCount()
-      } catch (error) {
-        console.error(`Manage Wishlist Item Error: ${error.message}`)
+
+    manageWishlist({ action, product }) {
+      if (action === 'add') {
+        this.wishlist.addItem(product)
+      } else if (action === 'remove') {
+        this.wishlist.removeItem(product)
       }
+
+      this.wishlist.synchronizeWishlist()
+      this.updateWishlistItemCount()
     },
 
     moveWishItem(item) {
-      this.wishlist.moveToCart(item)
+      const product = item.product
+      const quantity = 1 // Set the desired quantity for the cart
+
+      this.wishlist.removeItem(product.id) // Remove from wishlist
+      this.cart.addItem(product, quantity) // Add to cart
+
       this.wishlist.synchronizeWishlist()
+      this.cart.synchronizeCart()
+
       this.updateWishlistItemCount()
+      this.updateCartItemCount()
     },
 
     calculateUniqueCategories(products) {
@@ -459,72 +511,42 @@ export default {
         return { products: this.allProducts, searchTerm: this.searchTerm }
       }
     },
-    toggleBuilderZoneVisibility() {
-      this.builderZoneVisible = !this.builderZoneVisible
-    },
-    toggleMessageBoard() {
-      this.boardVisible = !this.boardVisible
-    },
 
-    toggleCartVisibility() {
-      this.cartVisible = !this.cartVisible
-    },
-    toggleBlogVisibility() {
-      this.blogVisible = !this.blogVisible
-    },
-    toggleBuildVisibility() {
-      this.buildVisible = !this.buildVisible
-    },
     closeBuilder() {
       this.buildVisible = !this.buildVisible
     },
+    toggleBuilderZoneVisibility() {
+      this.handleSectionVisibility('builderZone')
+    },
+    toggleMessageBoard() {
+      this.handleSectionVisibility('messageBoard')
+    },
+    toggleCartVisibility() {
+      this.handleSectionVisibility('cart')
+    },
+    toggleBlogVisibility() {
+      this.handleSectionVisibility('blog')
+    },
+    toggleBuildVisibility() {
+      this.handleSectionVisibility('build')
+    },
     toggleSupportVisibility() {
-      this.isSupportVisible = !this.isSupportVisible
+      this.handleSectionVisibility('support')
     },
     toggleShippingVisibility() {
-      this.shippingVisible = !this.shippingVisible
+      this.handleSectionVisibility('shipping')
     },
     toggleWishlistVisibility() {
-      this.wishlistVisible = !this.wishlistVisible
+      this.handleSectionVisibility('wishlist')
     },
 
-    handleSectionVisibility(section) {
-      // First, reset all visibility states to false
-      this.builderZoneVisible = false
-      this.boardVisible = false
-      this.cartVisible = false
-      this.blogVisible = false
-      this.buildVisible = false
-      this.isSupportVisible = false
-      this.shippingVisible = false
-      this.wishlistVisible = false
-
-      // Then, toggle the visibility of the desired section only
-      switch (section) {
-        case 'builder':
-          this.builderZoneVisible = true
-          break
-        case 'messageBoard':
-          this.boardVisible = true
-          break
-        case 'cart':
-          this.cartVisible = true
-          break
-        case 'blog':
-          this.blogVisible = true
-          break
-        case 'build':
-          this.buildVisible = true
-          break
-        case 'support':
-          this.isSupportVisible = true
-          break
-        case 'shipping':
-          this.shippingVisible = true
-          break
-        case 'wishlist':
-          this.wishlistVisible = true
-          break
+    handleSectionVisibility(sectionName) {
+      // If the section is already active, then close it by setting activeSection to null
+      if (this.activeSection === sectionName) {
+        this.activeSection = null
+      } else {
+        // Otherwise, set the active section to the one that was clicked
+        this.activeSection = sectionName
       }
     },
 
@@ -551,7 +573,7 @@ export default {
         }
       })
     },
-    scrollToWish() {
+    scrollToWishlist() {
       this.$nextTick(() => {
         const wishElement = document.getElementById('wishlist')
         if (wishElement && typeof wishElement.scrollIntoView === 'function') {
