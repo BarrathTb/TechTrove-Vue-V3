@@ -49,11 +49,7 @@ const app = createApp(App)
 app.config.globalProperties.$supabase = supabase
 app.config.globalProperties.$authService = authService
 app.config.globalProperties.$toast = toast
-app.use(toast, {
-  autoClose: 3000,
-  position: 'bottom-right',
-  theme: 'dark'
-})
+
 app.use(vuestic)
 app.use(router)
 app.use(Scrollbar)

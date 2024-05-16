@@ -120,54 +120,49 @@ export default {
       this.$refs.fileInputRef.click()
     },
     async uploadAvatar(evt) {
-      this.files = evt.target.files
       try {
         this.uploading = true
-        if (!this.files || this.files.length === 0) {
+        const files = evt.target.files
+
+        if (!files || files.length === 0) {
           throw new Error('You must select an image to upload.')
         }
 
-        const file = this.files[0]
+        const file = files[0]
         const fileExt = file.name.split('.').pop()
         const filePath = `${Math.random()}.${fileExt}`
 
         // Upload the file to Supabase storage
         const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file)
+
         if (uploadError) throw uploadError
 
         // Retrieve the public URL for the uploaded file
-        const { publicURL, error: urlError } = supabase.storage
+        const { data, error: urlError } = await supabase.storage
           .from('avatars')
           .getPublicUrl(filePath)
-        const response = supabase.storage.from('avatars').getPublicUrl(filePath)
-
-        const { publicUrl } = response.data
-
-        // Now you can use 'publicUrl'
-        console.log(publicUrl)
 
         if (urlError) throw urlError
+
+        const publicUrl = data.publicUrl
 
         // Get the current user's ID
         const userStore = useUserStore()
         const userId = userStore.user.id
-        console.log(userId)
 
         // Update the avatar URL in the 'profiles' table
-        const { data, error } = await supabase
+        const { error: updateError } = await supabase
           .from('profiles')
-          .update({
-            avatar_url: data.avatar_url
-          })
+          .update({ avatar_url: publicUrl })
           .eq('id', userId)
           .select()
-        console.log(error)
-        console.log(data.publicURL)
-        if (error) throw error
-        response.data = publicURL
+
+        if (updateError) throw updateError
+
         // Emit the event with the new avatar URL to update it in the profile
-        this.$emit('avatar-uploaded', publicURL)
+        this.$emit('avatar-uploaded', publicUrl)
       } catch (error) {
+        console.error('Error uploading avatar:', error.message)
         alert(error.message)
       } finally {
         this.uploading = false

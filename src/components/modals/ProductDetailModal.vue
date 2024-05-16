@@ -107,10 +107,10 @@ export default {
       type: CartCollection,
       required: false
     },
-    wishlistItems: {
-      type: Array,
-      default: () => []
-    },
+    // wishlistItems: {
+    //   type: Array,
+    //   default: () => []
+    // },
 
     isEditMode: {
       type: Boolean,
@@ -149,17 +149,25 @@ export default {
     }
   },
   methods: {
-    checkIfFavorite() {
-      // Assuming 'product' has a unique identifier 'id'
-      this.isFavorite = this.wishlistItems.includes(this.product.id)
-    },
+    // checkIfFavorite() {
+    //   // Assuming 'product' has a unique identifier 'id'
+    //   this.isFavorite = this.wishlistItems.includes(this.product.id)
+    // },
     toggleWishlistItem(item) {
       if (item.isFavorite) {
         // this.wishlist.addItem(item.product)
-        this.$emit('manage-wishlist', { action: 'add', product: item.product })
+        this.$emit('manage-wishlist', {
+          action: 'add',
+          product: item.product,
+          isFavorite: !this.isFavorite
+        })
       } else {
         // this.wishlist.removeItem(item.product)
-        this.$emit('manage-wishlist', { action: 'remove', product: item.product })
+        this.$emit('manage-wishlist', {
+          action: 'remove',
+          product: item.product,
+          isFavorite: this.isFavorite
+        })
       }
     },
     closeModal() {
@@ -176,20 +184,14 @@ export default {
     },
     handleManageCart() {
       this.$emit('manage-cart', {
+        id: this.product.id,
         product: this.product,
         quantity: this.quantity,
         isUpdate: this.isEditMode
       })
       this.closeModal()
     },
-    // handleManageWish() {
-    //   this.$emit('manage-wishlist', {
-    //     product: this.product,
-    //     isFavorite: !this.isFavorite
-    //   })
-    //   this.scrollToWish()
-    //   this.closeModal()
-    // },
+
     scrollToCart() {
       const cartElement = document.getElementById('shopping-cart')
       if (cartElement) {

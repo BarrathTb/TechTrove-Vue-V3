@@ -60,9 +60,9 @@ class CartCollection {
 
     const user = this.userStore.getUser()
 
-    if (!product) {
-      console.error('Cannot save cart item without a valid product.', product)
-      return null
+    if (!product || typeof product.id === 'undefined') {
+      console.error('Invalid product structure:', product)
+      return Promise.reject(new Error('Cannot save cart item without a valid product ID.'))
     }
 
     // Validate product existence
@@ -151,6 +151,10 @@ class CartCollection {
   }
 
   async updateQuantity(productId, quantity) {
+    if (typeof productId === 'undefined') {
+      console.error(`Cannot remove a product without a valid id.`)
+      return
+    }
     if (quantity <= 0) {
       await this.removeItem(productId)
       return
@@ -187,8 +191,13 @@ class CartCollection {
       return
     }
 
-    const success = this.items.delete(productId)
+    const item = this.items.get(productId)
+    if (item) {
+      // Set the product property to null or undefined
+      item.product = null || undefined
+    }
 
+    const success = this.items.delete(productId)
     if (!success) {
       console.error(`Product with id ${productId} not found in the local items.`)
       return
@@ -198,11 +207,11 @@ class CartCollection {
 
     // Then attempt to delete the item from the backend
     try {
-      await this.deleteCartItem({ id: productId })
+      await this.deleteCartItem({ product: item.product, id: productId })
+      await this.synchronizeCart()
     } catch (error) {
       console.error(`Failed to delete product ${productId} from cart:`, error.message)
-
-      // If deletion fails refreshing the cart items from the backend
+      // If deletion fails, refresh the cart items from the backend
       await this.fetchCartItems()
     }
   }
@@ -295,7 +304,7 @@ class CartCollection {
   async saveCartToDatabase() {
     for (let [productId, cartItem] of this.items) {
       try {
-        if (!cartItem.product || typeof cartItem.product.id === 'undefined') {
+        if (!cartItem.product || cartItem.product.id === undefined) {
           console.error('Product information is missing or incomplete', cartItem.product)
           continue // Skip to the next iteration of the loop
         }

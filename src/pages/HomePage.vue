@@ -36,6 +36,7 @@
     @remove-wish-item="removeWishItem"
     @manage-wishlist-item="manageWishlist"
     :wishlist="wishlist"
+    :cart="cart"
     @update-wishlist-count="updateWishlistItemCount"
   />
   <BuilderZone v-show="activeSection === 'builderZone'" />
@@ -64,7 +65,6 @@
     v-model="detailsVisible"
     @manage-cart="manageCart"
     :cart="cart"
-    :wishlist="wishlistItems"
     @manage-wishlist="manageWishlist"
   />
   <AppFooter />
@@ -89,6 +89,7 @@ import { useUserStore } from '@/stores/User'
 import { CartCollection } from '@/models/Cart.js'
 import Product from '@/models/Product'
 import Profile from '@/models/Profile.js'
+
 import { Wishlist } from '@/models/Wishlist'
 
 export default {
@@ -139,7 +140,15 @@ export default {
       uniqueCategories: [],
       uniqueBrands: [],
       allProducts: [],
-      filteredProducts: []
+      filteredProducts: [],
+      toastShown: false,
+      toastStyle: {
+        position: 'center-right',
+        type: 'success',
+        theme: 'outline',
+        style: 'color: custom-success',
+        autoClose: 2000
+      }
     }
   },
   async mounted() {
@@ -316,7 +325,7 @@ export default {
         console.log('Item successfully removed from cart:', realProduct)
 
         this.cart.synchronizeCart()
-        this.$toast('Item removed from cart.')
+        this.$toast('Item removed from cart.', this.toastStyle)
         this.updateCartItemCount()
       } catch (error) {
         console.error('Error while removing item from cart:', error.message)
@@ -335,15 +344,17 @@ export default {
     manageCart(payload) {
       try {
         const { product, quantity, isUpdate } = payload
+        // const cartItem = this.cart.items.get(item)
+
         if (isUpdate) {
           this.cart.updateQuantity(product.id, quantity)
-          this.$toast('Item quantity updated.')
+          this.$toast('Item quantity updated.', this.toastStyle)
         } else {
           this.cart.addItem(product, quantity)
-          this.$toast('Item added to cart.')
+          this.$toast('Item added to cart.', this.toastStyle)
         }
 
-        this.cart.synchronizeCart()
+        // this.cart.synchronizeCart()
         console.log('Cart updated', this.cart.items)
 
         if (!isUpdate) {
@@ -394,7 +405,7 @@ export default {
         console.log('Item successfully removed from wishlist:', realProduct)
 
         this.wishlist.synchronizeWishlist()
-        this.$toast('Item removed from wishlist.')
+        this.$toast('Item removed from wishlist.', this.toastStyle)
         this.updateWishlistItemCount()
       } catch (error) {
         console.error('Error while removing item from wishlist:', error.message)
@@ -410,8 +421,10 @@ export default {
     manageWishlist({ action, product }) {
       if (action === 'add') {
         this.wishlist.addItem(product)
+        this.$toast('Item added to wishlist.', this.toastStyle)
       } else if (action === 'remove') {
         this.wishlist.removeItem(product)
+        this.$toast('Item removed from wishlist.', this.toastStyle)
       }
 
       this.wishlist.synchronizeWishlist()
@@ -424,7 +437,7 @@ export default {
 
       this.wishlist.removeItem(product.id) // Remove from wishlist
       this.cart.addItem(product, quantity) // Add to cart
-
+      this.$toast('Item moved from wishlist to cart.', this.toastStyle)
       this.wishlist.synchronizeWishlist()
       this.cart.synchronizeCart()
 

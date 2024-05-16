@@ -59,8 +59,9 @@
                   v-if="cartItemCount > 0"
                   :text="cartItemCount.toString()"
                   overlap
-                  placement="top-end"
-                  color="danger"
+                  placement="bottom-right"
+                  style="--va-badge-text-wrapper-border-radius: 50%"
+                  color="#ee82ee"
                 ></VaBadge>
               </i>
             </button>
@@ -70,14 +71,18 @@
                   v-if="wishlistItemCount > 0"
                   :text="wishlistItemCount.toString()"
                   overlap
-                  placement="center"
-                  color="danger"
+                  placement="bottom-right"
+                  style="--va-badge-text-wrapper-border-radius: 50%"
+                  color="#ee82ee"
                 ></VaBadge>
               </i>
             </button>
 
-            <button @click="toggleLoginModal" class="nav-link" id="login-modal">
-              <i class="bi bi-person fs-4 mb-2 mx-2 icon-success"></i>
+            <button v-if="isLoggedIn" @click="toggleLoginModal" class="nav-link" id="login-modal">
+              <i class="bi bi-box-arrow-left fs-4 mb-2 mx-2 icon-success"></i>
+            </button>
+            <button v-else @click="toggleLoginModal" class="nav-link" id="login-modal">
+              <i class="bi bi-box-arrow-in-right fs-4 mb-2 mx-2 icon-success"></i>
             </button>
             <router-link to="/profile" class="nav-item avatar-container" id="profile-page-link">
               <img

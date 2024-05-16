@@ -205,8 +205,6 @@ export default {
   },
   async mounted() {
     const userStore = useUserStore()
-
-    // Run this only if there is an existing session
     if (userStore.isLoggedIn) {
       await userStore.fetchProfile()
     }
@@ -217,10 +215,10 @@ export default {
       const userStore = useUserStore()
       return userStore.isLoggedIn
     },
-    // Use the user information from the profile in the store
+
     localUser() {
       const userStore = useUserStore()
-      return userStore.profile || {} // Fallback to an empty object if no profile found
+      return userStore.profile || {}
     }
   },
   watch: {
@@ -228,12 +226,12 @@ export default {
       handler(loggedIn) {
         if (loggedIn) {
           const userStore = useUserStore()
-          userStore.fetchProfile() // Fetch profile on login
+          userStore.fetchProfile()
         } else {
           console.log('No user is logged in.')
         }
       },
-      immediate: true // This ensures the handler runs immediately after mount
+      immediate: true
     }
   },
 
@@ -262,25 +260,6 @@ export default {
       this.achievmentsVisible = false
       this.ordersVisible = false
     },
-    // async getProfile() {
-    //   this.loading = true
-    //   try {
-    //     const userStore = useUserStore() // Obtain the store instance
-    //     if (!userStore.session || !userStore.session.user) {
-    //       throw new Error('Session or user information is unavailable.')
-    //     }
-
-    //     const profile = await Profile.fetchUser(userStore.session.user.id)
-    //     if (profile) {
-    //       this.localUser = profile // Update the local user with fetched profile info
-    //     }
-    //     console.log(this.localUser)
-    //   } catch (error) {
-    //     console.error(error.message)
-    //   } finally {
-    //     this.loading = false
-    //   }
-    // },
 
     async updateProfile() {
       this.loading = true

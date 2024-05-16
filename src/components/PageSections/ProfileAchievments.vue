@@ -108,7 +108,7 @@
                   </div>
                 </div>
                 <button
-                  class="btn btn-success btn-sm px-4 mt-4 text-black btn-bold align-items-center justify-content-center"
+                  class="btn btn-success btn-sm mt-4 text-black align-items-center justify-content-center"
                   type="button"
                 >
                   <i class="bi bi-info-circle fs-5 me-2 text-black"></i>
@@ -171,6 +171,7 @@
 // import { LuzmoDashboard } from '@luzmo/vue-embed'
 // import Avatar from '@/components/PageSections/ProfileAvatar.vue'
 import { useUserStore } from '@/stores/User'
+import stats from '@/assets/images/stats.png'
 
 export default {
   name: 'ProfileAchievments',
@@ -189,7 +190,7 @@ export default {
 
   data() {
     return {
-      stats: '@/assets/images/stats.png',
+      stats: stats,
       defaultAvatarUrl: 'https://avatarfiles.alphacoders.com/367/367929.jpg',
       src: null,
       size: 10,
