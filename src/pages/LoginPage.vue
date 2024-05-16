@@ -36,8 +36,12 @@
 
             <hr />
           </div>
-
-          <form v-show="!showSignUpForm" @submit.prevent="login">
+          <div v-if="!showSignUpForm" class="text-center">
+            <button type="button" @click="signInWithMagicLink" class="btn btn-info mb-3">
+              Send Magic Link
+            </button>
+          </div>
+          <form v-show="!showSignUpForm" @submit.prevent="loginWithEmailPassword">
             <div class="form-group p-2">
               <label for="email">Email</label>
               <input
@@ -217,15 +221,46 @@ export default {
       this.showSignUpForm = !this.showSignUpForm
     },
 
+    async signInWithMagicLink() {
+      if (!this.credentials.email) {
+        this.credentials.errorMessage = 'Please enter an email address to send the magic link.'
+        return
+      }
+
+      try {
+        const response = await this.$authService.login(this.credentials.email)
+        if (response) {
+          this.credentials.errorMessage = '' // Clear any previous error messages
+          alert('Please check your inbox for the magic link to sign in.')
+          // Alternatively, you can use some toast/notification library to inform the user
+          this.$toast('Check your email inbox for the magic link to sign in.', {
+            type: 'success',
+            theme: 'outline',
+            style: 'color: custom-success',
+            autoClose: 2000
+          })
+          this.$router.push({ name: 'Home' })
+        }
+      } catch (error) {
+        this.credentials.errorMessage = `Failed to send magic link: ${error.message}`
+      }
+    },
+
     async login() {
       try {
-        const response = await this.$authService.login(
+        const response = await this.$authService.signInWithEmail(
           this.credentials.email,
           this.credentials.password
         )
+
         const userStore = useUserStore()
         userStore.setUser(response.user)
-        this.$toast('Welcome back!')
+        this.$toast('Welcome back!', {
+          type: 'success',
+          theme: 'outline',
+          style: 'color: custom-success',
+          autoClose: 2000
+        })
         this.$router.push({ name: 'Home' })
       } catch (error) {
         this.credentials.errorMessage = error.message
@@ -250,8 +285,12 @@ export default {
         console.log(`Sign up successful for ${this.signUpData.email}`)
         const userStore = useUserStore()
         userStore.setUser(response.user)
-
-        this.$toast('Account created! Welcome to --> TechTrove!')
+        this.$toast('Welcome to TechTrove!', {
+          type: 'success',
+          theme: 'outline',
+          style: 'color: custom-success',
+          autoClose: 2000
+        })
         this.$router.push({ name: 'Home' })
       } catch (error) {
         this.signUpData.errorMessage = error.message
@@ -263,7 +302,13 @@ export default {
         await this.$authService.logout()
         const userStore = useUserStore()
         userStore.clearUser()
-        this.$toast('Goodbye!')
+        this.$toast('Goodbye! Come back soon!', {
+          type: 'success',
+          position: 'topright',
+          theme: 'outline',
+          style: 'color: custom-success',
+          duration: 3000
+        })
         this.$router.push({ name: 'Welcome' })
       } catch (error) {
         this.credentials.errorMessage = error.message
@@ -282,7 +327,13 @@ export default {
           console.log('User object:', response.user)
           const userStore = useUserStore()
           userStore.setUser(response.user)
-          this.$toast('Welcome back!')
+          this.$toast('Welcome back!', {
+            type: 'success',
+            position: 'topright',
+            theme: 'outline',
+            style: 'color: custom-success',
+            duration: 3000
+          })
           this.$router.push({ name: 'Home' })
         } else {
           console.error('No user object in response.')

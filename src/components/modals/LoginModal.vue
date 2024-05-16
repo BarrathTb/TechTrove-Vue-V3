@@ -10,7 +10,7 @@
                 <i class="fas fa-close"></i>
               </button>
             </div>
-            <div class="modal-body rounded bg-secondary p-4">
+            <div class="modal-body rounded bg-primary p-4">
               <div class="text-center text-light p-2">
                 <p>Login via magic link with email below</p>
                 <a
@@ -38,14 +38,18 @@
 
                 <hr />
               </div>
-
-              <form v-show="!showSignUpForm" @submit.prevent="login">
+              <div v-if="!showSignUpForm" class="text-center">
+                <button type="button" @click="signInWithMagicLink" class="btn btn-info mb-3">
+                  Send Magic Link
+                </button>
+              </div>
+              <form v-show="!showSignUpForm" @submit.prevent="loginWithEmailPassword">
                 <div class="form-group p-2">
                   <label for="email">Email</label>
                   <input
                     v-model="credentials.email"
                     type="text"
-                    class="form-control text-light bg-primary login-input"
+                    class="form-control text-light login-input"
                     id="email"
                     placeholder=" Enter email"
                   />
@@ -55,13 +59,13 @@
                   <input
                     v-model="credentials.password"
                     type="password"
-                    class="form-control text-light bg-primary login-input"
+                    class="form-control text-light login-input"
                     id="password"
                     placeholder="Enter a password..."
                   />
                 </div>
 
-                <div class="form-check mt-2">
+                <div class="form-check mt-2 ms-2">
                   <input
                     v-model="credentials.rememberMe"
                     type="checkbox"
@@ -78,7 +82,7 @@
                   <input
                     v-model="signUpData.username"
                     type="text"
-                    class="form-control text-light bg-primary login-input"
+                    class="form-control text-light login-input"
                     id="username"
                     placeholder="Enter a username"
                   />
@@ -88,7 +92,7 @@
                   <input
                     v-model="signUpData.fullName"
                     type="text"
-                    class="form-control text-light bg-primary login-input"
+                    class="form-control text-light login-input"
                     id="fullName"
                     placeholder="Enter your full name"
                   />
@@ -98,21 +102,22 @@
                   <input
                     v-model="signUpData.email"
                     type="text"
-                    class="form-control text-light bg-primary login-input"
+                    class="form-control text-light login-input"
                     id="email"
                     placeholder=" Enter email"
                   />
                 </div>
-                <div class="form-group p-2">
+                <div class="form-group p-2 justify-content-center">
                   <label for="password">Password</label>
                   <input
                     v-model="signUpData.password"
                     type="password"
-                    class="form-control text-light bg-primary login-input"
+                    class="form-control text-light login-input"
                     id="password"
                     placeholder="Enter a password..."
                   />
                 </div>
+
                 <div class="d-flex mt-2 justify-content-between">
                   <button
                     type="button"
@@ -133,9 +138,10 @@
               </form>
             </div>
 
-            <div v-if="!showSignUpForm" class="modal-footer bg-primary p-2 mx-auto">
+            <hr v-if="!showSignUpForm" />
+            <div v-if="!showSignUpForm" class="bg-primary p-2">
               <div class="row mt-3">
-                <div class="col">
+                <div class="d-flex justify-content-center w-100">
                   <div class="btn-group">
                     <button
                       v-if="!isLoggedIn"
@@ -153,6 +159,8 @@
                     >
                       Logout
                     </button>
+
+                    <i class="bi bi-question-square fs-4 ms-4 me-4 tube-text-blue"></i>
                     <button
                       type="button"
                       class="btn btn-outline-secondary text-bold ms-2 me-2"
@@ -225,19 +233,45 @@ export default {
       this.showSignUpForm = !this.showSignUpForm
     },
 
+    async signInWithMagicLink() {
+      if (!this.credentials.email) {
+        this.credentials.errorMessage = 'Please enter an email address to send the magic link.'
+        return
+      }
+
+      try {
+        const response = await this.$authService.login(this.credentials.email)
+        if (response) {
+          this.credentials.errorMessage = '' // Clear any previous error messages
+          alert('Please check your inbox for the magic link to sign in.')
+          // Alternatively, you can use some toast/notification library to inform the user
+          this.$toast('Check your email inbox for the magic link to sign in.', {
+            type: 'success',
+            theme: 'outline',
+            style: 'color: custom-success',
+            autoClose: 2000
+          })
+          this.$router.push({ name: 'Home' })
+        }
+      } catch (error) {
+        this.credentials.errorMessage = `Failed to send magic link: ${error.message}`
+      }
+    },
+
     async login() {
       try {
-        const response = await this.$authService.login(
+        const response = await this.$authService.signInWithEmail(
           this.credentials.email,
           this.credentials.password
         )
+
         const userStore = useUserStore()
         userStore.setUser(response.user)
-        this.$toast.show('Welcome back!', {
+        this.$toast('Welcome back!', {
           type: 'success',
-          position: 'bottom-left',
-          duration: 3000,
-          theme: 'bubble'
+          theme: 'outline',
+          style: 'color: custom-success',
+          autoClose: 2000
         })
         this.$router.push({ name: 'Home' })
       } catch (error) {
@@ -263,11 +297,11 @@ export default {
         console.log(`Sign up successful for ${this.signUpData.email}`)
         const userStore = useUserStore()
         userStore.setUser(response.user)
-        this.$toast.show('Thanks for signing up!', {
+        this.$toast('Welcome to TechTrove!', {
           type: 'success',
-          position: 'bottom-left',
-          duration: 3000,
-          theme: 'bubble'
+          theme: 'outline',
+          style: 'color: custom-success',
+          autoClose: 2000
         })
         this.$router.push({ name: 'Home' })
       } catch (error) {
@@ -282,7 +316,9 @@ export default {
         userStore.clearUser()
         this.$toast('Goodbye! Come back soon!', {
           type: 'success',
-          position: 'bottom-left',
+          position: 'topright',
+          theme: 'outline',
+          style: 'color: custom-success',
           duration: 3000
         })
         this.$router.push({ name: 'Welcome' })
@@ -291,38 +327,31 @@ export default {
       }
     },
 
-    // async logout() {
-    //   try {
-    //     // Perform any pre-logout actions needed (like calling clearAndPersistCart)
-    //     await this.clearAndPersistCart()
-
-    //     await this.$authService.logout()
-    //     const userStore = useUserStore()
-    //     userStore.clearUser() // Clears user data from the store
-    //     // Possibly perform other cleanup tasks here (e.g., clearing session tokens, cookies)
-
-    //     this.closeModal() // Close the modal if it's open
-    //     this.$router.push({ name: 'Welcome' }) // Redirects user to the welcome page
-    //   } catch (error) {
-    //     this.credentials.errorMessage = error.message
-    //   }
-    // },
-
     async signInWithGoogle() {
+      console.log('signInWithGoogle method called') // Add this line for debugging.
+
       try {
-        // Make sure "google" is passed as the provider name
         const response = await this.$authService.loginWithProvider('google')
-        const userStore = useUserStore()
-        userStore.setUser(response.user)
-        this.$toast.show('Welcome back!', {
-          type: 'success',
-          position: 'bottom-left',
-          duration: 3000,
-          theme: 'bubble'
-        })
-        this.$router.push({ name: 'Home' })
+
+        console.log('Response received:', response) // Check if the promise resolves.
+
+        if (response?.user) {
+          console.log('User object:', response.user)
+          const userStore = useUserStore()
+          userStore.setUser(response.user)
+          this.$toast('Welcome back!', {
+            type: 'success',
+            position: 'topright',
+            theme: 'outline',
+            style: 'color: custom-success',
+            duration: 3000
+          })
+          this.$router.push({ name: 'Home' })
+        } else {
+          console.error('No user object in response.')
+        }
       } catch (error) {
-        console.error('Login error:', error.message)
+        console.error('Login error:', error)
         this.credentials.errorMessage = error.message
       }
     }

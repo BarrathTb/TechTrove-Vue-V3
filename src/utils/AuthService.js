@@ -38,6 +38,18 @@ class AuthService {
       throw new Error(`Login failed: ${error.message}`)
     }
   }
+  async signInWithEmail(email, password) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
+
+    if (error) {
+      throw new Error(`Sign in failed: ${error.message}`)
+    }
+
+    return data
+  }
 
   async logout() {
     const { error } = await supabase.auth.signOut()
@@ -59,16 +71,6 @@ class AuthService {
     if (!user) {
       throw new Error('Sign up failed. Please try again.')
     }
-
-    const userData = {
-      email,
-      profile_id: user.id,
-      level_id: 1,
-      points: 10
-    }
-
-    const { error: userError } = await supabase.from('users').insert([userData])
-    if (userError) throw userError
 
     const userStore = useUserStore()
     userStore.setUser(user)
