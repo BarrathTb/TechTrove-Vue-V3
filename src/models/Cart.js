@@ -53,10 +53,10 @@ class CartCollection {
   }
 
   async saveCartItem(product, quantity) {
-    if (!this.userStore.isLoggedIn) {
-      console.error('User must be logged in to save cart items.')
-      return Promise.reject(new Error('User must be logged in to save cart items.'))
-    }
+    // if (!this.userStore.isLoggedIn) {
+    //   console.error('User must be logged in to save cart items.')
+    //   return Promise.reject(new Error('User must be logged in to save cart items.'))
+    // }
 
     const user = this.userStore.getUser()
 
@@ -129,30 +129,36 @@ class CartCollection {
     // Check if item already exists in cart
     const existingItem = this.items.get(product.id)
     if (existingItem) {
-      // If it does, update the quantity
+      //update the quantity
       const newQuantity = existingItem.quantity + quantity
       await this.updateQuantity(product.id, newQuantity)
       console.log(`Updated quantity of ${product.id} to ${newQuantity}`)
     } else {
-      try {
-        const data = await this.saveCartItem(product, quantity)
+      // For unauthenticated user, add to local storage
+      if (!this.userStore.isLoggedIn) {
+        const newItem = new CartItem(product, quantity)
+        this.items.set(product.id, newItem)
+        this.synchronizeCart() // Synchronize with local storage
+      } else {
+        // For authenticated user, save to database
+        try {
+          const data = await this.saveCartItem(product, quantity)
 
-        if (data && data.product) {
-          this.items.set(product.id, new CartItem(data.product, data.quantity))
-
-          this.items = new Map(this.items)
+          if (data && data.product) {
+            this.items.set(product.id, new CartItem(data.product, data.quantity))
+          }
+          await this.fetchCartItems() // Refresh the cart
+        } catch (error) {
+          console.error('Failed to add item to cart:', error.message)
+          throw error
         }
-        await this.fetchCartItems()
-      } catch (error) {
-        console.error('Failed to add item to cart:', error.message)
-        throw error
       }
     }
   }
 
   async updateQuantity(productId, quantity) {
     if (typeof productId === 'undefined') {
-      console.error(`Cannot remove a product without a valid id.`)
+      console.error(`Cannot update a product without a valid id.`)
       return
     }
     if (quantity <= 0) {
@@ -169,21 +175,65 @@ class CartCollection {
     if (quantity > product.stock) {
       throw new Error(`Not enough stock available for ${product.name}`)
     }
-    try {
-      // Save the updated cart item quantity to the backend
-      const updatedCartItem = await this.saveCartItem(product, quantity)
 
-      if (updatedCartItem) {
-        this.items.set(productId, new CartItem(updatedCartItem.product, updatedCartItem.quantity))
-        // Ensure Vue reactivity by replacing the map
-        this.items = new Map(this.items)
-        console.log(`Updated quantity for product ${productId} to ${quantity}.`)
+    // Handle unauthenticated users using local storage
+    if (!this.userStore.isLoggedIn) {
+      const newItem = new CartItem(product, quantity)
+      this.items.set(productId, newItem)
+      this.synchronizeCart()
+      console.log(`Updated quantity for product ${productId} to ${quantity}.`)
+    } else {
+      try {
+        // Save the updated cart item quantity to the database for authenticated users
+        const updatedCartItem = await this.saveCartItem(product, quantity)
+
+        if (updatedCartItem && updatedCartItem.product) {
+          this.items.set(productId, new CartItem(updatedCartItem.product, updatedCartItem.quantity))
+
+          console.log(`Updated quantity for product ${productId} to ${updatedCartItem.quantity}.`)
+        }
+
+        await this.fetchCartItems() // Refresh the cart items
+      } catch (error) {
+        console.error(`Failed to update quantity for product ${productId}:`, error.message)
+        throw error // Rethrowing the error ensures we don't silently fail
       }
-      await this.fetchCartItems()
-    } catch (error) {
-      console.error(`Failed to update quantity for product ${productId}:`, error.message)
     }
   }
+
+  //   async removeItem(productId) {
+  //   if (typeof productId === 'undefined') {
+  //     console.error(`Cannot remove a product without a valid id.`);
+  //     return;
+  //   }
+
+  //   const item = this.items.get(productId);
+  //   if (!item) {
+  //     console.error(`Product with id ${productId} not found in the cart.`);
+  //     return;
+  //   }
+
+  //   // Handle unauthenticated users using local storage
+  //   if (!this.userStore.isLoggedIn) {
+  //     this.items.delete(productId);
+  //     this.synchronizeCart();
+  //     console.log(`Product with id ${productId} has been removed from the cart.`);
+  //   } else {
+  //     // Then attempt to delete the item from the backend for authenticated users
+  //     try {
+  //       await this.deleteCartItem({ id: productId });
+  //       console.log(`Product with id ${productId} has been removed from the cart.`);
+
+  //       // Fetch updated cart items list after deletion
+  //       await this.fetchCartItems();
+  //     } catch (error) {
+  //       console.error(`Failed to delete product ${productId} from cart:`, error.message);
+
+  //       // If deletion fails, we re-fetch the cart items to ensure UI consistency with the database state
+  //       await this.fetchCartItems();
+  //     }
+  //   }
+  // }
 
   async removeItem(productId) {
     if (typeof productId === 'undefined') {
@@ -192,27 +242,30 @@ class CartCollection {
     }
 
     const item = this.items.get(productId)
-    if (item) {
-      // Set the product property to null or undefined
-      item.product = null || undefined
-    }
-
-    const success = this.items.delete(productId)
-    if (!success) {
-      console.error(`Product with id ${productId} not found in the local items.`)
+    if (!item) {
+      console.error(`Product with id ${productId} not found in the cart.`)
       return
     }
 
-    console.log(`Product with id ${productId} has been removed from the cart.`)
+    // Handle unauthenticated users using local storage
+    if (!this.userStore.isLoggedIn) {
+      this.items.delete(productId)
+      this.synchronizeCart()
+      console.log(`Product with id ${productId} has been removed from the cart.`)
+    } else {
+      // Then attempt to delete the item from the backend for authenticated users
+      try {
+        await this.deleteCartItem({ id: productId })
+        console.log(`Product with id ${productId} has been removed from the cart.`)
 
-    // Then attempt to delete the item from the backend
-    try {
-      await this.deleteCartItem({ product: item.product, id: productId })
-      await this.synchronizeCart()
-    } catch (error) {
-      console.error(`Failed to delete product ${productId} from cart:`, error.message)
-      // If deletion fails, refresh the cart items from the backend
-      await this.fetchCartItems()
+        // Fetch updated cart items list after deletion
+        await this.fetchCartItems()
+      } catch (error) {
+        console.error(`Failed to delete product ${productId} from cart:`, error.message)
+
+        // If deletion fails, we re-fetch the cart items to ensure UI consistency with the database state
+        await this.fetchCartItems()
+      }
     }
   }
 

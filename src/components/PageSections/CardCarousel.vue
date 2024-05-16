@@ -9,6 +9,10 @@
       arrow="hover"
       height="480px"
     >
+      <!-- Skeleton Loader before the items are loaded -->
+      <div v-if="!items.length" class="skeleton-loader-container">
+        <div v-for="index in 3" :key="'skeleton-' + index" class="skeleton-loader"></div>
+      </div>
       <!-- Modify this loop to use each product as a carousel item -->
       <el-carousel-item v-for="(item, index) in items" :key="index">
         <!-- This slot now passes an individual item instead of grouping them -->
@@ -58,5 +62,29 @@ export default {
 }
 .el-carousel__mask {
   background: none;
+}
+.skeleton-loader-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.skeleton-loader {
+  width: 200px; /* Adjust width as necessary */
+  height: 300px; /* Adjust height as necessary */
+  background-color: #ddd;
+  border-radius: 4px;
+  margin: 10px;
+  animation: shimmer 2s infinite;
+  background-image: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background-size: 1000px 104px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
 }
 </style>

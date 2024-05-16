@@ -9,13 +9,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// supabase.auth.onAuthStateChange((event, session) => {
-//   // the "event" is a string indicating what trigger the state change (ie. SIGN_IN, SIGN_OUT, etc)
-//   // the session contains info about the current session most importanly the user dat
-//   const { user } = authService()
-
-//   user.value = session?.user || null
-// })
 export { supabase }
 
 // Immediately-Invoked Function Expression (IIFE) for handling async operations

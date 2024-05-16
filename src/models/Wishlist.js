@@ -37,10 +37,10 @@ class Wishlist {
   }
 
   async saveWishlistItem(product) {
-    if (!this.userStore.isLoggedIn) {
-      console.error('User must be logged in to save wishlist items.')
-      return Promise.reject(new Error('User must be logged in to save wishlist items.'))
-    }
+    // if (!this.userStore.isLoggedIn) {
+    //   console.error('User must be logged in to save wishlist items.')
+    //   return Promise.reject(new Error('User must be logged in to save wishlist items.'))
+    // }
 
     const user = this.userStore.getUser()
 
@@ -88,32 +88,33 @@ class Wishlist {
     return data
   }
 
-  async addItem(product, quantity) {
-    if (quantity <= 0) {
-      throw new Error('Quantity must be a positive number')
+  async addItem(product) {
+    if (typeof product === 'undefined' || product === null) {
+      console.error(`Cannot add an undefined or null product to the wishlist.`)
+      return
     }
 
-    if (quantity > product.stock) {
-      throw new Error(`Not enough stock available for ${product.name}`)
-    }
-
-    // Check if item already exists in cart
+    // Check if item already exists in wishlist
     const existingItem = this.items.get(product.id)
-    if (!existingItem) {
-      // If it does, update the quantity
+    if (existingItem) {
+      console.error(`Product with id ${product.id} is already in the wishlist.`)
+      return
+    }
 
+    if (!this.userStore.isLoggedIn) {
+      this.items.set(product.id, new WishlistItem(product))
+      this.synchronizeWishlist()
+      console.log(`Product with id ${product.id} has been added to the wishlist.`)
+    } else {
       try {
-        const data = await this.saveWishlistItem(product)
-
+        const data = await this.saveWishlistItem({ product })
         if (data && data.product) {
           this.items.set(product.id, new WishlistItem(data.product))
-
-          this.items = new Map(this.items)
         }
+        console.log(`Product with id ${product.id} has been added to the wishlist.`)
         await this.fetchWishlistItems()
       } catch (error) {
-        console.error('Failed to add item to cart:', error.message)
-        throw error
+        console.error('Failed to add item to wishlist:', error.message)
       }
     }
   }
@@ -124,31 +125,34 @@ class Wishlist {
       return
     }
 
+    // Attempt to delete the item from the local wishlist first
     const success = this.items.delete(productId)
-
     if (!success) {
-      console.error(`Product with id ${productId} not found in the local items.`)
+      console.error(`Product with id ${productId} was not found in the wishlist.`)
       return
+    } else {
+      console.log(`Product with id ${productId} has been removed from the wishlist.`)
     }
 
-    console.log(`Product with id ${productId} has been removed from the cart.`)
+    if (!this.userStore.isLoggedIn) {
+      // Handle removing from wishlist for unauthenticated users using local storage
+      this.synchronizeWishlist()
+    } else {
+      try {
+        await this.deleteWishlistItem({ id: productId })
+      } catch (error) {
+        console.error(`Failed to delete product ${productId} from wishlist:`, error.message)
 
-    // Then attempt to delete the item from the backend
-    try {
-      await this.deleteWishlistItem({ id: productId })
-    } catch (error) {
-      console.error(`Failed to delete product ${productId} from wishlist:`, error.message)
-
-      // If deletion fails refreshing the cart items from the backend
-      await this.fetchWishlistItems()
+        await this.fetchWishlistItems()
+      }
     }
   }
 
   async deleteWishlistItem(product) {
-    if (!this.userStore.isLoggedIn) {
-      console.error('User must be logged in to delete cart items.')
-      return null
-    }
+    // if (!this.userStore.isLoggedIn) {
+    //   console.error('User must be logged in to delete cart items.')
+    //   return null
+    // }
 
     if (!product || typeof product.id === 'undefined') {
       console.error('Cannot delete a cart item without a valid product.', product)
@@ -183,19 +187,53 @@ class Wishlist {
     }
   }
 
+  // async moveToCart(product) {
+  //   // if (!this.userStore.isLoggedIn) {
+  //   //   // Handle scenario when user is not logged in
+  //   //   console.error('User must be logged in to move items to cart.')
+  //   //   return
+  //   // }
+
+  //   const user = this.userStore.getUser()
+
+  //   // Transactional operation - both remove from wishlist and add to cart
+  //   try {
+  //     // Start by removing the item from the wishlist
+  //     const { error: wishlistError } = await supabase
+  //       .from('wishlists')
+  //       .delete()
+  //       .eq('user_id', user.id)
+  //       .eq('product_id', product.id)
+
+  //     if (wishlistError) throw wishlistError
+
+  //     this.items.delete(product.id)
+
+  //     await CartCollection.addItem(product, 1)
+
+  //     console.log(`${product.name} has been moved to the cart.`)
+  //   } catch (error) {
+  //     console.error(`Failed to move ${product.name} to cart:`, error.message)
+  //     throw error
+  //   }
+  // }
   async moveToCart(product) {
+    if (!product || typeof product.id === 'undefined') {
+      console.error('Cannot move an undefined product to the cart.')
+      return
+    }
+
     if (!this.userStore.isLoggedIn) {
-      // Handle scenario when user is not logged in
-      console.error('User must be logged in to move items to cart.')
+      localStorage.setItem('tempCartItem', JSON.stringify(product))
+      console.log('User is not logged in. The product has been saved for later.')
+
       return
     }
 
     const user = this.userStore.getUser()
 
-    // Transactional operation - both remove from wishlist and add to cart
     try {
-      // Start by removing the item from the wishlist
-      const { error: wishlistError } = await supabase
+      const { data: deletedWishlistItems, error: wishlistError } = await supabase
         .from('wishlists')
         .delete()
         .eq('user_id', user.id)
@@ -203,9 +241,18 @@ class Wishlist {
 
       if (wishlistError) throw wishlistError
 
+      // Ensure the selected product was deleted before proceeding
+      if (deletedWishlistItems.length === 0) {
+        console.error(`Product ${product.name} not found in the wishlist.`)
+        return
+      }
+
       this.items.delete(product.id)
 
-      await CartCollection.addItem(product, 1)
+      // Proceed to add the item to the cart
+      const { error: cartError } = await CartCollection.addItem(product, 1)
+
+      if (cartError) throw cartError
 
       console.log(`${product.name} has been moved to the cart.`)
     } catch (error) {
