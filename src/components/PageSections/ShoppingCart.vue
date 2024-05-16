@@ -101,18 +101,6 @@ export default {
       cartVisible: false
     }
   },
-  // mounted() {
-  //   this.cartItems = async () => {
-  //     // Make sure this computed property can handle Promises if using async/await
-  //     try {
-  //       const itemsMap = await this.cart.fetchCartItems() // Fetch and wait for items, since it's an async function
-  //       return Array.from(itemsMap.values()) // Convert Map values to Array
-  //     } catch (error) {
-  //       console.error('Failed to fetch cart items:', error)
-  //       return [] // Return an empty array in case of an error
-  //     }
-  //   }
-  // },
 
   computed: {
     cartTotal() {
@@ -136,12 +124,10 @@ export default {
       this.toggleCartVisibility()
     },
     emitRemoveCartItem(item) {
-      // Make sure you're passing the correct item structure
       this.$emit('remove-cart-item', item)
     },
 
     emitEditItem(item) {
-      // Pass the whole item for editing, not just the product
       this.$emit('edit-item', item)
     },
 

@@ -150,7 +150,7 @@ export default {
   },
   methods: {
     // checkIfFavorite() {
-    //   // Assuming 'product' has a unique identifier 'id'
+    //
     //   this.isFavorite = this.wishlistItems.includes(this.product.id)
     // },
     toggleWishlistItem(item) {

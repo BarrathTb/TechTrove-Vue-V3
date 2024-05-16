@@ -191,7 +191,6 @@ class Wishlist {
     }
 
     const user = this.userStore.getUser()
-    const product_id = product.id
 
     // Transactional operation - both remove from wishlist and add to cart
     try {
@@ -200,20 +199,18 @@ class Wishlist {
         .from('wishlists')
         .delete()
         .eq('user_id', user.id)
-        .eq('product_id', product_id)
+        .eq('product_id', product.id)
 
       if (wishlistError) throw wishlistError
 
-      this.items.delete(product_id)
+      this.items.delete(product.id)
 
-      // Now, add the item to the cart
-      // Assuming you have access to `cartInstance` which is an instance of CartCollection
-      await CartCollection.addItem(product, 1) // Add one quantity of the item to the cart
+      await CartCollection.addItem(product, 1)
 
       console.log(`${product.name} has been moved to the cart.`)
     } catch (error) {
       console.error(`Failed to move ${product.name} to cart:`, error.message)
-      throw error // Optional: re-throw the error for further handling
+      throw error
     }
   }
 
@@ -297,7 +294,7 @@ class Wishlist {
   get totalValue() {
     let total = 0
     for (let item of this.items.values()) {
-      total += item.product.price // Ensure 'price' exists on 'product'
+      total += item.product.price
     }
     return total
   }
