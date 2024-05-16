@@ -10,18 +10,3 @@ if (!supabaseUrl || !supabaseAnonKey) {
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export { supabase }
-
-// Immediately-Invoked Function Expression (IIFE) for handling async operations
-// ;(async () => {
-//   try {
-//     let { data, error } = await supabase.from('products').insert(products)
-
-//     if (error) {
-//       throw error
-//     }
-
-//     console.log('Successfully imported products:', data)
-//   } catch (error) {
-//     console.error('Error importing products:', error)
-//   }
-// })()
