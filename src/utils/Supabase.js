@@ -10,3 +10,4 @@ if (!supabaseUrl || !supabaseAnonKey) {
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export { supabase }
+// export { supabase, authService }
