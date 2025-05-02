@@ -3,7 +3,7 @@
     <section v-show="achievmentsVisible">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-3">
+          <div class="col-12 col-lg-3 mb-4 mb-lg-0">
             <h3 class="text-white text-center align-items-center">Achievments</h3>
 
             <img
@@ -20,7 +20,7 @@
             <p class="text-light-bold text-center">Total Points</p>
           </div>
 
-          <div class="col-5 me-4">
+          <div class="col-12 col-lg-5 mb-4 mb-lg-0">
             <div class="container-fluid mt-2">
               <div class="bg-secondary p-4 rounded-4">
                 <h4 class="text-white text-center">User Level</h4>
@@ -46,28 +46,28 @@
             <div class="container-fluid mt-2">
               <div class="bg-primary rounded-4 mt-4">
                 <div class="row">
-                  <div class="col-3">
+                  <div class="col-4 col-md-3 mb-3 mb-md-0">
                     <div
                       class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
                     >
                       <VaAvatar src="images/badge1.png" />
                     </div>
                   </div>
-                  <div class="col-3">
+                  <div class="col-4 col-md-3 mb-3 mb-md-0">
                     <div
                       class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
                     >
                       <VaAvatar src="images/badge2.png" />
                     </div>
                   </div>
-                  <div class="col-3">
+                  <div class="col-4 col-md-3 mb-3 mb-md-0">
                     <div
                       class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
                     >
                       <VaAvatar src="images/badge3.png" />
                     </div>
                   </div>
-                  <div class="col-3">
+                  <div class="col-4 col-md-3">
                     <div
                       class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
                     >
@@ -78,28 +78,28 @@
               </div>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-12 col-lg-4">
             <div class="container-fluid mt-2 ms-4">
               <div class="bg-secondary p-4 rounded-4">
                 <h5 class="text-light-bold p-2">
                   Discover How to Earn Badges and Unlock Amazing Rewards and Discounts.
                 </h5>
                 <div class="row d-flex align-items-center justify-content-between me-2">
-                  <div class="col-3">
+                  <div class="col-4 col-md-3 mb-3 mb-md-0">
                     <div
                       class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
                     >
                       <VaAvatar src="images/badge2.png" />
                     </div>
                   </div>
-                  <div class="col-3">
+                  <div class="col-4 col-md-3 mb-3 mb-md-0">
                     <div
                       class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
                     >
                       <VaAvatar src="images/badge3.png" />
                     </div>
                   </div>
-                  <div class="col-3">
+                  <div class="col-4 col-md-3">
                     <div
                       class="bg-secondary d-flex align-items-center justify-content-center p-4 rounded-4"
                     >
@@ -125,11 +125,11 @@
             <div class="bg-secondary p-4 rounded-4">
               <div class="bg-primary p-4 rounded-4">
                 <div class="row">
-                  <div class="col-md-9 col-6">
+                  <div class="col-12 col-md-9">
                     <!-- Adjusted the column sizes here -->
                     <h4 class="text-white">Achievement Stats</h4>
                   </div>
-                  <div class="col-md-3 col-6 d-flex justify-content-end">
+                  <div class="col-12 col-md-3 d-flex justify-content-md-end mt-2 mt-md-0">
                     <!-- Added d-flex and adjusted classes for responsive behavior -->
                     <select
                       name="stat-graph"
@@ -170,8 +170,8 @@
 <script>
 // import { LuzmoDashboard } from '@luzmo/vue-embed'
 // import Avatar from '@/components/PageSections/ProfileAvatar.vue'
-import { useUserStore } from '@/stores/User'
 import stats from '@/assets/images/stats.png'
+import { useUserStore } from '@/stores/User'
 
 export default {
   name: 'ProfileAchievments',
@@ -308,3 +308,13 @@ export default {
   opacity: 0;
 }
 </style>
+@media (max-width: 991.98px) { /* Target screens smaller than lg breakpoint */ .col-12.col-lg-5 {
+margin-right: 0 !important; /* Remove right margin when stacked */ } .col-12.col-lg-4
+.container-fluid.mt-2.ms-4 { margin-left: 0 !important; /* Remove left margin on right column
+container */ } .col-12.col-lg-3.mb-4.mb-lg-0 { text-align: center; /* Center text in the first
+column */ } .col-12.col-lg-3.mb-4.mb-lg-0 .avatar { margin-left: auto; /* Center avatar */
+margin-right: auto; } } @media (max-width: 767.98px) { /* Target screens smaller than md breakpoint
+*/ .col-12.col-md-3.d-flex.justify-content-md-end { justify-content: flex-start !important; /* Align
+dropdown to start on small screens */ } .col-4.col-md-3 .bg-secondary { padding: 0.5rem !important;
+/* Reduce padding for badges on smaller screens */ } .col-12.col-lg-4 .bg-secondary { text-align:
+center; /* Center content in the right column box */ } }

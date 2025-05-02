@@ -3,7 +3,7 @@
     <section v-show="preferencesVisible">
       <div class="container-fluid">
         <div class="row bg-primary">
-          <div class="col-4">
+          <div class="col-12">
             <h4 class="text-white ms-4 align-items-center justify-content-start">
               Personal Preferences
             </h4>
@@ -20,7 +20,7 @@
         </div>
         <div class="container-fluid my-2 mt-2 ms-4">
           <div class="row">
-            <div class="col-6">
+            <div class="col-12 col-lg-7">
               <div class="preference my-2">
                 <span class="preference-label">Enable Notifications</span>
                 <VaSwitch v-model="preferences.notifications" color="custom-success" />
@@ -59,7 +59,7 @@
                 <VaSwitch v-model="preferences.autoPlayVideos" color="custom-success" />
               </div>
             </div>
-            <div class="col-4 h-100 bg-primary ms-4 mt-4">
+            <div class="col-12 col-lg-5 h-100 bg-primary ms-lg-4 mt-4">
               <div class="container-fluid ms-4">
                 <div class="bg-secondary p-4 rounded-2 me-4">
                   <h3 class="text-white">Exclusive Offers!</h3>
@@ -163,5 +163,17 @@ export default {
 .preference-label {
   font-weight: 500;
   font-size: 16px;
+}
+@media (max-width: 991.98px) {
+  /* Target screens smaller than lg breakpoint */
+  .col-12.col-lg-5.bg-primary {
+    margin-left: 0 !important; /* Remove left margin on offers box when
+stacked */
+    margin-top: 2rem; /* Add top margin to offers box when stacked */
+  }
+  .container-fluid.my-2.mt-2.ms-4 {
+    margin-left: 0 !important; /* Remove left margin on main container
+*/
+  }
 }
 </style>

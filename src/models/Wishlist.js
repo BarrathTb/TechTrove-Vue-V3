@@ -1,5 +1,5 @@
-import { supabase } from '@/utils/Supabase'
 import { useUserStore } from '@/stores/User'
+import { supabase } from '@/utils/Supabase'
 import { CartCollection } from './Cart'
 import Product from './Product'
 
@@ -53,14 +53,14 @@ class Wishlist {
     const { data: productData, error: productError } = await supabase
       .from('products')
       .select('*')
-      .eq('id', product.id)
+      .eq('id', product.product.id)
       .single()
 
     if (productError || !productData) {
-      throw new Error(`Product with ID ${product.id} does not exist.`)
+      throw new Error(`Product with ID ${product.product.id} does not exist.`)
     }
 
-    const existingCartItem = this.items.get(product.id)
+    const existingCartItem = this.items.get(product.product.id)
 
     let data, error
     if (!existingCartItem) {
@@ -69,7 +69,7 @@ class Wishlist {
         .from('wishlists')
         .insert({
           user_id: user.id,
-          product_id: product.id
+          product_id: product.product.id
         })
         .single()
       data = insertedData
@@ -83,7 +83,7 @@ class Wishlist {
 
     // Always update local items Map with the latest data
     if (data && productData) {
-      this.items.set(product.id, new WishlistItem(productData))
+      this.items.set(product.product.id, new WishlistItem(productData))
     }
     return data
   }
@@ -310,7 +310,7 @@ class Wishlist {
           continue // Skip to the next iteration of the loop
         }
 
-        await this.saveWishlistItem(wishlistItem.product.id)
+        await this.saveWishlistItem(wishlistItem.product)
 
         const item = this.items.get(productId)
         if (item) {
@@ -347,4 +347,4 @@ class Wishlist {
   }
 }
 
-export { WishlistItem, Wishlist }
+export { Wishlist, WishlistItem }

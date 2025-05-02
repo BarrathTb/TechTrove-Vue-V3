@@ -13,12 +13,14 @@
         </div>
 
         <div class="modal-body rounded justify-content-center">
-          <img
-            :src="product.image"
-            class="img-fluid details-image"
-            style="border-radius: 10px; margin-bottom: 20px"
-            :alt="product.name"
-          />
+          <div class="image-container rounded mx-auto mb-3">
+            <img
+              :src="product.image"
+              class="details-image"
+              style="border-radius: 10px; margin-bottom: 20px"
+              :alt="product.name"
+            />
+          </div>
           <div class="row">
             <h5 class="col text-white">{{ product.name }}</h5>
 
@@ -41,13 +43,60 @@
           <p class="text-white">{{ productFormattedPrice }}</p>
           <p class="text-white">{{ product.description }}</p>
           <hr class="bg-white" />
-          <h5 class="text-white">Features</h5>
-          <ul class="row list-unstyled text-light">
-            <li v-for="(feature, index) in product.features" :key="index">
-              {{ feature }}
-            </li>
-          </ul>
           <hr class="bg-white" />
+
+          <div class="row mb-3">
+            <div class="col-6">
+              <div class="p-3 rounded bg-secondary text-white h-100">
+                <h5 class="text-white">Features</h5>
+                <ul class="list-unstyled text-light">
+                  <li v-if="product.feature1">{{ product.feature1 }}</li>
+                  <li v-if="product.feature2">{{ product.feature2 }}</li>
+                  <li v-if="product.feature3">{{ product.feature3 }}</li>
+                  <li v-if="product.feature4">{{ product.feature4 }}</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 rounded bg-secondary text-white h-100">
+                <h5 class="text-white">Dimensions</h5>
+                <p class="text-light">Width: {{ product.dimension_width }}</p>
+                <p class="text-light">Height: {{ product.dimension_height }}</p>
+                <p class="text-light">Length: {{ product.dimension_length }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6">
+              <div class="p-3 rounded bg-secondary text-white h-100">
+                <h5 class="text-white">Weight</h5>
+                <p class="text-light">{{ product.weight }}</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 rounded bg-secondary text-white h-100">
+                <h5 class="text-white">Warranty</h5>
+                <p class="text-light">{{ product.warranty }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6">
+              <div class="p-3 rounded bg-secondary text-white h-100">
+                <h5 class="text-white">Ratings</h5>
+                <p class="text-light">Average Rating: {{ product.rating_average }}</p>
+                <p class="text-light">Total Reviews: {{ product.rating_total_reviews }}</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <!-- Empty column to maintain layout if there's an odd number of cards -->
+            </div>
+          </div>
+
+          <hr class="bg-white" />
+
           <div class="row align-items-center">
             <div class="col-6">
               <h5 class="text-white float-left">Price</h5>
@@ -87,7 +136,6 @@
     </template>
   </VaModal>
 </template>
-
 <script>
 import { CartCollection } from '@/models/Cart.js'
 import { Wishlist } from '@/models/Wishlist.js'
@@ -154,6 +202,7 @@ export default {
     //   this.isFavorite = this.wishlistItems.includes(this.product.id)
     // },
     toggleWishlistItem(item) {
+      console.log('Product object in toggleWishlistItem:', item.product)
       if (item.isFavorite) {
         // this.wishlist.addItem(item.product)
         this.$emit('manage-wishlist', {
@@ -209,15 +258,26 @@ export default {
 </script>
 <style scoped>
 .details-image {
-  width: 50%;
-  height: 50%;
+  width: 60%;
+  margin: auto;
+  display: block;
+  height: 25%;
   position: center;
   object-fit: cover;
+}
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  color: white;
+  width: 100%;
+  margin: auto;
 }
 .product-detail-modal {
   position: relative;
   z-index: 1000;
-  width: 50vw;
+  width: 60vw;
   height: 60vh;
 }
 
@@ -228,17 +288,23 @@ export default {
 .heart {
   cursor: pointer;
   background-color: transparent;
-  height: 30px;
+  height: 40px;
 
-  width: 30px;
+  width: 40px;
 
-  display: inline-block;
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M24.8,47l-2.9-2.7C9.6,31.1,1,22.9,1,14.5C1,7.1,6.6,1,13.4,1c4.3,0,8.1,2.2,10.6,5.7C26,3.2,29.8,1,34.1,1C40.9,1,46.5,7.1,46.5,14.5c0,8.5-8.6,16.6-20.9,30L24.8,47z" fill="%23CCCCCC"/></svg>');
-
+  filter: drop-shadow(0 0 3px #ee82ee); /* Add a pink glow */
+  transition:
+    background-image 0.3s ease-in-out,
+    filter 0.3s ease-in-out;
   background-size: cover;
 }
 
 .hidden-checkbox:checked + .heart {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M24.8,47l-2.9-2.7C9.6,31.1,1,22.9,1,14.5C1,7.1,6.6,1,13.4,1c4.3,0,8.1,2.2,10.6,5.7C26,3.2,29.8,1,34.1,1C40.9,1,46.5,7.1,46.5,14.5c0,8.5-8.6,16.6-20.9,30L24.8,47z" fill="%23FF0000"/></svg>');
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M24.8,47l-2.9-2.7C9.6,31.1,1,22.9,1,14.5C1,7.1,6.6,1,13.4,1c4.3,0,8.1,2.2,10.7,5.7C26,3.2,29.8,1,34.1,1C40.9,1,46.5,7.1,46.5,14.5c0,8.5-8.6,16.6-20.9,30L24.8,47z" fill="%23ee82ee"/></svg>');
+  filter: drop-shadow(0 0 10px #ee82ee); /* Add a pink glow */
+  transition:
+    background-image 0.3s ease-in-out,
+    filter 0.3s ease-in-out;
 }
 </style>

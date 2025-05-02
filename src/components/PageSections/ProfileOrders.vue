@@ -16,11 +16,11 @@
             class="order-item bg-secondary p-4 rounded mb-3"
           >
             <div class="row">
-              <div class="col-md-3">
+              <div class="col-12 col-md-3 mb-3 mb-md-0">
                 <h5 class="text-white">Order #{{ order.id }}</h5>
                 <p class="text-muted">Placed on {{ formatDate(order.created_at) }}</p>
               </div>
-              <div class="col-md-6">
+              <div class="col-12 col-md-6 mb-3 mb-md-0">
                 <div v-for="item in order.items" :key="item.id" class="order-product">
                   <div class="d-flex align-items-center mb-2">
                     <img
@@ -37,7 +37,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-3 text-end">
+              <div class="col-12 col-md-3 text-md-end">
                 <h5 class="text-white">Total: {{ formatPrice(order.total_amount) }}</h5>
               </div>
             </div>
@@ -138,3 +138,6 @@ export default {
   opacity: 0;
 }
 </style>
+@media (max-width: 767.98px) { /* Target screens smaller than md breakpoint */ .profile-orders {
+max-width: none; /* Allow container to use full width */ padding-left: 1rem; /* Add some padding */
+padding-right: 1rem; } .order-item { padding: 1rem; /* Adjust padding for smaller screens */ } }

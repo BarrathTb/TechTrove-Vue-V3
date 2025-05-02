@@ -6,7 +6,7 @@
     <div class="card-body text-light d-flex flex-column justify-content-between my-auto py-auto">
       <h5 class="card-title text-center font-size-sm">{{ product.name }}</h5>
       <p class="product-card-text text-left mx-2 font-size-sm">{{ product.description }}</p>
-      <button type="button" class="btn btn-success-2 my-auto" @click="handleViewDetails">
+      <button type="button" class="btn btn-success-2 my-2" @click="handleViewDetails">
         View Product Details
       </button>
     </div>
@@ -50,11 +50,14 @@ export default {
   align-items: center;
   justify-content: space-between;
   border-radius: 0.25rem;
+  background: linear-gradient(rgba(18, 18, 18, 0.8), rgba(44, 44, 44, 0.95)),
+    url('images/card-back.jpg');
+  background-size: cover; /* Ensure the background image covers the entire element */
+  background-position: center; /* Center the background image */
 }
-
 .card-img-container {
   width: 95%; /* Width is 100% of the card */
-  max-height: 30vh;
+  max-height: 40vh;
   min-height: 20vh; /* Maximum height for your image */
   display: flex;
   justify-content: center;
@@ -92,5 +95,10 @@ export default {
 .product-card .btn-success-2 {
   align-self: center; /* Center button horizontally */
   margin-top: auto; /* Pushes the button to the bottom */
+}
+@media (max-width: 768px) {
+  .product-card-text {
+    display: none;
+  }
 }
 </style>

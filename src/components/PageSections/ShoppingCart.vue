@@ -11,7 +11,7 @@
               <div class="card mx-auto bg-secondary mb-3">
                 <h2 class="tube-text p-4">Your Cart</h2>
                 <div class="table-responsive">
-                  <table class="table mx-auto table-dark bg-secondary col-md-4">
+                  <table class="table mx-auto table-dark bg-secondary col-md-4" style="width: 100%">
                     <thead>
                       <tr>
                         <th scope="col"></th>

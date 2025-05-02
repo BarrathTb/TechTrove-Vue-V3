@@ -52,7 +52,8 @@
 
   <HeroImage />
 
-  <CardCarousel :items="filteredProducts">
+  <CardCarousel :items="filteredProducts" :cards-to-show="carouselItems">
+    <!-- Use carouselItems computed property -->
     <template v-slot:item="{ item }">
       <ProductCard :key="item.id" :product="item" @view-details="handleViewDetails" />
     </template>
@@ -79,16 +80,16 @@ import HeroImage from '@/components/PageSections/HeroImage.vue'
 import MessageBoard from '@/components/PageSections/MessageBoard.vue'
 import PcBuilder from '@/components/PageSections/PcBuilder.vue'
 import ProductCard from '@/components/PageSections/ProductCard.vue'
-import ShoppingCart from '@/components/PageSections/ShoppingCart.vue'
 import ShippingSection from '@/components/PageSections/ShippingSection.vue'
+import ShoppingCart from '@/components/PageSections/ShoppingCart.vue'
 import SupportSection from '@/components/PageSections/SupportSection.vue'
+import WishlistSection from '@/components/PageSections/WishListSection.vue'
 import ProductDetailModal from '@/components/modals/ProductDetailModal.vue'
 import HeaderComponent from '@/components/siteNavs/HeaderComponent.vue'
-import WishlistSection from '@/components/PageSections/WishListSection.vue'
-import { useUserStore } from '@/stores/User'
 import { CartCollection } from '@/models/Cart.js'
 import Product from '@/models/Product'
 import Profile from '@/models/Profile.js'
+import { useUserStore } from '@/stores/User'
 
 import { Wishlist } from '@/models/Wishlist'
 
@@ -148,7 +149,8 @@ export default {
         theme: 'outline',
         style: 'color: custom-success',
         autoClose: 2000
-      }
+      },
+      windowWidth: window.innerWidth // Add windowWidth data property
     }
   },
   async mounted() {
@@ -157,6 +159,8 @@ export default {
       await this.initializeUserProfile()
       await this.initializeCart()
       await this.initializeWishlist()
+      window.addEventListener('resize', this.handleResize) // Add resize listener
+      this.handleResize() // Initial call to set windowWidth
     } catch (error) {
       console.error(error)
     }
@@ -171,6 +175,19 @@ export default {
     localUser() {
       const userStore = useUserStore()
       return userStore.profile || {}
+    },
+    cardsToShow() {
+      // Computed property to determine number of cards based on screen width
+      if (this.windowWidth < 768) {
+        return 0 // Show 1 card on mobile
+      } else {
+        return 2 // Show 3 cards on larger screens
+      }
+    },
+
+    carouselItems() {
+      // Computed property to slice filteredProducts based on cardsToShow
+      return this.filteredProducts.slice(0, this.cardsToShow)
     }
   },
 
@@ -204,6 +221,10 @@ export default {
   },
 
   methods: {
+    handleResize() {
+      // Method to update windowWidth on resize
+      this.windowWidth = window.innerWidth
+    },
     /**
      * Initializes the products by fetching them from the server and setting them to the component's state.
      *
@@ -423,7 +444,7 @@ export default {
         this.wishlist.addItem(product)
         this.$toast('Item added to wishlist.', this.toastStyle)
       } else if (action === 'remove') {
-        this.wishlist.removeItem(product)
+        this.wishlist.removeItem(product.id)
         this.$toast('Item removed from wishlist.', this.toastStyle)
       }
 
@@ -596,9 +617,14 @@ export default {
         }
       })
     }
+  },
+  beforeUnmount() {
+    // Remove resize listener
+    window.removeEventListener('resize', this.handleResize)
   }
 }
 </script>
+
 <style>
 .login-modal {
   z-index: 300;

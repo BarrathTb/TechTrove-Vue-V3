@@ -26,6 +26,7 @@
     "material-icons": "^1.13.12",
     "npm": "^10.5.0",
     "pinia": "^2.1.7",
+    "psql": "^0.0.1",
     "quasar": "^2.14.7",
     "sass-loader": "^14.1.1",
     "smooth-scrollbar": "^8.8.4",
@@ -47,6 +48,7 @@
     "material-design-icons-iconfont": "^6.7.0",
     "prettier": "^3.0.3",
     "sass": "^1.71.1",
+    "supabase": "^2.22.6",
     "vite": "^5.0.11"
   }
 }

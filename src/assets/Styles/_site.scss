@@ -104,21 +104,51 @@ body {
   }
 
   ::-webkit-scrollbar-track {
-    background: #2e2e2e;
+    background: #2d2d2d;
+    border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: #555;
-    border-radius: 6px;
-    border: 3px solid $custom-success;
+    background: #2c2c2c; /* color of the scroll thumb */
+    border-radius: 10px; /* roundness of the scroll thumb */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: darken(#2c2c2c, 10%); /* color of the scroll thumb on hover */
   }
 
   /* For Firefox */
   * {
-    scrollbar-width: thin;
-    scrollbar-color: #555 #2e2e2e;
+    scrollbar-width: thin; /* "auto" or "thin" */
+    scrollbar-color: #2c2c2c #2d2d2d; /* thumb color track color */
   }
 
+  /* Custom Scrollbar Styles */
+
+  /* For Webkit browsers (Chrome, Safari, Edge, Opera) */
+  ::-webkit-scrollbar {
+    width: 8px; /* width of the scrollbar */
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #2d2d2d; /* color of the track */
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2c2c2c; /* color of the scroll thumb */
+    border-radius: 10px; /* roundness of the scroll thumb */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: darken(#2c2c2c, 10%); /* color of the scroll thumb on hover */
+  }
+
+  /* For Firefox */
+  * {
+    scrollbar-width: thin; /* "auto" or "thin" */
+    scrollbar-color: #2c2c2c #2d2d2d; /* thumb color track color */
+  }
   a.nav-link.active.text-light-bold.main-nav-menu-item:not(:hover):active {
     color: white !important;
   }
@@ -684,7 +714,7 @@ select.select-input {
     max-width: 25px;
   }
   .tube-text {
-    font-size: 6vw;
+    font-size: 3vw;
     font-weight: 100;
     color: #d4eaff;
     text-shadow:
@@ -777,6 +807,21 @@ select.select-input {
 @media (min-width: 768px) {
   .tube-text {
     font-size: 2vw;
+    font-weight: 100;
+    color: #d4eaff;
+    text-shadow:
+      0 0 0 transparent,
+      0 0 10px #0ee636,
+      0 0 20px rgba(38, 149, 255, 0.5),
+      0 0 40px #0ee636,
+      0 0 100px #0ee636,
+      0 0 200px #0ee636,
+      0 0 300px #0ee636,
+      0 0 500px #0ee636;
+    animation: blink 4s infinite alternate;
+  }
+  .tube-text-news {
+    font-size: 1vw;
     font-weight: 100;
     color: #d4eaff;
     text-shadow:
@@ -900,4 +945,31 @@ select.select-input {
 
 .login-modal {
   z-index: 999 important;
+}
+
+/* Custom Scrollbar Styles */
+
+/* For Webkit browsers (Chrome, Safari, Edge, Opera) */
+::-webkit-scrollbar {
+  width: 8px; /* width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #2d2d2d; /* color of the track */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* color of the scroll thumb */
+  border-radius: 10px; /* roundness of the scroll thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* color of the scroll thumb on hover */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: #888 #2d2d2d; /* thumb color track color */
 }

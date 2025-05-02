@@ -10,9 +10,15 @@ class Product {
     this.image = data.image
     this.description = data.description
     this.stock = Number(data.stock)
-    this.ratings = data.ratings
-    this.features = data.features || []
-    this.dimensions = data.dimensions
+    this.rating_average = data.rating_average
+    this.rating_total_reviews = data.rating_total_reviews
+    this.feature1 = data.feature1
+    this.feature2 = data.feature2
+    this.feature3 = data.feature3
+    this.feature4 = data.feature4
+    this.dimension_width = data.dimension_width
+    this.dimension_height = data.dimension_height
+    this.dimension_length = data.dimension_length
     this.weight = data.weight
     this.warranty = data.warranty
   }

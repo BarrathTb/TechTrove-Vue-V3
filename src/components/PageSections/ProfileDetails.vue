@@ -3,7 +3,7 @@
     <section v-show="detailsVisible == true">
       <div class="container-fluid">
         <div class="row bg-primary">
-          <div class="col-4">
+          <div class="col-12">
             <h4 class="text-white ms-4 align-items-center justify-content-start">
               Personal Details
             </h4>
@@ -21,15 +21,15 @@
 
         <div class="container-fluid mt-2 ms-4">
           <div class="row">
-            <div class="col-6">
+            <div class="col-12 col-lg-7">
               <form class="form-widget mt-4" @submit.prevent="updateProfile">
                 <div class="row">
-                  <div class="col-4">
+                  <div class="col-12 col-lg-4">
                     <label for="username" class="text-white d-flex align-items-center"
                       ><i class="bi bi-pencil-fill me-4"></i>Full Name</label
                     >
                   </div>
-                  <div class="col-8">
+                  <div class="col-12 col-lg-8">
                     <input
                       id="username"
                       type="text"
@@ -40,12 +40,12 @@
                   </div>
                 </div>
                 <div class="row mt-4">
-                  <div class="col-4">
+                  <div class="col-12 col-lg-4">
                     <label class="text-white d-flex align-items-center"
                       ><i class="bi bi-pencil-fill me-4"></i>User Name</label
                     >
                   </div>
-                  <div class="col-8">
+                  <div class="col-12 col-lg-8">
                     <input
                       type="text"
                       v-model="localUser.username"
@@ -55,12 +55,12 @@
                   </div>
                 </div>
                 <div class="row mt-4">
-                  <div class="col-4">
+                  <div class="col-12 col-lg-4">
                     <label for="email" class="text-white d-flex align-items-center"
                       ><i class="bi bi-pencil-fill me-4"></i>Email</label
                     >
                   </div>
-                  <div class="col-8">
+                  <div class="col-12 col-lg-8">
                     <input
                       type="email"
                       class="form-control select-input"
@@ -71,22 +71,22 @@
                   </div>
                 </div>
                 <div class="row mt-4">
-                  <div class="col-4">
+                  <div class="col-12 col-lg-4">
                     <label class="text-white d-flex align-items-center"
                       ><i class="bi bi-pencil-fill me-4"></i>Date of Birth</label
                     >
                   </div>
-                  <div class="col-8">
+                  <div class="col-12 col-lg-8">
                     <input type="date" class="form-control select-input" />
                   </div>
                 </div>
                 <div class="row mt-4">
-                  <div class="col-4">
+                  <div class="col-12 col-lg-4">
                     <label class="text-white d-flex align-items-center"
                       ><i class="bi bi-pencil-fill me-4"></i>Shipping Address</label
                     >
                   </div>
-                  <div class="col-8">
+                  <div class="col-12 col-lg-8">
                     <textarea
                       class="form-control select-input"
                       placeholder="123 Main St, Anytown AU"
@@ -94,12 +94,12 @@
                   </div>
                 </div>
                 <div class="row mt-4">
-                  <div class="col-4">
+                  <div class="col-12 col-lg-4">
                     <label class="text-white d-flex align-items-center"
                       ><i class="bi bi-pencil-fill me-4"></i>Profile Avatar</label
                     >
                   </div>
-                  <div class="col-8">
+                  <div class="col-12 col-lg-8">
                     <Avatar @avatar-uploaded="onAvatarUpload($event)" />
                   </div>
                 </div>
@@ -117,7 +117,7 @@
                 </div>
               </form>
             </div>
-            <div class="col-4 h-100 bg-primary ms-4 mt-4">
+            <div class="col-12 col-lg-5 h-100 bg-primary ms-lg-4 mt-4">
               <div class="container-fluid ms-4">
                 <div class="bg-secondary p-4 rounded-2 me-4">
                   <h3 class="text-white">Exclusive Offers!</h3>
@@ -307,3 +307,9 @@ export default {
   opacity: 0;
 }
 </style>
+@media (max-width: 991.98px) { /* Target screens smaller than lg breakpoint */ .form-widget .row
+.col-12.col-lg-4 label { margin-bottom: 0.5rem; /* Add space below labels when stacked */ }
+.col-12.col-lg-5.bg-primary { margin-left: 0 !important; /* Remove left margin on offers box when
+stacked */ margin-top: 2rem; /* Add top margin to offers box when stacked */ }
+.container-fluid.mt-2.ms-4 { margin-left: 0 !important; /* Remove left margin on main container */ }
+}

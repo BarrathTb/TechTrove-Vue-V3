@@ -55,7 +55,6 @@
               </div>
             </div>
           </div>
-
           <p class="lead">Check out our latest collection below.</p>
         </div>
       </div>
@@ -64,8 +63,10 @@
     <!-- Small screens Hero Section -->
     <div class="container-fluid d-md-none d-sm-flex hero-image-sm bg-primary">
       <div class="row hero-text-sm">
-        <div class="col-12 text-light mx-auto">
-          <h4>{{ currentHeroTitle }}</h4>
+        <div class="col-12 text-light text-center">
+          <h4 :class="{ 'rainbow-text-animate-sm': animateText }" class="display-8 pt-3 mr-auto">
+            {{ currentHeroTitle }}
+          </h4>
           <p class="lead">Check out our latest collection below.</p>
         </div>
       </div>
@@ -214,7 +215,7 @@ export default {
   }
 } */
 
-/* .rainbow-text-animate {
+.rainbow-text-animate-sm {
   background: linear-gradient(
     90deg,
     red,
@@ -238,7 +239,7 @@ export default {
   animation: slideGradient 15s linear infinite;
   -webkit-text-fill-color: transparent;
   display: inline-block;
-} */
+}
 
 .rainbow-text-animate {
   background: radial-gradient(
@@ -380,5 +381,31 @@ export default {
   border-radius: 50px;
   cursor: pointer;
   z-index: 4;
+}
+
+/* Modified styles for small screens */
+
+/* Adjust font size for hero text on small screens */
+@media (max-width: 767.98px) {
+  .hero-text-sm {
+    position: relative; /* Change to relative positioning */
+    top: 50%; /* Adjust vertical positioning */
+    left: 0;
+    transform: translateY(-50%); /* Center vertically */
+    text-align: center; /* Center text horizontally */
+    padding: 0 15px; /* Add some padding */
+    word-wrap: break-word; /* Allow text to wrap */
+    overflow-wrap: break-word; /* Allow text to wrap */
+  }
+  .hero-image-sm {
+    background: url('/TechTrove-Vue-V3/images/ek-fluid-gaming-digital-reef-art-1.webp') no-repeat
+      bottom center;
+    background-size: cover;
+    position: relative;
+    height: 38vh;
+    display: flex; /* Use flexbox for centering content */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+  }
 }
 </style>

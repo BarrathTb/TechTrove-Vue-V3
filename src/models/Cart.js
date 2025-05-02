@@ -1,6 +1,6 @@
+import { useUserStore } from '@/stores/User'
 import { supabase } from '@/utils/Supabase'
 import Product from './Product'
-import { useUserStore } from '@/stores/User'
 
 class CartItem {
   constructor(productData, quantity = 1) {
@@ -362,7 +362,7 @@ class CartCollection {
           continue // Skip to the next iteration of the loop
         }
 
-        await this.saveCartItem(cartItem.product.id, cartItem.quantity)
+        await this.saveCartItem(cartItem.product, cartItem.quantity)
 
         const item = this.items.get(productId)
         if (item) {
@@ -416,4 +416,4 @@ class CartCollection {
   }
 }
 
-export { CartItem, CartCollection }
+export { CartCollection, CartItem }

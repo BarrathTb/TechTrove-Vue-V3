@@ -209,7 +209,6 @@
         class="offcanvas offcanvas-end bg-primary"
         id="offcanvasNavbar"
         aria-labelledby="offcanvasNavbarLabel"
-        style="visibility: visible"
       >
         <!-- VaButton to close offcanvas -->
         <button
@@ -228,7 +227,7 @@
               <div v-for="(category, index) in uniqueCategories" :key="`category-item-${index}`">
                 <VaSidebarItem
                   class="align-items-center menu-item"
-                  @click="handleCategoryClick(category)"
+                  @click="handleCategoryClick(category), toggleOffcanvasVisibility()"
                 >
                   <VaSidebarItemContent>
                     <VaSidebarItemTitle class="text-light">{{ category }} </VaSidebarItemTitle>
@@ -248,7 +247,10 @@
                   v-for="(brand, index) in uniqueBrands"
                   :key="`brand-item-${index}`"
                 >
-                  <VaSidebarItem @click="handleBrandClick(brand)" class="menu-item">
+                  <VaSidebarItem
+                    @click="handleBrandClick(brand), toggleOffcanvasVisibility()"
+                    class="menu-item"
+                  >
                     <VaSidebarItemContent>
                       <VaSidebarItemTitle class="brand-item text-light">
                         {{ brand }}
@@ -263,7 +265,7 @@
 
         <!-- Other Main Navigation Links -->
         <router-link to="/profile" class="nav-link text-light-bold-2 nav-item" id="news-link">
-          <VaSidebarItem class="menu-item">
+          <VaSidebarItem @click="toggleOffcanvasVisibility()" class="menu-item">
             <VaSidebarItemContent>
               <VaIcon color="white" name="person" />
               <VaSpacer class="spacer" />
@@ -272,7 +274,10 @@
             </VaSidebarItemContent>
           </VaSidebarItem>
         </router-link>
-        <VaSidebarItem @click.prevent="toggleLoginModal" class="menu-item">
+        <VaSidebarItem
+          @click.prevent="toggleLoginModal, toggleOffcanvasVisibility()"
+          class="menu-item"
+        >
           <VaSidebarItemContent>
             <VaIcon color="white" name="login" />
             <VaSpacer class="spacer" />
@@ -306,7 +311,7 @@
         </VaSidebarItem>
 
         <router-link to="/news" class="nav-link text-light-bold-2 nav-item" id="news-link">
-          <VaSidebarItem class="menu-item">
+          <VaSidebarItem @click="toggleOffcanvasVisibility()" class="menu-item">
             <VaSidebarItemContent>
               <VaIcon color="white" name="article" />
               <VaSpacer class="spacer" />
@@ -483,6 +488,7 @@ export default {
     },
     toggleBuildVisibility() {
       this.$emit('toggle-build')
+
       if (this.windowWidth < 768) {
         this.toggleOffcanvasVisibility()
       }
@@ -501,13 +507,17 @@ export default {
     },
     toggleMessageBoard() {
       this.$emit('toggle-board')
+
       if (this.windowWidth < 768) {
+        // This check might be redundant now, but keeping it for safety
         this.toggleOffcanvasVisibility()
       }
     },
     toggleLoginModal() {
       this.$emit('toggle-login-modal')
+
       if (this.windowWidth < 768) {
+        // This check might be redundant now, but keeping it for safety
         this.toggleOffcanvasVisibility()
       }
       this.isModalVisible = true
@@ -620,5 +630,48 @@ export default {
 }
 .va-sidebar {
   z-index: 900;
+}
+@media (min-width: 768px) {
+  /* Target screens larger than or equal to md breakpoint */
+  #offcanvasNavbar {
+    /* Target the inner div */
+    display: none !important; /* Ensure it's hidden */
+    visibility: hidden !important; /* Ensure it's hidden */
+    position: fixed; /* Keep it fixed */
+    top: 0;
+    left: 0;
+    height: 100vh; /* Full height */
+    width: 25%; /* Set a width for the sidebar (col-4 equivalent) */
+    /* Remove visibility and transform overrides as they might conflict */
+  }
+
+  .container-fluid {
+    padding-left: 15%; /* Add padding to the main content to make space for the sidebar */
+  }
+
+  /* Hide the mobile header toggle button on large screens */
+  .header .d-md-none {
+    display: none !important;
+  }
+
+  /* Ensure the main header content is visible on large screens */
+  .header .d-md-block {
+    display: block !important;
+  }
+
+  .header .d-md-flex {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  /* Target screens smaller than md breakpoint */
+  .sidebar.bg-secondary {
+    height: auto; /* Allow sidebar height to adjust based on content */
+    margin-bottom: 1rem; /* Add some space below the sidebar when stacked */
+  }
+  .col-12.col-md-9.bg-primary {
+    margin-top: 0 !important; /* Remove top margin for content when stacked */
+  }
 }
 </style>

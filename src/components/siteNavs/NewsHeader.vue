@@ -106,7 +106,10 @@
         </button>
 
         <!-- Other Main Navigation Links -->
-        <VaSidebarItem @click="toggleSupportVisibility" class="menu-item">
+        <VaSidebarItem
+          @click="toggleSupportVisibility, toggleOffcanvasVisibility()"
+          class="menu-item"
+        >
           <VaSidebarItemContent>
             <VaIcon color="danger" name="help" />
             <VaSpacer class="spacer" />
@@ -126,7 +129,7 @@
               />
               <button
                 class="btn btn-success-2 ms-2"
-                @click.prevent="performSearch($event)"
+                @click.prevent="performSearch($event), toggleOffcanvasVisibility()"
                 type="submit"
               >
                 Search
@@ -146,9 +149,9 @@
 </template>
 
 <script>
-import LoginModal from '../modals/LoginModal.vue'
 import logo from '@/assets/images/TechTrove-logo.png'
 import { useUserStore } from '@/stores/User'
+import LoginModal from '../modals/LoginModal.vue'
 export default {
   name: 'NewsHeader',
   components: {
@@ -174,6 +177,8 @@ export default {
   methods: {
     toggleLoginModal() {
       this.isModalVisible = !this.isModalVisible
+      // Close the sidebar when the login modal is toggled
+      this.toggleOffcanvasVisibility()
     },
     getAvatarUrl() {
       const userStore = useUserStore()

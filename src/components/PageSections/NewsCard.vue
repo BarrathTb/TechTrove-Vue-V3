@@ -13,10 +13,8 @@
     </div>
     <div class="card-body text-light d-flex flex-column justify-content-between my-auto py-auto">
       <!-- Article title -->
-      <h5 class="card-title text-center font-size-md">{{ article.title }}</h5>
-      <a :href="article.source_url" class="tube-text text-center font-size-sm">{{
-        article.source_url
-      }}</a>
+      <h5 class="card-title text-center">{{ article.title }}</h5>
+      <a :href="article.source_url" class="tube-text-news text-center">{{ article.source_url }}</a>
 
       <!-- Read article button -->
       <button type="button" class="btn btn-success-2 mt-3 my-auto" @click="handleReadArticle">
@@ -73,12 +71,12 @@ export default {
   align-items: center;
   justify-content: space-between;
   border-radius: 0.25rem;
+  overflow: hidden; /* Prevent content overflow */
 }
 
 .card-img-container {
   width: 95%; /* Width is 100% of the card */
-  max-height: 250px;
-  min-height: 100px; /* Maximum height for your image */
+  height: 180px; /* Fixed height for consistency */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -87,9 +85,10 @@ export default {
 
 .news-img-top {
   max-width: 100%; /* The image can be as wide as its container */
-  max-height: 90%; /* The image can be as tall as its container */
-
-  border-radius: 0.25rem; /* Ensures image maintains aspect ratio but fits within the space */
+  height: 100%; /* Make image fill the height of the container */
+  object-fit: cover; /* Crop image to cover the container while maintaining aspect ratio */
+  display: block; /* Remove extra space below the image */
+  border-radius: 0.25rem;
 }
 
 .product-card .card-body {
@@ -97,15 +96,39 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden; /* Prevent content overflow */
 }
 
 .product-card .card-title {
   text-align: center;
   margin-top: 1rem; /* Add spacing above title if needed */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
 }
 
 .product-card .btn-success-2 {
   align-self: center; /* Center button horizontally */
   margin-top: auto; /* Pushes the button to the bottom */
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+  .product-card .card-title {
+    font-size: 1rem; /* Smaller font size for titles on small screens */
+    -webkit-line-clamp: 4; /* Allow a bit more lines on smaller cards */
+  }
+
+  .product-card .card-body a {
+    /* Target the source URL link */
+    font-size: 0.8rem; /* Smaller font size for source URL on small screens */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* Limit source URL to 1 line */
+    -webkit-box-orient: vertical;
+  }
 }
 </style>

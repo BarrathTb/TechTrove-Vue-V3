@@ -63,15 +63,12 @@
             title="Menu"
             right
           >
-            <ul class="nav nav-tabs d-none d-lg-flex mx-2">
+            <ul class="nav nav-tabs flex-column mx-2">
               <li class="nav-item left-tab border-none">
                 <a
-                  class="nav-link text-light-bold main-nav-menu-item dropdown"
+                  class="nav-link text-light-bold main-nav-menu-item"
                   href="#"
-                  id="navbarDropdownMenuLinkProducts"
                   role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="true"
                   @click="toStore"
                 >
                   PRODUCTS
@@ -80,16 +77,7 @@
 
               <li class="nav-item left-tab border-none">
                 <router-link to="/login" class="nav-link text-light-bold main-nav-menu-item">
-                  <a
-                    class="nav-link text-light-bold main-nav-menu-item dropdown"
-                    href="#"
-                    id="navbarDropdownMenuLinkProducts"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="true"
-                  >
-                    LOGIN
-                  </a>
+                  LOGIN
                 </router-link>
               </li>
             </ul>
