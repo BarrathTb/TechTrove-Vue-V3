@@ -145,8 +145,9 @@ export default {
 <style scoped>
 .hero-image {
   background-image: linear-gradient(to top, #161616, rgba(0, 128, 128, 0)),
-    url('/TechTrove-Vue-V3/images/ek-fluid-gaming-digital-reef-art-1.webp');
+    url('images/ek-fluid-gaming-digital-reef-art-1.webp');
   background-size: cover;
+  background-position: center;
   position: relative;
   z-index: 1;
   width: 100vw;

@@ -12,21 +12,21 @@
     <info-card
       class="flex-grow-1"
       title="Step 1"
-      image-src="/TechTrove-Vue-V3/images/tech-entry-3.png"
+      image-src="images/tech-entry-3.png"
       description="Search for the computer parts you need. Find the best deals and quality products."
     ></info-card>
 
     <info-card
       class="flex-grow-1"
       title="Step 2"
-      image-src="/TechTrove-Vue-V3/images/tech-entry-4.png"
+      image-src="images/tech-entry-4.png"
       description="Click on a product card for more details. Add products to your cart, and customize your order."
     ></info-card>
 
     <info-card
       class="flex-grow-1"
       title="Step 3"
-      image-src="/TechTrove-Vue-V3/images/tech-entry-5.png"
+      image-src="images/tech-entry-5.png"
       description="Review your cart and make any changes, proceed to checkout when ready. Don't forget to try the pc builder to make your dream pc come to life."
     ></info-card>
   </HowItWorksAccordion>
@@ -40,20 +40,20 @@
     <info-card
       class="flex-grow"
       title="As a Customer"
-      image-src="/TechTrove-Vue-V3/images/tech-entry-6.png"
+      image-src="images/tech-entry-6.png"
       description="Provide assistance to other customers with product review and recommendations. Earn rewards for your contributions to the community. Contribute to the blogs for add ons to the tech community."
     ></info-card>
 
     <info-card
       class="flex-grow"
       title="As a Supplier"
-      image-src="/TechTrove-Vue-V3/images/tech-entry-7.png"
+      image-src="images/tech-entry-7.png"
       description="TechTrove is a community-driven platform that helps you find the best deals and quality products for every build. As a supplier, you can create a vendor profile to showcase your products and services. Reach out to customers directly and gain new business opportunities."
     ></info-card>
     <info-card
       class="flex-grow"
       title="As a Colleague"
-      image-src="/TechTrove-Vue-V3/images/tech-entry-7.png"
+      image-src="images/tech-entry-7.png"
       description="Join a team of experts dedicated to providing the best parts and service."
     ></info-card>
   </HowItWorksAccordion>
