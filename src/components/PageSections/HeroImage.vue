@@ -399,8 +399,7 @@ export default {
     overflow-wrap: break-word; /* Allow text to wrap */
   }
   .hero-image-sm {
-    background: url('/TechTrove-Vue-V3/images/ek-fluid-gaming-digital-reef-art-1.webp') no-repeat
-      bottom center;
+    background: url('images/ek-fluid-gaming-digital-reef-art-1.webp') no-repeat bottom center;
     background-size: cover;
     position: relative;
     height: 38vh;

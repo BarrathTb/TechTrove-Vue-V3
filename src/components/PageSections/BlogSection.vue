@@ -41,7 +41,7 @@ export default {
       articles: [
         {
           title: 'Unleashing the Power: A Deep Dive into the Latest Graphics Cards',
-          imageSrc: '/TechTrove-Vue-V3/images/asus-rog-strix-4090-btf.png',
+          imageSrc: 'images/asus-rog-strix-4090-btf.png',
           imageAlt: 'Latest Graphics Cards',
           introduction:
             'Discover how the new generation of graphics cards elevates gaming and professional graphics work to a whole new level.',
@@ -65,7 +65,7 @@ export default {
         },
         {
           title: 'The Heart of Your Machine: Choosing the Right CPU for Your Build',
-          imageSrc: '/TechTrove-Vue-V3/images/AMD Ryzen Threadripper 3960X.webp',
+          imageSrc: 'images/AMD Ryzen Threadripper 3960X.webp',
           imageAlt: 'Choosing the Right CPU',
           introduction:
             "Any PC builder knows the central role a processor plays in a system's performance. We discuss how to choose the best one for you.",
@@ -82,7 +82,7 @@ export default {
         },
         {
           title: 'Speed Up Your Load Times: SSDs are the Game Changer',
-          imageSrc: '/TechTrove-Vue-V3/images/Samsung 980 PRO.webp',
+          imageSrc: 'images/Samsung 980 PRO.webp',
           imageAlt: 'Solid State Drives',
           introduction:
             'Gone are the days of lengthy load times. Solid-state drives (SSDs) have revolutionized data access speeds. We examine the technology behind SSDs and why they offer such a significant speed improvement over traditional hard drives.',

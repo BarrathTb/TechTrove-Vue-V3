@@ -20,9 +20,9 @@
 </template>
 
 <script>
+import YouTube from 'vue3-youtube'
 import SearchBar from './SearchBar.vue'
 import WelcomeBanner from './WelcomeBanner.vue'
-import YouTube from 'vue3-youtube'
 
 export default {
   components: {
@@ -128,7 +128,7 @@ export default {
     z-index: 1;
     height: 20vh;
     background-image: linear-gradient(to bottom, #161616, rgba(0, 128, 128, 0)),
-      url('/TechTrove-Vue-V3/images/colorsplash.png');
+      url('images/colorsplash.png');
     background-size: cover;
     position: relative;
 
