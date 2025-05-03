@@ -51,7 +51,7 @@ export default {
   justify-content: space-between;
   border-radius: 0.25rem;
   background: linear-gradient(rgba(18, 18, 18, 0.8), rgba(44, 44, 44, 0.95)),
-    url('images/card-back.jpg');
+    url('/images/card-back.jpg');
   background-size: cover; /* Ensure the background image covers the entire element */
   background-position: center; /* Center the background image */
 }
