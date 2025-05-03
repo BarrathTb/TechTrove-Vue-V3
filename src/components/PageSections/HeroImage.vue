@@ -145,7 +145,7 @@ export default {
 <style scoped>
 .hero-image {
   background-image: linear-gradient(to top, #161616, rgba(0, 128, 128, 0)),
-    url('images/ek-fluid-gaming-digital-reef-art-1.webp');
+    url('/images/ek-fluid-gaming-digital-reef-art-1.webp');
   background-size: cover;
   background-position: center;
   position: relative;
@@ -399,7 +399,7 @@ export default {
     overflow-wrap: break-word; /* Allow text to wrap */
   }
   .hero-image-sm {
-    background: url('images/ek-fluid-gaming-digital-reef-art-1.webp') no-repeat bottom center;
+    background: url('/images/ek-fluid-gaming-digital-reef-art-1.webp') no-repeat bottom center;
     background-size: cover;
     position: relative;
     height: 38vh;
