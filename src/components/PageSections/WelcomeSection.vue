@@ -128,7 +128,7 @@ export default {
     z-index: 1;
     height: 20vh;
     background-image: linear-gradient(to bottom, #161616, rgba(0, 128, 128, 0)),
-      url('images/colorsplash.png');
+      url('/images/colorsplash.png');
     background-size: cover;
     position: relative;
 
