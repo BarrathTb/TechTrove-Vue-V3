@@ -11,7 +11,7 @@
     >
       <!-- Skeleton Loader before the items are loaded -->
       <div v-if="!items || !items.length" class="skeleton-loader-container">
-        <div v-for="index in 3" :key="'skeleton-' + index" class="skeleton-loader"></div>
+        <div v-for="index in 1" :key="'skeleton-' + index" class="skeleton-loader"></div>
       </div>
       <!-- Modify this loop to use each product as a carousel item -->
       <el-carousel-item v-else v-for="(item, index) in items" :key="index">
