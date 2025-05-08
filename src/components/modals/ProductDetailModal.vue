@@ -107,7 +107,7 @@
           </div>
           <div class="row mt-3">
             <div class="col">
-              <div class="btn-group">
+              <div class="btn-group prod-qty">
                 <button
                   size="small"
                   class="rounded-circle me-2 btn btn-success-2"
@@ -311,12 +311,11 @@ export default {
   .product-detail-modal {
     width: 100%;
     height: 90vh;
-    overflow-x: hidden;
+    margin: auto;
   }
   .modal-lg {
     width: 100%;
-
-    overflow-x: hidden;
+    margin: auto;
   }
   .details-image {
     width: 80%;
@@ -341,9 +340,15 @@ export default {
   .vuestic-modal-subtitle {
     font-size: 1.2rem;
   }
-  .vuestic-input {
-    width: 100%;
-    height: 40px;
+  .prod-qty {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .va-input {
+    width: 80%;
   }
   .cart-button {
     width: 100%;
