@@ -77,8 +77,7 @@ export default {
 @media (max-width: 768px) {
   .el-carousel {
     /* Mobile styles */
-    min-height: 40vh;
-    max-height: 50vh;
+    max-height: 45vh;
     width: 80vw;
     margin: 0 auto;
   }
@@ -87,7 +86,7 @@ export default {
 .el-carousel__item {
   background: none;
   max-width: 80vw;
-  max-height: 60vh;
+  max-height: 50vh;
 }
 .el-carousel__container {
   max-width: 80vw;

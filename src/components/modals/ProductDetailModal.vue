@@ -125,7 +125,7 @@
                 </button>
               </div>
             </div>
-            <div class="col-3">
+            <div class="col-sm-12 col-md-3 col-lg-3 text-center cart-button">
               <button class="flex-end btn btn-success-2" @click="handleManageCart">
                 {{ buttonText }}
               </button>
@@ -306,5 +306,51 @@ export default {
   transition:
     background-image 0.3s ease-in-out,
     filter 0.3s ease-in-out;
+}
+@media screen and (max-width: 768px) {
+  .product-detail-modal {
+    width: 90vw;
+    height: 90vh;
+  }
+  .details-image {
+    width: 80%;
+    height: auto;
+  }
+  .image-container {
+    width: 100%;
+    height: auto;
+  }
+  .heart {
+    height: 30px;
+    width: 30px;
+  }
+  .heart.is-favorite {
+    height: 30px;
+    width: 30px;
+  }
+  .vuestic-modal-content {
+    width: 90%;
+    height: 90%;
+  }
+
+  .vuestic-modal-title {
+    font-size: 1.5rem;
+  }
+  .vuestic-modal-subtitle {
+    font-size: 1.2rem;
+  }
+  .vuestic-input {
+    width: 100%;
+    height: 40px;
+  }
+  .cart-button {
+    width: 100%;
+    height: 40px;
+    margin-top: 10px;
+  }
+  .btn-success-2 {
+    width: 100%;
+    height: 40px;
+  }
 }
 </style>
