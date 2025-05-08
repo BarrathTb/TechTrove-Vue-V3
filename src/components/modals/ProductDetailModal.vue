@@ -313,6 +313,11 @@ export default {
     height: 90vh;
     overflow-x: hidden;
   }
+  .modal-lg {
+    width: 100%;
+
+    overflow-x: hidden;
+  }
   .details-image {
     width: 80%;
     height: auto;
