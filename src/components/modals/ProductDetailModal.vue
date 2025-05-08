@@ -307,6 +307,14 @@ export default {
     background-image 0.3s ease-in-out,
     filter 0.3s ease-in-out;
 }
+
+.prod-qty {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
 @media screen and (max-width: 768px) {
   .product-detail-modal {
     width: 100%;
