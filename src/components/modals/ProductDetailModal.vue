@@ -309,8 +309,9 @@ export default {
 }
 @media screen and (max-width: 768px) {
   .product-detail-modal {
-    width: 90vw;
+    width: 100%;
     height: 90vh;
+    overflow-x: hidden;
   }
   .details-image {
     width: 80%;
@@ -327,10 +328,6 @@ export default {
   .heart.is-favorite {
     height: 30px;
     width: 30px;
-  }
-  .vuestic-modal-content {
-    width: 90%;
-    height: 90%;
   }
 
   .vuestic-modal-title {
