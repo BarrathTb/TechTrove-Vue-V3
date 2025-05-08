@@ -51,6 +51,18 @@ export default {
     -1px -1px 0 #000,
     /* Black border on top and left */ 1px 1px 0 #000; /* Black border on bottom and right for 3D effect */
 }
+
+@media (max-width: 576px) {
+  .text-banner-button {
+    font-size: calc(4vw * 0.8);
+    font-weight: 600;
+    color: #fff;
+    text-shadow:
+      5px 0px 20px rgba(0, 0, 0, 0.8),
+      -1px -1px 0 #000,
+      /* Black border on top and left */ 1px 1px 0 #000; /* Black border on bottom and right for 3D effect */
+  }
+}
 .da-fade {
   background: linear-gradient(180deg, black 0%, #161616 20%, #161616 60%, #0ee636 100%);
   height: calc(15vh * 0.75);
