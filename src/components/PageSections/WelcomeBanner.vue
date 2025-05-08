@@ -129,11 +129,6 @@ export default {
     color: #fff;
   }
 
-  .tube-text {
-    font-size: calc(6vw * 0.8);
-    font-weight: 600;
-  }
-
   .banner-button {
     font-size: calc(2vw * 0.7);
     font-weight: 600;
