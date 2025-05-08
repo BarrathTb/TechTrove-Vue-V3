@@ -181,7 +181,7 @@ export default {
     height: 20vh;
 
     width: 100vw;
-    height: 25vh;
+    height: 35vh;
     transition: height 2s;
   }
 }

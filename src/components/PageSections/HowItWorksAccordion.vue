@@ -49,7 +49,7 @@ export default {
   --inverted-color: #000;
 }
 .welcome-container-two {
-  width: 80%;
+  width: 90%;
 }
 .accordion-item {
   width: 100%;
